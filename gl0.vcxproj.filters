@@ -21,7 +21,7 @@
     <ClCompile Include="src\hello_triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\log.c">
+    <ClCompile Include="log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -31,10 +31,10 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\log.h">
+    <ClInclude Include="thirdparty\include\glad\glad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="thirdparty\include\glad\glad.h">
+    <ClInclude Include="include\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
