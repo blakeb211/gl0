@@ -2,7 +2,7 @@
 //
 #include <GLFW/glfw3.h>
 
-#include <iostream>
+#include <stdio.h> 
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -48,7 +48,7 @@ int main() {
   GLFWwindow *window =
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
   if (window == NULL) {
-    std::cout << "Failed to create GLFW window" << std::endl;
+    printf("Failed to create GLFW window\n");
     glfwTerminate();
     return -1;
   }
@@ -58,7 +58,7 @@ int main() {
   // glad: load all OpenGL function pointers
   // ---------------------------------------
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    std::cout << "Failed to initialize GLAD" << std::endl;
+    printf("Failed to initialize GLAD\n");
     return -1;
   }
 
@@ -74,8 +74,7 @@ int main() {
   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-              << infoLog << std::endl;
+    printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED %s\n",infoLog);
   }
   // fragment shader
   unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -85,8 +84,7 @@ int main() {
   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-              << infoLog << std::endl;
+    printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED %s\n", infoLog);
   }
 
   // fragment shader2
@@ -97,8 +95,7 @@ int main() {
   glGetShaderiv(fragmentShader2, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(fragmentShader2, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-              << infoLog << std::endl;
+    printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED %s\n", infoLog); 
   }
 
   // link shaders
@@ -110,8 +107,7 @@ int main() {
   glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
-              << infoLog << std::endl;
+    printf("ERROR::SHADER::PROGRAM::LINKING_FAILED %s\n", infoLog);
   }
 
   // create 2nd shader program
@@ -123,8 +119,7 @@ int main() {
   glGetProgramiv(shaderProgram2, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shaderProgram2, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
-              << infoLog << std::endl;
+    printf("ERROR::SHADER::PROGRAM::LINKING_FAILED %s\n", infoLog);
   }
 
   glDeleteShader(vertexShader);
