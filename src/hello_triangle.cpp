@@ -2,7 +2,7 @@
 //
 #include <GLFW/glfw3.h>
 
-#include <log.h>
+#include "log.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -13,19 +13,22 @@ const unsigned int SCR_HEIGHT = 600;
 
 const char *vertexShaderSource =
     "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
+    "layout (location = 0) in vec3 aPos;\n"  // pos variable has location 0
+    "layout(location = 1) in vec3 aColor;\n" // color variable has location 1
+    "out vec3 ourColor;\n"
     "void main()\n"
     "{\n"
     "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   ourColor = aColor;\n"
     "}\0";
 
-const char *fragmentShaderSource =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n\0";
+const char *fragmentShaderSource = "#version 330 core\n"
+                                   "in vec3 ourColor;\n"
+                                   "out vec4 FragColor;\n"
+                                   "void main()\n"
+                                   "{\n"
+                                   "   FragColor = vec4(ourColor,1.0);\n"
+                                   "}\n\0";
 
 const char *fragmentShaderSource2 =
     "#version 330 core\n"
@@ -36,19 +39,21 @@ const char *fragmentShaderSource2 =
     "}\n\0";
 
 int main() {
+  // init log
+  setLogFile("log.txt");
   // glfw: initialize and configure
   // ------------------------------
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
- 
+
   // glfw window creation
   // --------------------
   GLFWwindow *window =
       glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
   if (window == NULL) {
-    logPrint("Failed to create GLFW window\n");
+    logPrintLn({"Failed to create GLFW window"});
     glfwTerminate();
     return -1;
   }
@@ -58,12 +63,16 @@ int main() {
   // glad: load all OpenGL function pointers
   // ---------------------------------------
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    logPrint("Failed to initialize GLAD\n");
+    logPrintLn({"Failed to initialize GLAD"});
     return -1;
   }
 
+  // Query GL
+  int nrAttributes;
+  glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+  logPrintLn({"Maximum nr of vertex attributes supported:", nrAttributes});
   // build and compile our shader program
-  // ------------------------------------
+  // -----------------------------------
   // vertex shader
   unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -74,7 +83,7 @@ int main() {
   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    logPrint("ERROR::SHADER::VERTEX::COMPILATION_FAILED %s\n", infoLog);
+    logPrintLn({"ERROR::SHADER::VERTEX::COMPILATION_FAILED", infoLog});
   }
   // fragment shader
   unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -84,7 +93,7 @@ int main() {
   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    logPrint("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED %s\n", infoLog);
+    logPrintLn({"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED", infoLog});
   }
 
   // fragment shader2
@@ -95,7 +104,7 @@ int main() {
   glGetShaderiv(fragmentShader2, GL_COMPILE_STATUS, &success);
   if (!success) {
     glGetShaderInfoLog(fragmentShader2, 512, NULL, infoLog);
-    logPrint("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED %s\n", infoLog); 
+    logPrintLn({"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED", infoLog});
   }
 
   // link shaders
@@ -107,7 +116,7 @@ int main() {
   glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    logPrint("ERROR::SHADER::PROGRAM::LINKING_FAILED %s\n", infoLog);
+    logPrintLn({"ERROR::SHADER::PROGRAM::LINKING_FAILED", infoLog});
   }
 
   // create 2nd shader program
@@ -119,7 +128,7 @@ int main() {
   glGetProgramiv(shaderProgram2, GL_LINK_STATUS, &success);
   if (!success) {
     glGetProgramInfoLog(shaderProgram2, 512, NULL, infoLog);
-    logPrint("ERROR::SHADER::PROGRAM::LINKING_FAILED %s\n", infoLog);
+    logPrintLn({"ERROR::SHADER::PROGRAM::LINKING_FAILED", infoLog});
   }
 
   glDeleteShader(vertexShader);
@@ -129,9 +138,10 @@ int main() {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   float vertices[] = {
-      -0.5f, -0.5f, 0.0f, // left
-      0.5f,  -0.5f, 0.0f, // right
-      0.0f,  0.5f,  0.0f, // top
+      // positions         // colors
+      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
+      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
+      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // top
   };
 
   float vertices2[] = {
@@ -203,11 +213,19 @@ int main() {
     glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // draw our first triangle
+    // draw triangle #1
+    float timeValue = glfwGetTime();
+    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+    if (vertexColorLocation == -1) {
+      logPrintLn({"uniform ourColor was not found in the shader program"});
+    }
     glUseProgram(shaderProgram);
-    glBindVertexArray(VAO); // seeing as we only have a single VAO there's
-                            // no need to bind it every time, but we'll do
-                            // so to keep things a bit more organized
+    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    // seeing as we only have a single VAO there's
+    // no need to bind it every time, but we'll do
+    // so to keep things a bit more organized
+    glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0); // no need to unbind it every time
 
@@ -231,6 +249,7 @@ int main() {
   // glfw: terminate, clearing all previously allocated GLFW resources.
   // ------------------------------------------------------------------
   glfwTerminate();
+  closeLog();
   return 0;
 }
 

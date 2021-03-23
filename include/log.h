@@ -1,3 +1,10 @@
 #pragma once
+#include <initializer_list>
+#include <any>
 
-void logPrint(const char *, char* = 0);
+// print arguments to log file and screen and add a newline
+void logPrintLn(std::initializer_list<std::any> il);
+
+bool setLogFile(const char * fname);
+
+bool closeLog();
