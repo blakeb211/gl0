@@ -8,46 +8,20 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
+GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title, GLFWframebuffersizefun);
 
-float offset;
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-
-const char *vertexShaderSource = "";
-const char *fragmentShaderSource = "";
-const char *fragmentShaderSource2 = "";
+float offset;
 
 int main() {
   // init log
   setLogFile("log.txt");
   // glfw: initialize and configure
   // ------------------------------
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-  // glfw window creation
-  // --------------------
-  GLFWwindow *window =
-      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-  if (window == NULL) {
-    logPrintLn({"Failed to create GLFW window"});
-    glfwTerminate();
-    return -1;
-  }
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-  // glad: load all OpenGL function pointers
-  // ---------------------------------------
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    logPrintLn({"Failed to initialize GLAD"});
-    return -1;
-  }
-
-  // Query GL
+  GLFWwindow *window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL", framebuffer_size_callback);
+  // Query GL 
   int nrAttributes;
   glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
   logPrintLn({"Maximum nr of vertex attributes supported:", nrAttributes});
@@ -129,7 +103,7 @@ int main() {
   // uncomment this call to draw in wireframe polygons.
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-  // render loop
+  // game loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
     // input
@@ -144,9 +118,9 @@ int main() {
     // draw triangle #1
     /* float timeValue = glfwGetTime();
      float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-     int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-     if (vertexColorLocation == -1) {
-       logPrintLn({"uniform ourColor was not found in the shader program"});
+     int vertexColorLocation = glGetUniformLocation(shaderProgram,
+     "ourColor"); if (vertexColorLocation == -1) { logPrintLn({"uniform
+     ourColor was not found in the shader program"});
      }*/
     progOne.use();
     // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
@@ -202,4 +176,33 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   // and height will be significantly larger than specified on retina
   // displays.
   glViewport(0, 0, width, height);
+}
+
+GLFWwindow* initGLFW(unsigned int w,
+                     unsigned int h,
+                     const char* title,
+                     GLFWframebuffersizefun fun) {
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+  // glfw window creation
+  // --------------------
+  GLFWwindow *window = glfwCreateWindow(w, h, title, NULL, NULL);
+  if (window == NULL) {
+    logPrintLn({"Failed to create GLFW window"});
+    glfwTerminate();
+    return nullptr;
+  }
+  glfwMakeContextCurrent(window);
+  glfwSetFramebufferSizeCallback(window, fun);
+
+  // glad: load all OpenGL function pointers
+  // ---------------------------------------
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    logPrintLn({"Failed to initialize GLAD"});
+    return nullptr;
+  }
+  return window;
 }
