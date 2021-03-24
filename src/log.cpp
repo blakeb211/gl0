@@ -3,7 +3,9 @@
 #include <any>
 #include <initializer_list>
 #include <stdio.h>
+
 using namespace std;
+
 
 const char *typeFloat = "float";
 const char *typeConstCharPtr = "char const * __ptr64";
@@ -11,6 +13,11 @@ const char *typeCharPtr = "char * __ptr64";
 const char *typeInt = "int";
 const char *typeDouble = "double";
 const char *typeUint = "unsigned int";
+//****************************************************************
+// add handling for next type here
+//****************************************************************
+
+
 
 static FILE *fptr;
 
@@ -42,6 +49,7 @@ void logPrintLn(initializer_list<any> il) {
   int cCount = 0;
   for (auto &i : il) {
     const char *typeName = i.type().name();
+      
     if (strcmp(typeName, typeFloat) == 0) {
       cCount = sprintf(buf, "%lf ", any_cast<float>(i));
       printf("%s", buf);
@@ -78,10 +86,17 @@ void logPrintLn(initializer_list<any> il) {
       fwrite(buf, sizeof(char), cCount, fptr);
       continue;
     }
+    //****************************************************************
+    // add handling for next type here
+    //****************************************************************
+
+
+
     cCount = sprintf(buf, "ERROR: need to add new type to logPrint:<%s>", typeName);
     printf("%s", buf);
     fwrite(buf, sizeof(char), cCount, fptr);
   }
+  // print a new line at the end regardless of what got printed
   cCount = sprintf(buf, "%s", "\n");
   printf("%s", buf);
   fwrite(buf, sizeof(char), cCount, fptr);

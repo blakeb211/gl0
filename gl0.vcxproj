@@ -169,6 +169,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="src\hello_triangle.cpp" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="thirdparty\src\glad\glad.c" />
