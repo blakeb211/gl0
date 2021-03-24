@@ -45,7 +45,7 @@ bool setLogFile(const char *fname) {
 }
 
 void logPrintLn(initializer_list<any> il) {
-  char buf[50] = "";
+  char buf[256] = "";
   int cCount = 0;
   for (auto &i : il) {
     const char *typeName = i.type().name();

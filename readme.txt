@@ -1,6 +1,5 @@
 
-logging
-
+add frame timing
 
 levels
   loading meshes

@@ -1,1 +1,3 @@
 Maximum nr of vertex attributes supported: 16 
+SUCCESS::SHADER_FILES_LOADED .\shaders\3pos3color.vs .\shaders\colorFromVertex.fs 
+SUCCESS::SHADER_PROGRAM_COMPILED .\shaders\3pos3color.vs .\shaders\colorFromVertex.fs 

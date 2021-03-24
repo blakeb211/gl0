@@ -173,7 +173,6 @@
   <ItemGroup>
     <ClCompile Include="src\hello_triangle.cpp" />
     <ClCompile Include="src\log.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="thirdparty\src\glad\glad.c" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\log.h" />
+    <ClInclude Include="include\Shader.h" />
     <ClInclude Include="thirdparty\include\glad\glad.h" />
   </ItemGroup>
   <ItemGroup>

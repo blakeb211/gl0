@@ -3,15 +3,20 @@
 #include <GLFW/glfw3.h>
 
 #include "log.h"
+//
+#include "shader.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
+float offset;
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-
+const char *vertexShaderSource = "";
+const char *fragmentShaderSource = "";
+const char *fragmentShaderSource2 = "";
 
 int main() {
   // init log
@@ -46,69 +51,10 @@ int main() {
   int nrAttributes;
   glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
   logPrintLn({"Maximum nr of vertex attributes supported:", nrAttributes});
-  // build and compile our shader program
-  // -----------------------------------
-  // vertex shader
-  unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-  glCompileShader(vertexShader);
-  // check for shader compile errors
-  int success;
-  char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    logPrintLn({"ERROR::SHADER::VERTEX::COMPILATION_FAILED", infoLog});
-  }
-  // fragment shader
-  unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-  glCompileShader(fragmentShader);
-  // check for shader compile errors
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    logPrintLn({"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED", infoLog});
-  }
 
-  // fragment shader2
-  unsigned int fragmentShader2 = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader2, 1, &fragmentShaderSource2, NULL);
-  glCompileShader(fragmentShader2);
-  // check for shader compile errors
-  glGetShaderiv(fragmentShader2, GL_COMPILE_STATUS, &success);
-  if (!success) {
-    glGetShaderInfoLog(fragmentShader2, 512, NULL, infoLog);
-    logPrintLn({"ERROR::SHADER::FRAGMENT::COMPILATION_FAILED", infoLog});
-  }
-
-  // link shaders
-  unsigned int shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-  // check for linking errors
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    logPrintLn({"ERROR::SHADER::PROGRAM::LINKING_FAILED", infoLog});
-  }
-
-  // create 2nd shader program
-  unsigned int shaderProgram2 = glCreateProgram();
-  glAttachShader(shaderProgram2, vertexShader);
-  glAttachShader(shaderProgram2, fragmentShader2);
-  glLinkProgram(shaderProgram2);
-  // check for linking errors
-  glGetProgramiv(shaderProgram2, GL_LINK_STATUS, &success);
-  if (!success) {
-    glGetProgramInfoLog(shaderProgram2, 512, NULL, infoLog);
-    logPrintLn({"ERROR::SHADER::PROGRAM::LINKING_FAILED", infoLog});
-  }
-
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
-  glDeleteShader(fragmentShader2);
+  // create shader program
+  Shader progOne =
+      Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
 
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
@@ -120,9 +66,9 @@ int main() {
   };
 
   float vertices2[] = {
-      0.6f, 0.6f, 0.0f, // tri2 top
-      0.8f, 0.3f, 0.0f, // tri2 right
-      0.5f, 0.4f, 0.0f  // tri2 bottom
+      0.6f, 0.6f, 0.0f, 1.0f, 0.0f, 0.0f, // tri2 top
+      0.8f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f, // tri2 right
+      0.5f, 0.4f, 0.0f, 0.5f, 1.0f, 0.0f, // tri2 bottom
   };
 
   unsigned int VBO, VAO;
@@ -139,7 +85,7 @@ int main() {
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                        (void*)(3 * sizeof(float)));
+                        (void *)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
   // note that this is allowed, the call to glVertexAttribPointer registered
   // VBO as the vertex attribute's bound vertex buffer object so afterwards we
@@ -162,8 +108,12 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO2);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                        (void *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   // note that this is allowed, the call to glVertexAttribPointer registered
   // VBO as the vertex attribute's bound vertex buffer object so afterwards we
@@ -185,21 +135,21 @@ int main() {
     // input
     // -----
     processInput(window);
-
+    progOne.setFloat("offset", offset);
     // render
     // ------
     glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // draw triangle #1
-   /* float timeValue = glfwGetTime();
-    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-    if (vertexColorLocation == -1) {
-      logPrintLn({"uniform ourColor was not found in the shader program"});
-    }*/
-    glUseProgram(shaderProgram);
-    //glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    /* float timeValue = glfwGetTime();
+     float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+     int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+     if (vertexColorLocation == -1) {
+       logPrintLn({"uniform ourColor was not found in the shader program"});
+     }*/
+    progOne.use();
+    // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     // seeing as we only have a single VAO there's
     // no need to bind it every time, but we'll do
     // so to keep things a bit more organized
@@ -207,7 +157,7 @@ int main() {
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0); // no need to unbind it every time
 
-    glUseProgram(shaderProgram2);
+    progOne.use();
     glBindVertexArray(VAO2); // seeing as we only have a single VAO there's no
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -222,7 +172,6 @@ int main() {
   // ------------------------------------------------------------------------
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
-  glDeleteProgram(shaderProgram);
 
   // glfw: terminate, clearing all previously allocated GLFW resources.
   // ------------------------------------------------------------------
@@ -237,6 +186,12 @@ int main() {
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
+
+  if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && offset < 0.5)
+    offset += 0.01;
+
+  if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && offset > -0.5)
+    offset -= 0.01;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback
