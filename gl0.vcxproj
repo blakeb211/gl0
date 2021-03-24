@@ -169,9 +169,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="src\hello_triangle.cpp" />
     <ClCompile Include="src\log.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="thirdparty\src\glad\glad.c" />
   </ItemGroup>
   <ItemGroup>
@@ -190,6 +190,10 @@
   <ItemGroup>
     <ClInclude Include="include\log.h" />
     <ClInclude Include="thirdparty\include\glad\glad.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\3pos3color.vs" />
+    <None Include="shaders\colorFromVertex.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
