@@ -1,13 +1,13 @@
 
 add frame timing
 
-levels
-  loading meshes
-  have objects
+loading levels
+  meshes 
+    animation
+
+have objects
 
 game modes
-
-frame timer
 
 translate 3d coordinates for viewing
 
