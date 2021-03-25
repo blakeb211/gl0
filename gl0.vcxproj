@@ -189,6 +189,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\FrameRater.h" />
     <ClInclude Include="include\log.h" />
     <ClInclude Include="include\Shader.h" />
     <ClInclude Include="thirdparty\include\glad\glad.h" />

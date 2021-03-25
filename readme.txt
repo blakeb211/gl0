@@ -5,6 +5,12 @@ loading levels
   meshes 
     animation
 
+RESOURCED NEEDED
+  mesh with animation
+  textures
+  sounds
+
+
 have objects
 
 game modes

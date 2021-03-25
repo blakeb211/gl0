@@ -4,24 +4,30 @@
 
 #include "log.h"
 //
-#include "shader.h"
+#include "FrameRater.h"
+#include "Shader.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
-GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title, GLFWframebuffersizefun);
+GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
+                     GLFWframebuffersizefun);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 float offset;
+long unsigned int fcount = 0;
 
 int main() {
+  // init frame rate
+  FrameRater<1000> fr;
   // init log
   setLogFile("log.txt");
   // glfw: initialize and configure
   // ------------------------------
-  GLFWwindow *window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL", framebuffer_size_callback);
-  // Query GL 
+  GLFWwindow *window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL",
+                                framebuffer_size_callback);
+  // Query GL
   int nrAttributes;
   glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
   logPrintLn({"Maximum nr of vertex attributes supported:", nrAttributes});
@@ -140,6 +146,7 @@ int main() {
     // -------------------------------------------------------------------------------
     glfwSwapBuffers(window);
     glfwPollEvents();
+    fr.sleep();
   }
 
   // optional: de-allocate all resources once they've outlived their purpose:
@@ -178,9 +185,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-GLFWwindow* initGLFW(unsigned int w,
-                     unsigned int h,
-                     const char* title,
+GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
                      GLFWframebuffersizefun fun) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
