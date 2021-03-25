@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 const char *typeFloat = "float";
 const char *typeConstCharPtr = "char const * __ptr64";
 const char *typeCharPtr = "char * __ptr64";

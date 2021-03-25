@@ -11,10 +11,11 @@ APIENTRY	.\thirdparty\include\glad\glad.h	32;"	d
 APIENTRY	.\thirdparty\include\glad\glad.h	36;"	d
 APIENTRY	.\thirdparty\src\glad\glad.c	31;"	d	file:
 APIENTRYP	.\thirdparty\include\glad\glad.h	39;"	d
+BUFFER_LENGTH	.\src\log.cpp	20;"	d	file:
 CALLBACK	.\thirdparty\include\GLFW\glfw3.h	140;"	d
 CALLBACK	.\thirdparty\include\GLFW\glfw3.h	5886;"	d
 FrameRater	.\include\FrameRater.h	/^  FrameRater()$/;"	f	class:FrameRater
-FrameRater	.\include\FrameRater.h	/^class FrameRater {$/;"	c
+FrameRater	.\include\FrameRater.h	/^template <std::intmax_t FPS> class FrameRater {$/;"	c
 GLAD_GL_VERSION_1_0	.\thirdparty\include\glad\glad.h	/^GLAPI int GLAD_GL_VERSION_1_0;$/;"	v
 GLAD_GL_VERSION_1_0	.\thirdparty\src\glad\glad.c	/^int GLAD_GL_VERSION_1_0 = 0;$/;"	v
 GLAD_GL_VERSION_1_1	.\thirdparty\include\glad\glad.h	/^GLAPI int GLAD_GL_VERSION_1_1;$/;"	v
@@ -2464,21 +2465,29 @@ _glfw3_native_h_	.\thirdparty\include\GLFW\glfw3native.h	30;"	d
 axes	.\thirdparty\include\GLFW\glfw3.h	/^    float axes[6];$/;"	m	struct:GLFWgamepadstate
 blue	.\thirdparty\include\GLFW\glfw3.h	/^    unsigned short* blue;$/;"	m	struct:GLFWgammaramp
 blueBits	.\thirdparty\include\GLFW\glfw3.h	/^    int blueBits;$/;"	m	struct:GLFWvidmode
+buf_	.\include\circular_buffer.h	/^  std::unique_ptr<T[]> buf_;$/;"	m	class:circular_buffer
 buttons	.\thirdparty\include\GLFW\glfw3.h	/^    unsigned char buttons[15];$/;"	m	struct:GLFWgamepadstate
+capacity	.\include\circular_buffer.h	/^  size_t capacity() const { return max_size_; }$/;"	f	class:circular_buffer
 checkCompileErrors	.\include\Shader.h	/^  void checkCompileErrors(unsigned int shader, std::string type) {$/;"	f	class:Shader
+circular_buffer	.\include\circular_buffer.h	/^  explicit circular_buffer(size_t size)$/;"	f	class:circular_buffer
+circular_buffer	.\include\circular_buffer.h	/^template <class T> class circular_buffer {$/;"	c
+clearBuffer	.\src\log.cpp	/^void clearBuffer(char* buf, int len) {$/;"	f
 closeLog	.\src\log.cpp	/^bool closeLog() {$/;"	f
 close_gl	.\thirdparty\src\glad\glad.c	/^void close_gl(void) {$/;"	f	file:
+empty	.\include\circular_buffer.h	/^  bool empty() const {$/;"	f	class:circular_buffer
 exts	.\thirdparty\src\glad\glad.c	/^static const char *exts = NULL;$/;"	v	file:
 exts_i	.\thirdparty\src\glad\glad.c	/^static char **exts_i = NULL;$/;"	v	file:
 fcount	.\src\hello_triangle.cpp	/^long unsigned int fcount = 0;$/;"	v
 find_coreGL	.\thirdparty\src\glad\glad.c	/^static void find_coreGL(void) {$/;"	f	file:
 find_extensionsGL	.\thirdparty\src\glad\glad.c	/^static int find_extensionsGL(void) {$/;"	f	file:
 fptr	.\src\log.cpp	/^static FILE *fptr;$/;"	v	file:
-frameRater	.\FrameRater.cpp	/^  frameRater()$/;"	f	class:frameRater
-frameRater	.\FrameRater.cpp	/^class frameRater {$/;"	c	file:
-frame_count	.\FrameRater.cpp	/^  long unsigned int frame_count;$/;"	m	class:frameRater	file:
+frame_count	.\include\FrameRater.h	/^  unsigned long int frame_count;$/;"	m	class:FrameRater
 framebuffer_size_callback	.\src\hello_triangle.cpp	/^void framebuffer_size_callback(GLFWwindow *window, int width, int height) {$/;"	f
 free_exts	.\thirdparty\src\glad\glad.c	/^static void free_exts(void) {$/;"	f	file:
+full	.\include\circular_buffer.h	/^  bool full() const {$/;"	f	class:circular_buffer
+full_	.\include\circular_buffer.h	/^  bool full_ = 0;$/;"	m	class:circular_buffer
+get	.\include\circular_buffer.h	/^  T get() {$/;"	f	class:circular_buffer
+getFrameRate	.\include\FrameRater.h	/^  double getFrameRate(void) {$/;"	f	class:FrameRater
 get_exts	.\thirdparty\src\glad\glad.c	/^static int get_exts(void) {$/;"	f	file:
 get_proc	.\thirdparty\src\glad\glad.c	/^void* get_proc(const char *namez) {$/;"	f	file:
 glAccum	.\thirdparty\include\glad\glad.h	2111;"	d
@@ -4661,10 +4670,11 @@ glad_glWindowPos3sv	.\thirdparty\src\glad\glad.c	/^PFNGLWINDOWPOS3SVPROC glad_gl
 green	.\thirdparty\include\GLFW\glfw3.h	/^    unsigned short* green;$/;"	m	struct:GLFWgammaramp
 greenBits	.\thirdparty\include\GLFW\glfw3.h	/^    int greenBits;$/;"	m	struct:GLFWvidmode
 has_ext	.\thirdparty\src\glad\glad.c	/^static int has_ext(const char *ext) {$/;"	f	file:
+head_	.\include\circular_buffer.h	/^  size_t head_ = 0;$/;"	m	class:circular_buffer
 height	.\thirdparty\include\GLFW\glfw3.h	/^    int height;$/;"	m	struct:GLFWimage
 height	.\thirdparty\include\GLFW\glfw3.h	/^    int height;$/;"	m	struct:GLFWvidmode
 id	.\thirdparty\include\GLFW\glfw3native.h	/^  typedef void* id;$/;"	t
-initGLFW	.\src\hello_triangle.cpp	/^GLFWwindow* initGLFW(unsigned int w,$/;"	f
+initGLFW	.\src\hello_triangle.cpp	/^GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,$/;"	f
 khronos_boolean_enum_t	.\thirdparty\include\KHR\khrplatform.h	/^} khronos_boolean_enum_t;$/;"	t	typeref:enum:__anon1
 khronos_float_t	.\thirdparty\include\KHR\khrplatform.h	/^typedef          float         khronos_float_t;$/;"	t
 khronos_int16_t	.\thirdparty\include\KHR\khrplatform.h	/^typedef signed   short int     khronos_int16_t;$/;"	t
@@ -4695,6 +4705,7 @@ khronos_uintptr_t	.\thirdparty\include\KHR\khrplatform.h	/^typedef unsigned long
 khronos_usize_t	.\thirdparty\include\KHR\khrplatform.h	/^typedef unsigned long  int     khronos_usize_t;$/;"	t
 khronos_usize_t	.\thirdparty\include\KHR\khrplatform.h	/^typedef unsigned long long int khronos_usize_t;$/;"	t
 khronos_utime_nanoseconds_t	.\thirdparty\include\KHR\khrplatform.h	/^typedef khronos_uint64_t       khronos_utime_nanoseconds_t;$/;"	t
+lastTime	.\include\FrameRater.h	/^  timepoint lastTime;$/;"	m	class:FrameRater
 libGL	.\thirdparty\src\glad\glad.c	/^static HMODULE libGL;$/;"	v	file:
 libGL	.\thirdparty\src\glad\glad.c	/^static void* libGL;$/;"	v	file:
 load_GL_VERSION_1_0	.\thirdparty\src\glad\glad.c	/^static void load_GL_VERSION_1_0(GLADloadproc load) {$/;"	f	file:
@@ -4714,25 +4725,30 @@ main	.\src\hello_triangle.cpp	/^int main() {$/;"	f
 major	.\thirdparty\include\glad\glad.h	/^    int major;$/;"	m	struct:gladGLversionStruct
 max_loaded_major	.\thirdparty\src\glad\glad.c	/^static int max_loaded_major;$/;"	v	file:
 max_loaded_minor	.\thirdparty\src\glad\glad.c	/^static int max_loaded_minor;$/;"	v	file:
+max_size_	.\include\circular_buffer.h	/^  const size_t max_size_;$/;"	m	class:circular_buffer
 minor	.\thirdparty\include\glad\glad.h	/^    int minor;$/;"	m	struct:gladGLversionStruct
+mutex_	.\include\circular_buffer.h	/^  std::mutex mutex_;$/;"	m	class:circular_buffer
 num_exts_i	.\thirdparty\src\glad\glad.c	/^static int num_exts_i = 0;$/;"	v	file:
 offset	.\src\hello_triangle.cpp	/^float offset;$/;"	v
 open_gl	.\thirdparty\src\glad\glad.c	/^int open_gl(void) {$/;"	f	file:
 pixels	.\thirdparty\include\GLFW\glfw3.h	/^    unsigned char* pixels;$/;"	m	struct:GLFWimage
 processInput	.\src\hello_triangle.cpp	/^void processInput(GLFWwindow *window) {$/;"	f
+put	.\include\circular_buffer.h	/^  void put(T item) {$/;"	f	class:circular_buffer
 red	.\thirdparty\include\GLFW\glfw3.h	/^    unsigned short* red;$/;"	m	struct:GLFWgammaramp
 redBits	.\thirdparty\include\GLFW\glfw3.h	/^    int redBits;$/;"	m	struct:GLFWvidmode
 refreshRate	.\thirdparty\include\GLFW\glfw3.h	/^    int refreshRate;$/;"	m	struct:GLFWvidmode
+reset	.\include\circular_buffer.h	/^  void reset() {$/;"	f	class:circular_buffer
 setBool	.\include\Shader.h	/^  void setBool(const std::string &name, bool value) const {$/;"	f	class:Shader
 setFloat	.\include\Shader.h	/^  void setFloat(const std::string &name, float value) const {$/;"	f	class:Shader
 setInt	.\include\Shader.h	/^  void setInt(const std::string &name, int value) const {$/;"	f	class:Shader
 setLogFile	.\src\log.cpp	/^bool setLogFile(const char *fname) {$/;"	f
+size	.\include\circular_buffer.h	/^  size_t size() const {$/;"	f	class:circular_buffer
 size	.\thirdparty\include\GLFW\glfw3.h	/^    unsigned int size;$/;"	m	struct:GLFWgammaramp
-sleep	.\FrameRater.cpp	/^  void sleep() {$/;"	f	class:frameRater
 sleep	.\include\FrameRater.h	/^  void sleep() {$/;"	f	class:FrameRater
-time_between_frames	.\FrameRater.cpp	/^  std::chrono::duration<double, std::ratio<1, FPS>> time_between_frames;$/;"	m	class:frameRater	file:
+tail_	.\include\circular_buffer.h	/^  size_t tail_ = 0;$/;"	m	class:circular_buffer
 time_between_frames	.\include\FrameRater.h	/^  std::chrono::duration<double, std::ratio<1, FPS>> time_between_frames;$/;"	m	class:FrameRater
-tp	.\FrameRater.cpp	/^      tp;$/;"	m	class:frameRater	file:
+timepoint	.\include\FrameRater.h	/^typedef std::chrono::high_resolution_clock::time_point timepoint;$/;"	t
+times	.\include\FrameRater.h	/^  circular_buffer<double> times;$/;"	m	class:FrameRater
 tp	.\include\FrameRater.h	/^      tp;$/;"	m	class:FrameRater
 typeCharPtr	.\src\log.cpp	/^const char *typeCharPtr = "char * __ptr64";$/;"	v
 typeConstCharPtr	.\src\log.cpp	/^const char *typeConstCharPtr = "char const * __ptr64";$/;"	v
@@ -4743,3 +4759,4 @@ typeUint	.\src\log.cpp	/^const char *typeUint = "unsigned int";$/;"	v
 use	.\include\Shader.h	/^  void use() { glUseProgram(ID); }$/;"	f	class:Shader
 width	.\thirdparty\include\GLFW\glfw3.h	/^    int width;$/;"	m	struct:GLFWimage
 width	.\thirdparty\include\GLFW\glfw3.h	/^    int width;$/;"	m	struct:GLFWvidmode
+write_num_to_buffer	.\src\log.cpp	/^void write_num_to_buffer(any val, char* buf) {$/;"	f
