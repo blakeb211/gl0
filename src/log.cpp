@@ -17,7 +17,7 @@ const char *typeUint = "unsigned int";
 // add handling for next type here
 //****************************************************************
 
-
+#define BUFFER_LENGTH 256
 
 static FILE *fptr;
 
@@ -44,16 +44,22 @@ bool setLogFile(const char *fname) {
   }
 }
 
+
+template <class T>
+void write_num_to_buffer(any val, char* buf) {
+  int cCount = sprintf(buf, "%8.3Lf ", (long double)any_cast<T>(val));
+  printf("%s", buf);  
+  fwrite(buf, sizeof(char), cCount, fptr);
+}
+
 void logPrintLn(initializer_list<any> il) {
-  char buf[256] = "";
+  char buf[BUFFER_LENGTH] = "";
   int cCount = 0;
   for (auto &i : il) {
     const char *typeName = i.type().name();
-      
+    clearBuffer(buf, BUFFER_LENGTH);  
     if (strcmp(typeName, typeFloat) == 0) {
-      cCount = sprintf(buf, "%lf ", any_cast<float>(i));
-      printf("%s", buf);
-      fwrite(buf, sizeof(char), cCount, fptr);
+	  write_num_to_buffer<float>(i, buf);
       continue;
     }
     if (strcmp(typeName, typeConstCharPtr) == 0) {
@@ -69,21 +75,15 @@ void logPrintLn(initializer_list<any> il) {
       continue;
     }
     if (strcmp(typeName, typeInt) == 0) {
-      cCount = sprintf(buf, "%d ", any_cast<int>(i));
-      printf("%s", buf);
-      fwrite(buf, sizeof(char), cCount, fptr);
+	  write_num_to_buffer<int>(i, buf);
       continue;
     }
     if (strcmp(typeName, typeDouble) == 0) {
-      sprintf(buf, "%lf ", any_cast<double>(i));
-      printf("%s", buf);
-      fwrite(buf, sizeof(char), cCount, fptr);
+	  write_num_to_buffer<double>(i, buf);
       continue;
     }
     if (strcmp(typeName, typeUint) == 0) {
-      cCount = sprintf(buf, "%d ", any_cast<unsigned int>(i));
-      printf("%s", buf);
-      fwrite(buf, sizeof(char), cCount, fptr);
+	  write_num_to_buffer<unsigned int>(i, buf);
       continue;
     }
     //****************************************************************
@@ -91,13 +91,21 @@ void logPrintLn(initializer_list<any> il) {
     //****************************************************************
 
 
-
     cCount = sprintf(buf, "ERROR: need to add new type to logPrint:<%s>", typeName);
     printf("%s", buf);
     fwrite(buf, sizeof(char), cCount, fptr);
   }
   // print a new line at the end regardless of what got printed
-  cCount = sprintf(buf, "%s", "\n");
+  cCount = sprintf(buf, "%s", "\n\0");
   printf("%s", buf);
   fwrite(buf, sizeof(char), cCount, fptr);
 }
+
+void clearBuffer(char* buf, int len) {
+  int count = 0;
+  while (count < len) {
+    buf[count] = '\0';
+    count++;
+  }
+}
+

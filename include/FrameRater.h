@@ -1,4 +1,5 @@
 #pragma once
+#include "circular_buffer.h"
 #include <chrono>
 #include <ratio>
 #include <thread>
@@ -10,27 +11,26 @@ public:
   FrameRater()
       :                         // initialize the object keeping the pace
         time_between_frames{1}, // std::ratio<1, FPS> seconds
-       tp{std::chrono::steady_clock::now()},
-       lastTime{std::chrono::high_resolution_clock::now()} {}
-
+        tp{std::chrono::steady_clock::now()},
+        lastTime{std::chrono::high_resolution_clock::now()},
+        times{circular_buffer<double>(200)}, frame_count{0} {}
 
   void sleep() {
     // add to time point
     tp += time_between_frames;
+    frame_count++;
     timepoint newTime = std::chrono::high_resolution_clock::now();
-    auto diff_ms =
-        std::chrono::duration_cast<std::chrono::milliseconds>(newTime - lastTime).count();
-    
+    auto diff_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                       newTime - lastTime)
+                       .count();
+    times.put((double)diff_ms);
     // check for framerates not being met
-    if (diff_ms > 10) {
+    if (frame_count % 500 == 0) {
       logPrintLn({
-          "Min Framerate broken by a long frame.",
-          "Diff in MS:",
-          (int)diff_ms,
+        "avg framerate:", this->getFrameRate()
       });
     }
     lastTime = newTime;
-
 
     std::this_thread::sleep_until(tp);
   }
@@ -44,4 +44,16 @@ private:
                           decltype(time_between_frames)>
       tp;
   timepoint lastTime;
+  circular_buffer<double> times;
+  unsigned long int frame_count;
+
+  double getFrameRate(void) {
+    double total = 0.0;
+    while (!times.empty()) {
+      total += times.get();
+    }
+    auto avg_frametime_ms = total / times.capacity();
+    auto avg_frametime_s = avg_frametime_ms / 1000.0;
+    return 1.0 / avg_frametime_s;
+  }
 };

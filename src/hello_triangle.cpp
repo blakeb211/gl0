@@ -20,7 +20,7 @@ long unsigned int fcount = 0;
 
 int main() {
   // init frame rate
-  FrameRater<1000> fr;
+  FrameRater<2000> fr;
   // init log
   setLogFile("log.txt");
   // glfw: initialize and configure
