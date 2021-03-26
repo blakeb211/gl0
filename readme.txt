@@ -1,13 +1,22 @@
 
 loading levels
   meshes 
+  	vertices	
+	textures
     animation
 
-	uneven terrain creation
+	terrain creation
+	wall creation
+
+
+translate 3d coordinates for viewing
+
+camera movement
 
 
 RESOURCED NEEDED
-  mesh with animation
+  meshes
+  animation
   textures
   sounds
 
@@ -20,8 +29,5 @@ world
 
 game modes
 
-translate 3d coordinates for viewing
-
-camera movement
 
 create a complete build.bat or cmake file to build this project

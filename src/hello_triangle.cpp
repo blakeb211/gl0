@@ -37,15 +37,25 @@ int main() {
   logPrintLn({"OpenGL Version:", glMajVers, ".", glMinVers});
 
   // init texture
-  // -----------------------------
+  // ------------------------------
+
+  unsigned int tex1;
+  // create, bind, generate texture
+  glGenTextures(1, &tex1);
+  glBindTexture(GL_TEXTURE_2D, tex1);
+
   int width, height, nrChannels;
   unsigned char* data = stbi_load(R"(.\textures\wooden_container.jpg)", &width,
                                   &height, &nrChannels, 0);
-  if (data != nullptr) {
+  if (data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(data);
     logPrintLn(
         {"texture loaded (w:", width, "h:", height, "nchan:", nrChannels});
   } else {
-    logPrintLn({"texture not loaded"});
+    logPrintLn({"Failed to load texture data"});
   }
 
   // create shader program
@@ -55,16 +65,11 @@ int main() {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   float vertices[] = {
-      // positions         // colors
-      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
-      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
-  };
-
-  float vertices2[] = {
-      0.6f, 0.6f, 0.0f, 1.0f, 0.0f, 0.0f,  // tri2 top
-      0.8f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,  // tri2 right
-      0.5f, 0.4f, 0.0f, 0.5f, 1.0f, 0.0f,  // tri2 bottom
+      // positions          // colors           // texture coords
+      0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // top right
+      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
+      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
+      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
   };
 
   unsigned int VBO, VAO;
@@ -77,40 +82,15 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                         (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
-  // note that this is allowed, the call to glVertexAttribPointer registered
-  // VBO as the vertex attribute's bound vertex buffer object so afterwards we
-  // can safely unbind
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // You can unbind the VAO afterwards so other VAO calls won't accidentally
-  // modify this VAO, but this rarely happens. Modifying other VAOs requires a
-  // call to glBindVertexArray anyways so we generally don't unbind VAOs (nor
-  // VBOs) when it's not directly necessary.
-  glBindVertexArray(0);
-
-  unsigned int VBO2, VAO2;
-  glGenVertexArrays(1, &VAO2);
-  glGenBuffers(1, &VBO2);
-  // bind the Vertex Array Object first, then bind and set vertex buffer(s),
-  // and then configure vertex attributes(s).
-  glBindVertexArray(VAO2);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                        (void*)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
-
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                        (void*)(6 * sizeof(float)));
+  glEnableVertexAttribArray(2);
   // note that this is allowed, the call to glVertexAttribPointer registered
   // VBO as the vertex attribute's bound vertex buffer object so afterwards we
   // can safely unbind
@@ -149,13 +129,10 @@ int main() {
     // seeing as we only have a single VAO there's
     // no need to bind it every time, but we'll do
     // so to keep things a bit more organized
+    glBindTexture(GL_TEXTURE_2D, tex1);
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(0);  // no need to unbind it every time
-
-    progOne.use();
-    glBindVertexArray(VAO2);  // seeing as we only have a single VAO there's no
-    glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse
     // moved etc.)
