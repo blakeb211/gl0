@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ratio>
 #include <thread>
+#define FR_PRINT_FREQ 2000
 
 typedef std::chrono::high_resolution_clock::time_point timepoint;
 
@@ -13,7 +14,7 @@ public:
         time_between_frames{1}, // std::ratio<1, FPS> seconds
         tp{std::chrono::steady_clock::now()},
         lastTime{std::chrono::high_resolution_clock::now()},
-        times{circular_buffer<double>(200)}, frame_count{0} {}
+        times{circular_buffer<double>(400)}, frame_count{0} {}
 
   void sleep() {
     // add to time point
@@ -25,7 +26,7 @@ public:
                        .count();
     times.put((double)diff_ms);
     // check for framerates not being met
-    if (frame_count % 500 == 0) {
+    if (frame_count % FR_PRINT_FREQ == 0) {
       logPrintLn({
         "avg framerate:", this->getFrameRate()
       });

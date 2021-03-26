@@ -6,6 +6,7 @@
 //
 #include "FrameRater.h"
 #include "Shader.h"
+#include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -28,9 +29,24 @@ int main() {
   GLFWwindow *window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL",
                                 framebuffer_size_callback);
   // Query GL
-  int nrAttributes;
-  glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-  logPrintLn({"Maximum nr of vertex attributes supported:", nrAttributes});
+  int glMajVers, glMinVers;
+  glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
+  glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
+  logPrintLn({"OpenGL Version:", glMajVers, ".", glMinVers});
+  
+  // init texture
+  // -----------------------------
+  int width, height, nrChannels;
+  unsigned char* data = stbi_load(R"(.\textures\wooden_container.jpg)", &width,
+                                  &height, &nrChannels, 0);
+  if (data != nullptr) {
+    logPrintLn(
+        {"texture loaded (w:", width, "h:", height, "nchan:", nrChannels});
+  } else {
+    logPrintLn({"texture not loaded"});
+  }
+
+
 
   // create shader program
   Shader progOne =
@@ -168,11 +184,11 @@ void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
-  if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && offset < 0.5)
-    offset += 0.01;
+  if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && offset < 0.5f)
+    offset += 0.01f;
 
-  if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && offset > -0.5)
-    offset -= 0.01;
+  if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && offset > -0.5f)
+    offset -= 0.01f;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback

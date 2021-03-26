@@ -27,6 +27,12 @@
     <ClCompile Include="src\log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\slurp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="add_stb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thirdparty\include\glad\glad.h">
@@ -42,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\circular_buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

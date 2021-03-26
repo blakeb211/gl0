@@ -2,8 +2,7 @@
 #include "log.h"
 #include <any>
 #include <initializer_list>
-#include <stdio.h>
-
+#include <cstdio>
 using namespace std;
 
 const char *typeFloat = "float";
@@ -16,7 +15,7 @@ const char *typeUint = "unsigned int";
 // add handling for next type here
 //****************************************************************
 
-#define BUFFER_LENGTH 256
+#define BUFFER_LENGTH 512
 
 static FILE *fptr;
 
@@ -47,7 +46,7 @@ bool setLogFile(const char *fname) {
 template <class T>
 void write_num_to_buffer(any val, char* buf) {
   int cCount = sprintf(buf, "%8.3Lf ", (long double)any_cast<T>(val));
-  printf("%s", buf);  
+  printf("%s", buf); 
   fwrite(buf, sizeof(char), cCount, fptr);
 }
 
