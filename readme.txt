@@ -5,6 +5,7 @@ loading levels
 
 	uneven terrain creation
 
+
 RESOURCED NEEDED
   mesh with animation
   textures
@@ -22,3 +23,5 @@ game modes
 translate 3d coordinates for viewing
 
 camera movement
+
+create a complete build.bat or cmake file to build this project
