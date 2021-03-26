@@ -16,11 +16,17 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{61aebee5-7acd-437f-80b0-335bc5aaf5ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{b5d693b8-8a7c-4c01-9dc5-de7beb619a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\Include">
+      <UniqueIdentifier>{a70ca7ca-7f78-4301-bcc7-e8f23baa0487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\Source">
+      <UniqueIdentifier>{ce91c188-47ce-49d0-9b53-50d3ccdb47d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="thirdparty\src\glad\glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\hello_triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,14 +36,14 @@
     <ClCompile Include="src\slurp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="add_stb.cpp">
+    <ClCompile Include="thirdparty\src\glad\glad.c">
+      <Filter>ThirdParty\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\add_stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="thirdparty\include\glad\glad.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -50,8 +56,11 @@
     <ClInclude Include="include\circular_buffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\stb_image.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="thirdparty\include\stb\stb_image.h">
+      <Filter>ThirdParty\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\include\glad\glad.h">
+      <Filter>ThirdParty\Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

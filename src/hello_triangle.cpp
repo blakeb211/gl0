@@ -4,13 +4,15 @@
 
 #include "log.h"
 //
+#include <stb\stb_image.h>
 #include "FrameRater.h"
 #include "Shader.h"
-#include "stb_image.h"
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void processInput(GLFWwindow *window);
-GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window);
+GLFWwindow* initGLFW(unsigned int w,
+                     unsigned int h,
+                     const char* title,
                      GLFWframebuffersizefun);
 
 // settings
@@ -26,14 +28,14 @@ int main() {
   setLogFile("log.txt");
   // glfw: initialize and configure
   // ------------------------------
-  GLFWwindow *window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL",
+  GLFWwindow* window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL",
                                 framebuffer_size_callback);
   // Query GL
   int glMajVers, glMinVers;
   glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
   glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
   logPrintLn({"OpenGL Version:", glMajVers, ".", glMinVers});
-  
+
   // init texture
   // -----------------------------
   int width, height, nrChannels;
@@ -46,8 +48,6 @@ int main() {
     logPrintLn({"texture not loaded"});
   }
 
-
-
   // create shader program
   Shader progOne =
       Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
@@ -56,15 +56,15 @@ int main() {
   // ------------------------------------------------------------------
   float vertices[] = {
       // positions         // colors
-      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
-      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f  // top
+      0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
+      0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
   };
 
   float vertices2[] = {
-      0.6f, 0.6f, 0.0f, 1.0f, 0.0f, 0.0f, // tri2 top
-      0.8f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f, // tri2 right
-      0.5f, 0.4f, 0.0f, 0.5f, 1.0f, 0.0f, // tri2 bottom
+      0.6f, 0.6f, 0.0f, 1.0f, 0.0f, 0.0f,  // tri2 top
+      0.8f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,  // tri2 right
+      0.5f, 0.4f, 0.0f, 0.5f, 1.0f, 0.0f,  // tri2 bottom
   };
 
   unsigned int VBO, VAO;
@@ -77,11 +77,11 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                        (void *)(3 * sizeof(float)));
+                        (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
   // note that this is allowed, the call to glVertexAttribPointer registered
   // VBO as the vertex attribute's bound vertex buffer object so afterwards we
@@ -104,11 +104,11 @@ int main() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO2);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
-                        (void *)(3 * sizeof(float)));
+                        (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
   // note that this is allowed, the call to glVertexAttribPointer registered
@@ -151,10 +151,10 @@ int main() {
     // so to keep things a bit more organized
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-    glBindVertexArray(0); // no need to unbind it every time
+    glBindVertexArray(0);  // no need to unbind it every time
 
     progOne.use();
-    glBindVertexArray(VAO2); // seeing as we only have a single VAO there's no
+    glBindVertexArray(VAO2);  // seeing as we only have a single VAO there's no
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse
@@ -180,7 +180,7 @@ int main() {
 // process all input: query GLFW whether relevant keys are pressed/released this
 // frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window) {
+void processInput(GLFWwindow* window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
@@ -194,14 +194,16 @@ void processInput(GLFWwindow *window) {
 // glfw: whenever the window size changed (by OS or user resize) this callback
 // function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
   // make sure the viewport matches the new window dimensions; note that width
   // and height will be significantly larger than specified on retina
   // displays.
   glViewport(0, 0, width, height);
 }
 
-GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
+GLFWwindow* initGLFW(unsigned int w,
+                     unsigned int h,
+                     const char* title,
                      GLFWframebuffersizefun fun) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -210,7 +212,7 @@ GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
 
   // glfw window creation
   // --------------------
-  GLFWwindow *window = glfwCreateWindow(w, h, title, NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(w, h, title, NULL, NULL);
   if (window == NULL) {
     logPrintLn({"Failed to create GLFW window"});
     glfwTerminate();
