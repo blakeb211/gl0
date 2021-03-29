@@ -78,5 +78,20 @@
     <None Include="shaders\3pos3color.vs">
       <Filter>shaders</Filter>
     </None>
+    <None Include="old_proj_for_reference\level.go">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="old_proj_for_reference\main.go">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="old_proj_for_reference\mathlib.go">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="old_proj_for_reference\timing.go">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="old_proj_for_reference\types.go">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

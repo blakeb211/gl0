@@ -58,6 +58,24 @@ int main() {
     logPrintLn({"Failed to load texture data"});
   }
 
+  unsigned int tex2;
+  // create, bind, generate texture
+  glGenTextures(1, &tex2);
+  glBindTexture(GL_TEXTURE_2D, tex2);
+
+  data = stbi_load(R"(.\textures\awesomeface.png)", &width, &height,
+                   &nrChannels, 0);
+  if (data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(data);
+    logPrintLn(
+        {"texture loaded (w:", width, "h:", height, "nchan:", nrChannels});
+  } else {
+    logPrintLn({"Failed to load texture data"});
+  }
+
   // create shader program
   Shader progOne =
       Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
@@ -125,6 +143,7 @@ int main() {
      ourColor was not found in the shader program"});
      }*/
     progOne.use();
+
     // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     // seeing as we only have a single VAO there's
     // no need to bind it every time, but we'll do
