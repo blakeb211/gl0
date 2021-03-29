@@ -5,12 +5,6 @@
 #include <initializer_list>
 using namespace std;
 
-const char* typeFloat = "float";
-const char* typeConstCharPtr = "char const * __ptr64";
-const char* typeCharPtr = "char * __ptr64";
-const char* typeInt = "int";
-const char* typeDouble = "double";
-const char* typeUint = "unsigned int";
 //****************************************************************
 // add handling for next type here
 //****************************************************************
@@ -55,31 +49,31 @@ void logPrintLn(initializer_list<any> il) {
   for (auto& i : il) {
     const char* typeName = i.type().name();
     clearBuffer(buf, BUFFER_LENGTH);
-    if (strcmp(typeName, typeFloat) == 0) {
+    if (typeid(0.1f) == i.type()) {
       write_num_to_buffer<float>(i, buf);
       continue;
     }
-    if (strcmp(typeName, typeConstCharPtr) == 0) {
+    if (typeid(const char*) == i.type()) {
       cCount = sprintf(buf, "%s ", any_cast<const char*>(i));
       printf("%s", buf);
       fwrite(buf, sizeof(char), cCount, fptr);
       continue;
     }
-    if (strcmp(typeName, typeCharPtr) == 0) {
+    if (typeid(char*) == i.type()) {
       cCount = sprintf(buf, "%s ", any_cast<char*>(i));
       printf("%s", buf);
       fwrite(buf, sizeof(char), cCount, fptr);
       continue;
     }
-    if (strcmp(typeName, typeInt) == 0) {
+    if (typeid(1) == i.type()) {
       write_num_to_buffer<int>(i, buf);
       continue;
     }
-    if (strcmp(typeName, typeDouble) == 0) {
+    if (typeid(1.0) == i.type()) {
       write_num_to_buffer<double>(i, buf);
       continue;
     }
-    if (strcmp(typeName, typeUint) == 0) {
+    if (typeid(1u) == i.type()) {
       write_num_to_buffer<unsigned int>(i, buf);
       continue;
     }

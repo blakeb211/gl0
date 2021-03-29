@@ -39,7 +39,7 @@
     <ClCompile Include="thirdparty\src\glad\glad.c">
       <Filter>ThirdParty\Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\add_stb.cpp">
+    <ClCompile Include="add_stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
