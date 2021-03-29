@@ -137,7 +137,7 @@ func MultiplyMat3313(a [3][3]float64, b [1][3]float64) (c [1][3]float64) {
 	for k := 0; k < K; k++ {
 		for j := 0; j < J; j++ {
 			for i := 0; i < I; i++ {
-				c[k][i] += a[j][i] * b[k][j]
+				c[k][i] += a[j][i] * b[k][j]	
 			}
 		}
 	}

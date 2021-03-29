@@ -13,7 +13,6 @@ translate 3d coordinates for viewing
 
 camera movement
 
-
 RESOURCED NEEDED
   meshes
   animation
