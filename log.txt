@@ -1,6 +1,8 @@
 OpenGL Version:    3.000 .    3.000 
 texture loaded (w:  512.000 h:  512.000 nchan:    3.000 
 texture loaded (w:  512.000 h:  512.000 nchan:    4.000 
-SUCCESS::SHADER_FILES_LOADED .\shaders\3pos3color.vs .\shaders\colorFromVertex.fs 
-SUCCESS::SHADER_PROGRAM_COMPILED .\shaders\3pos3color.vs .\shaders\colorFromVertex.fs 
-avg framerate: 1257.862 
+avg framerate: 1169.591 
+avg framerate: 1716.738 
+avg framerate: 1746.725 
+avg framerate: 1384.083 
+avg framerate: 1731.602 

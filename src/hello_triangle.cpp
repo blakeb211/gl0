@@ -1,10 +1,15 @@
 #include <glad/glad.h>
 //
 #include <GLFW/glfw3.h>
-
+#include <stb\stb_image.h>
+#include <glm/gtx/string_cast.hpp>
+#include <glm\glm.hpp>
+#include <glm\gtc\matrix_transform.hpp>
+#include <glm\gtc\type_ptr.hpp>
 #include "log.h"
 //
-#include <stb\stb_image.h>
+#include <iostream>
+
 #include "FrameRater.h"
 #include "Shader.h"
 
@@ -61,6 +66,9 @@ int main() {
   unsigned int tex2;
   // create, bind, generate texture
   glGenTextures(1, &tex2);
+  glBindTexture(GL_TEXTURE_2D, tex2);
+
+  glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, tex2);
 
   data = stbi_load(R"(.\textures\awesomeface.png)", &width, &height,
@@ -122,6 +130,7 @@ int main() {
 
   // uncomment this call to draw in wireframe polygons.
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // Test GLM
 
   // game loop
   // -----------
@@ -142,7 +151,17 @@ int main() {
      "ourColor"); if (vertexColorLocation == -1) { logPrintLn({"uniform
      ourColor was not found in the shader program"});
      }*/
+    // create transformations
+    glm::mat4 transform = glm::mat4(
+        1.0f);  // make sure to initialize matrix to identity matrix first
+    transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+    transform = glm::rotate(transform, (float)glfwGetTime(),
+                            glm::vec3(0.0f, 0.0f, 1.0f));
+
+    // get matrix's uniform location and set matrix
     progOne.use();
+    unsigned int transformLoc = glGetUniformLocation(progOne.ID, "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
     // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     // seeing as we only have a single VAO there's
