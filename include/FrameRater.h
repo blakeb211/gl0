@@ -1,21 +1,23 @@
 #pragma once
-#include "circular_buffer.h"
 #include <chrono>
 #include <ratio>
 #include <thread>
+#include "circular_buffer.h"
 #define FR_PRINT_FREQ 2000
 
 typedef std::chrono::high_resolution_clock::time_point timepoint;
 
-template <std::intmax_t FPS> class FrameRater {
-public:
+template <std::intmax_t FPS>
+class FrameRater {
+ public:
   FrameRater()
-      :                         // initialize the object keeping the pace
-        time_between_frames{1}, // std::ratio<1, FPS> seconds
+      :                          // initialize the object keeping the pace
+        time_between_frames{1},  // std::ratio<1, FPS> seconds
         tp{std::chrono::steady_clock::now()},
         lastTime{std::chrono::high_resolution_clock::now()},
-        times{circular_buffer<double>(400)}, frame_count{0} {}
-
+        times{circular_buffer<double>(400)},
+        frame_count{0} {}
+  auto getFrameCount() { return this->frame_count; }
   void sleep() {
     // add to time point
     tp += time_between_frames;
@@ -27,16 +29,14 @@ public:
     times.put((double)diff_ms);
     // check for framerates not being met
     if (frame_count % FR_PRINT_FREQ == 0) {
-      logPrintLn({
-        "avg framerate:", this->getFrameRate()
-      });
+      logPrintLn({"avg framerate:", this->getFrameRate()});
     }
     lastTime = newTime;
 
     std::this_thread::sleep_until(tp);
   }
 
-private:
+ private:
   // a duration with a length of 1/FPS seconds
   std::chrono::duration<double, std::ratio<1, FPS>> time_between_frames;
 

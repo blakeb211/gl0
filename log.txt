@@ -1,8 +1,10 @@
 OpenGL Version:    3.000 .    3.000 
 texture loaded (w:  512.000 h:  512.000 nchan:    3.000 
 texture loaded (w:  512.000 h:  512.000 nchan:    4.000 
-avg framerate: 1169.591 
-avg framerate: 1716.738 
-avg framerate: 1746.725 
-avg framerate: 1384.083 
-avg framerate: 1731.602 
+avg framerate: 1449.275 
+avg framerate: 1532.567 
+avg framerate: 1538.462 
+avg framerate: 1694.915 
+avg framerate: 1010.101 
+avg framerate:  888.889 
+avg framerate: 1146.132 
