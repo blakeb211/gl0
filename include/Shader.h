@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 #include <fstream>
-#include <iostream>
+#include <iosfwd>
 #include <sstream>
 #include <string>
 

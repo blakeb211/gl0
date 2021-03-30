@@ -102,24 +102,15 @@
     <None Include="shaders\3pos3color.vs">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="old_proj_for_reference\level.go">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="old_proj_for_reference\main.go">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="old_proj_for_reference\types.go">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="models\cube.obj">
-      <Filter>Resource Files\models</Filter>
-    </Object>
     <Object Include="models\plane.obj">
       <Filter>Resource Files\models</Filter>
     </Object>
     <Object Include="models\sphere.obj">
+      <Filter>Resource Files\models</Filter>
+    </Object>
+    <Object Include="models\cube.obj">
       <Filter>Resource Files\models</Filter>
     </Object>
   </ItemGroup>

@@ -43,14 +43,6 @@ std::unique_ptr<model> load_model_from_disk(const char* name) {
   return m;
 }
 
-bool fileExists(string fname) {
-  return true;
-}
-
-unique_ptr<vector<string>> split_file_to_lines() {}
-// load_level parses a level file, loads models, and creates a level struct from
-// it. should global startup produce a list of files in the level dir?
-
 // format of level
 // entity_type  model_name  x y z
 void load_level(string levelName) {
@@ -62,17 +54,19 @@ void load_level(string levelName) {
   auto l = make_unique<level>();
   string line, first_tok = "";
 
-  if (fileExists(levelName)) {
+  if (slurp::fileExists(levelName)) {
     auto levelData =
         slurp::get_file_contents(levelPath(levelName.c_str())->c_str());
     logPrintLn({"level 'test' slurped from disk successfully"});
     while (levelData.good()) {
       ENTITY_TYPE currType{};
-      levelData >> first_tok;
       getline(levelData, line, '\n');  // getline sets stream bits on error
+      stringstream lineStream{line};
+      lineStream >> first_tok;
       auto type = str_to_type.count(first_tok) ? str_to_type[first_tok]
                                                : ENTITY_TYPE::unknown;
-      stringstream lineStream{line};
+
+      // add a reverse map of str_to_type
       string modelName;
       glm::vec3 modelPos;
 
