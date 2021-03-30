@@ -191,6 +191,7 @@
     <ClCompile Include="thirdparty\src\glad\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="levels\test.txt" />
     <Text Include="log.txt" />
     <Text Include="readme.txt">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>

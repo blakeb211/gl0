@@ -1,2 +1,5 @@
-cube 0,0,1
-sphere 2,1,3
+cube 0 0 1
+sphere 2 1 3
+hero 3 3 4
+box 1 1 2
+plane 0 0 1

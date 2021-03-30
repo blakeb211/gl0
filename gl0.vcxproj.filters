@@ -31,6 +31,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{61aebee5-7acd-437f-80b0-335bc5aaf5ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\levels">
+      <UniqueIdentifier>{f29bbb0d-be17-4657-8488-79a73ba4ced1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -87,6 +90,9 @@
     </Text>
     <Text Include="readme.txt">
       <Filter>Resource Files\text</Filter>
+    </Text>
+    <Text Include="levels\test.txt">
+      <Filter>Resource Files\levels</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

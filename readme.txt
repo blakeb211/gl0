@@ -2,7 +2,6 @@
 loading levels
   meshes 
   	vertices	
-	textures
     animation
 
 	terrain creation
@@ -12,6 +11,8 @@ loading levels
 translate 3d coordinates for viewing
 
 camera movement
+
+octree for collisions
 
 RESOURCED NEEDED
   meshes
