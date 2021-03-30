@@ -147,9 +147,6 @@ unsigned int init_vertices() {
 }
 
 void init_textures() {
-  // init texture
-  // ------------------------------
-
   unsigned int tex1;
   glGenTextures(1, &tex1);
   glBindTexture(GL_TEXTURE_2D, tex1);
