@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="shaders">
-      <UniqueIdentifier>{61aebee5-7acd-437f-80b0-335bc5aaf5ab}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{b5d693b8-8a7c-4c01-9dc5-de7beb619a4c}</UniqueIdentifier>
     </Filter>
@@ -31,9 +28,12 @@
     <Filter Include="Resource Files\models">
       <UniqueIdentifier>{af89ac4e-3866-4e7f-a98d-91ccd91f3a6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{61aebee5-7acd-437f-80b0-335bc5aaf5ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\hello_triangle.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\log.cpp">
@@ -48,7 +48,7 @@
     <ClCompile Include="add_stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\models.cpp">
+    <ClCompile Include="src\model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,10 +56,10 @@
     <ClInclude Include="include\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Shader.h">
+    <ClInclude Include="include\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\FrameRater.h">
+    <ClInclude Include="include\framerater.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\circular_buffer.h">
@@ -77,6 +77,9 @@
     <ClInclude Include="include\models.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt">
@@ -88,10 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\colorFromVertex.fs">
-      <Filter>shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\3pos3color.vs">
-      <Filter>shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="old_proj_for_reference\level.go">
       <Filter>Resource Files</Filter>

@@ -1,11 +1,12 @@
-#include <glad/glad.h>
+#include <glad\glad.h>
 //
-#include <GLFW/glfw3.h>
+#include <GLFW\glfw3.h>
 #include <stb\stb_image.h>
-#include <glm/gtx/string_cast.hpp>
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
+#include <glm\gtx\string_cast.hpp>
+#include "global.h"
 #include "log.h"
 //
 #include <array>
@@ -26,21 +27,16 @@ GLFWwindow* initGLFW(unsigned int w,
                      const char* title,
                      GLFWframebuffersizefun);
 
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-float offset;
-long unsigned int fcount = 0;
-
 int main() {
   // init frame rate
   FrameRater<2000> fr;
   // init log
   setLogFile("log.txt");
+  float offset = 0.0f;
   // glfw: initialize and configure
   // ------------------------------
-  GLFWwindow* window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL",
-                                framebuffer_size_callback);
+  GLFWwindow* window = initGLFW(global::SCR_WIDTH, global::SCR_HEIGHT,
+                                "Learn OpenGL", framebuffer_size_callback);
   logOpenGLInfo();
   init_textures();
   load_level("test");
@@ -57,7 +53,6 @@ int main() {
     // input
     // -----
     processInput(window);
-    progOne.setFloat("offset", offset);
     // create transformations
     glm::mat4 transform = glm::mat4(1.0f);  // init to identity first
     transform = glm::rotate(transform, (float)glfwGetTime(),
@@ -158,10 +153,12 @@ void init_textures() {
   unsigned int tex1;
   glGenTextures(1, &tex1);
   glBindTexture(GL_TEXTURE_2D, tex1);
-
   int width, height, nrChannels;
-  unsigned char* data = stbi_load(R"(.\textures\wooden_container.jpg)", &width,
-                                  &height, &nrChannels, 0);
+  std::string filePath{global::texturePath +
+                       std::string("wooden_container.jpg")};
+  unsigned char* data =
+      stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
+
   if (data) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data);
@@ -179,9 +176,9 @@ void init_textures() {
 
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_2D, tex2);
+  filePath = global::texturePath + std::string("awesomeface.png");
+  data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
 
-  data = stbi_load(R"(.\textures\awesomeface.png)", &width, &height,
-                   &nrChannels, 0);
   if (data) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, data);
@@ -194,10 +191,11 @@ void init_textures() {
   }
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this
-// frame and react accordingly
+// process all input: query GLFW whether relevant keys are pressed/released
+// this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window) {
+  float offset = 0.0f;
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 

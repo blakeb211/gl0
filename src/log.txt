@@ -1,0 +1,6 @@
+OpenGL Version:    3.000 .    3.000 
+Failed to load texture data 
+Failed to load texture data 
+C:\cprojects\gl0\src\slurp.cpp Method: get_file_contents(const char* filename) errno:    2.000 
+avg framerate: 1970.443 
+avg framerate: 2083.333 
