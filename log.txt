@@ -6,3 +6,4 @@ cube line found
 sphere line found 
 unknown line found in level file 
 unknown line found in level file 
+plane line found 

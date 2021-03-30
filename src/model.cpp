@@ -71,7 +71,7 @@ void load_level(string levelName) {
           logPrintLn({"sphere line found"});
           break;
         case LINE_TYPE::plane:
-          logPrintLn({"sphere line found"});
+          logPrintLn({"plane line found"});
           break;
         default:
           logPrintLn({"unknown line found in level file"});
