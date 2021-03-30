@@ -1,17 +1,20 @@
-#include <slurp.h>
 #include <glm/glm.hpp>
 #include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
 #include "global.h"
+#include "slurp.h"
 
 using namespace std;
+
+// will need to be able to deep copy models
 
 struct model {
   model() = default;
   string name;
   vector<glm::vec3> vertices;
+  vector<glm::u32vec3> faces;
   vector<glm::vec3> normals;
   vector<glm::vec4> colors;
 };

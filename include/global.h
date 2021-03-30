@@ -3,6 +3,7 @@
 
 //@DESIGN: prefer passing a variable around to creating a global. watch out for
 // thread issues.
+//@TODO: Consider a settings json or other file instead of a source code file
 namespace global {
 inline std::string appRoot = std::string{R"(c:\cprojects\gl0\)"};
 inline std::string texturePath = appRoot + R"(textures\)";
