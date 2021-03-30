@@ -2,8 +2,4 @@ OpenGL Version:    3.000 .    3.000
 texture loaded ( w:  512.000 h:  512.000 nchan:    3.000 ) 
 texture loaded ( w:  512.000 h:  512.000 nchan:    4.000 ) 
 level 'test' slurped from disk successfully 
-cube line found 
-sphere line found 
-unknown line found in level file 
-unknown line found in level file 
-plane line found 
+avg framerate: 1587.302 

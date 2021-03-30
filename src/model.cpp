@@ -1,4 +1,5 @@
 #include <glm/glm.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -42,40 +43,62 @@ std::unique_ptr<model> load_model_from_disk(const char* name) {
   return m;
 }
 
+bool fileExists(string fname) {
+  return true;
+}
+
+unique_ptr<vector<string>> split_file_to_lines() {}
 // load_level parses a level file, loads models, and creates a level struct from
 // it. should global startup produce a list of files in the level dir?
 
+// format of level
+// entity_type  model_name  x y z
 void load_level(string levelName) {
-  enum class LINE_TYPE { unknown, cube, sphere, plane };
-  map<string, LINE_TYPE> str_to_type{{"cube", LINE_TYPE::cube},
-                                     {"sphere", LINE_TYPE::sphere},
-                                     {"plane", LINE_TYPE::plane}};
+  enum class ENTITY_TYPE { unknown, hero, box, ground };
+  map<string, ENTITY_TYPE> str_to_type{{"hero", ENTITY_TYPE::hero},
+                                       {"box", ENTITY_TYPE::box},
+                                       {"ground", ENTITY_TYPE::ground}};
 
   auto l = make_unique<level>();
   string line, first_tok = "";
 
-  if (levelName == "test") {
-    auto levelData = slurp::get_file_contents(levelPath("test")->c_str());
+  if (fileExists(levelName)) {
+    auto levelData =
+        slurp::get_file_contents(levelPath(levelName.c_str())->c_str());
     logPrintLn({"level 'test' slurped from disk successfully"});
     while (levelData.good()) {
-      LINE_TYPE currType{};
+      ENTITY_TYPE currType{};
       levelData >> first_tok;
       getline(levelData, line, '\n');  // getline sets stream bits on error
       auto type = str_to_type.count(first_tok) ? str_to_type[first_tok]
-                                               : LINE_TYPE::unknown;
+                                               : ENTITY_TYPE::unknown;
+      stringstream lineStream{line};
+      string modelName;
+      glm::vec3 modelPos;
+
+      unique_ptr<model> modelPtr{};
+
       switch (type) {
-        case LINE_TYPE::cube:
-          logPrintLn({"cube line found"});
-          break;
-        case LINE_TYPE::sphere:
-          logPrintLn({"sphere line found"});
-          break;
-        case LINE_TYPE::plane:
-          logPrintLn({"plane line found"});
-          break;
+        case ENTITY_TYPE::hero:
+          lineStream >> modelName >> modelPos.x >> modelPos.y >> modelPos.z;
+          modelPtr = load_model_from_disk(modelName.c_str());
+
+          cout << "hero: " << modelName << " " << glm::to_string(modelPos)
+               << endl;
+          continue;
+        case ENTITY_TYPE::box:
+          lineStream >> modelName >> modelPos.x >> modelPos.y >> modelPos.z;
+          cout << "box: " << modelName << " " << glm::to_string(modelPos)
+               << endl;
+          continue;
+        case ENTITY_TYPE::ground:
+          lineStream >> modelName >> modelPos.x >> modelPos.y >> modelPos.z;
+          cout << "ground: " << modelName << " " << glm::to_string(modelPos)
+               << endl;
+          continue;
         default:
           logPrintLn({"unknown line found in level file"});
-          break;
+          continue;
       }
     }
   }
