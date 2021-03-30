@@ -12,11 +12,14 @@
 #include <iostream>
 #include "FrameRater.h"
 #include "Shader.h"
+#include "models.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void init_textures();
 unsigned int init_vertices();
+
+void logOpenGLInfo();
 
 GLFWwindow* initGLFW(unsigned int w,
                      unsigned int h,
@@ -38,54 +41,34 @@ int main() {
   // ------------------------------
   GLFWwindow* window = initGLFW(SCR_WIDTH, SCR_HEIGHT, "Learn OpenGL",
                                 framebuffer_size_callback);
-  // Query GL
-  int glMajVers, glMinVers;
-  glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
-  glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
-  logPrintLn({"OpenGL Version:", glMajVers, ".", glMinVers});
-
+  logOpenGLInfo();
   init_textures();
-
+  load_level("test");
   // create shader program
   Shader progOne =
       Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
-
   int VAO = init_vertices();
 
-  // uncomment this call to draw in wireframe polygons.
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  // Test GLM
 
-  // game loop
+  // Game loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
     // input
     // -----
     processInput(window);
     progOne.setFloat("offset", offset);
+    // create transformations
+    glm::mat4 transform = glm::mat4(1.0f);  // init to identity first
+    transform = glm::rotate(transform, (float)glfwGetTime(),
+                            glm::vec3(0.0f, 0.4f, 1.0f));
+    progOne.setMat4("transform", transform);
     // render
     // ------
     glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // draw triangle #1
-    /* float timeValue = glfwGetTime();
-     float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-     int vertexColorLocation = glGetUniformLocation(shaderProgram,
-     "ourColor"); if (vertexColorLocation == -1) { logPrintLn({"uniform
-     ourColor was not found in the shader program"});
-     }*/
-    // create transformations
-    glm::mat4 transform = glm::mat4(
-        1.0f);  // make sure to initialize matrix to identity matrix first
-    // transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-    transform = glm::rotate(transform, ((float)fr.getFrameCount()) / 4000.0f,
-                            glm::vec3(0.0f, 0.4f, 1.0f));
-
-    // get matrix's uniform location and set matrix
     progOne.use();
-    unsigned int transformLoc = glGetUniformLocation(progOne.ID, "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
     // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     // seeing as we only have a single VAO there's
@@ -115,6 +98,15 @@ int main() {
   return 0;
 }
 
+void logOpenGLInfo() {
+  // Query GL
+  int glMajVers, glMinVers;
+  glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
+  glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
+  logPrintLn({"OpenGL Version:", glMajVers, ".", glMinVers});
+}
+
+// returns the VAO id
 unsigned int init_vertices() {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
@@ -164,7 +156,6 @@ void init_textures() {
   // ------------------------------
 
   unsigned int tex1;
-  // create, bind, generate texture
   glGenTextures(1, &tex1);
   glBindTexture(GL_TEXTURE_2D, tex1);
 
@@ -176,14 +167,13 @@ void init_textures() {
                  GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
-    logPrintLn(
-        {"texture loaded (w:", width, "h:", height, "nchan:", nrChannels});
+    logPrintLn({"texture loaded ( w:", width, "h:", height,
+                "nchan:", nrChannels, ")"});
   } else {
     logPrintLn({"Failed to load texture data"});
   }
 
   unsigned int tex2;
-  // create, bind, generate texture
   glGenTextures(1, &tex2);
   glBindTexture(GL_TEXTURE_2D, tex2);
 
@@ -197,8 +187,8 @@ void init_textures() {
                  GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
-    logPrintLn(
-        {"texture loaded (w:", width, "h:", height, "nchan:", nrChannels});
+    logPrintLn({"texture loaded ( w:", width, "h:", height,
+                "nchan:", nrChannels, ")"});
   } else {
     logPrintLn({"Failed to load texture data"});
   }
@@ -222,9 +212,6 @@ void processInput(GLFWwindow* window) {
 // function executes
 // ---------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-  // make sure the viewport matches the new window dimensions; note that width
-  // and height will be significantly larger than specified on retina
-  // displays.
   glViewport(0, 0, width, height);
 }
 

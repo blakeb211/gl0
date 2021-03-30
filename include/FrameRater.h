@@ -3,7 +3,7 @@
 #include <ratio>
 #include <thread>
 #include "circular_buffer.h"
-#define FR_PRINT_FREQ 2000
+constexpr auto FR_PRINT_FREQ = 2000;
 
 typedef std::chrono::high_resolution_clock::time_point timepoint;
 

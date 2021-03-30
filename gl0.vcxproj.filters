@@ -25,6 +25,12 @@
     <Filter Include="ThirdParty\Source">
       <UniqueIdentifier>{ce91c188-47ce-49d0-9b53-50d3ccdb47d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\text">
+      <UniqueIdentifier>{e59676ea-d9d9-4aa3-a0c8-a6acafe432ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\models">
+      <UniqueIdentifier>{af89ac4e-3866-4e7f-a98d-91ccd91f3a6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hello_triangle.cpp">
@@ -40,6 +46,9 @@
       <Filter>ThirdParty\Source</Filter>
     </ClCompile>
     <ClCompile Include="add_stb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\models.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,13 +71,19 @@
     <ClInclude Include="thirdparty\include\glad\glad.h">
       <Filter>ThirdParty\Include</Filter>
     </ClInclude>
+    <ClInclude Include="include\slurp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\models.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="readme.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="log.txt">
-      <Filter>Resource Files</Filter>
+      <Filter>Resource Files\text</Filter>
+    </Text>
+    <Text Include="readme.txt">
+      <Filter>Resource Files\text</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -84,14 +99,19 @@
     <None Include="old_proj_for_reference\main.go">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="old_proj_for_reference\mathlib.go">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="old_proj_for_reference\timing.go">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="old_proj_for_reference\types.go">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="models\cube.obj">
+      <Filter>Resource Files\models</Filter>
+    </Object>
+    <Object Include="models\plane.obj">
+      <Filter>Resource Files\models</Filter>
+    </Object>
+    <Object Include="models\sphere.obj">
+      <Filter>Resource Files\models</Filter>
+    </Object>
   </ItemGroup>
 </Project>
