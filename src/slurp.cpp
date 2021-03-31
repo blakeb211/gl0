@@ -1,18 +1,20 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "..\include\slurp.h"
+#include "slurp.h"
 #include <errno.h>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <sstream>
 #include <string>
 #include <vector>
 #include "log.h"
 
-namespace slurp {
 using namespace std;
 
-std::stringstream get_file_contents(const char* filename) {
-  FILE* fp = std::fopen(filename, "rb");
+namespace slurp {
+
+stringstream get_file_contents(const char* filename) {
+  FILE* fp = fopen(filename, "rb");
   if (fp) {
     string contents;
     fseek(fp, 0, SEEK_END);
@@ -20,7 +22,7 @@ std::stringstream get_file_contents(const char* filename) {
     rewind(fp);
     fread(&contents[0], 1, contents.size(), fp);
     fclose(fp);
-    return std::stringstream{contents};
+    return stringstream{contents};
   }
   // error string if fopen failed
   logPrintLn({__FILE__,
@@ -28,11 +30,11 @@ std::stringstream get_file_contents(const char* filename) {
   return stringstream{""};
 }
 
-bool fileExists(string fname) {
-  return true;
+// takes a path and a name and returns true if it exists
+bool checkFileExist(const string path, const string fname, const string ext) {
+  return filesystem::exists(path + fname + "." + ext);
 }
 
-unique_ptr<vector<string>> split_file_to_lines() {}
 // load_level parses a level file, loads models, and creates a level struct from
 // it. should global startup produce a list of files in the level dir?
 

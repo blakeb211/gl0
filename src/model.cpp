@@ -39,60 +39,59 @@ unique_ptr<string> modelPath(string name) {
 std::unique_ptr<model> load_model_from_disk(const char* name) {
   auto m = std::make_unique<model>();
   auto fileData = slurp::get_file_contents(modelPath(name)->c_str());
-
+  logPrintLn({"model <", name, "> slurped from disk successfully"});
   return m;
 }
 
 // format of level
 // entity_type  model_name  x y z
 void load_level(string levelName) {
-  enum class ENTITY_TYPE { unknown, hero, box, ground };
-  map<string, ENTITY_TYPE> str_to_type{{"hero", ENTITY_TYPE::hero},
-                                       {"box", ENTITY_TYPE::box},
-                                       {"ground", ENTITY_TYPE::ground}};
+  //*************************************
+  // update here for new entities
+  //**************************************
 
   auto l = make_unique<level>();
-  string line, first_tok = "";
+  string line, entityName = "";
 
-  if (slurp::fileExists(levelName)) {
+  if (slurp::checkFileExist(global::levelPath, levelName, "txt")) {
     auto levelData =
         slurp::get_file_contents(levelPath(levelName.c_str())->c_str());
-    logPrintLn({"level 'test' slurped from disk successfully"});
+
+    logPrintLn({"level", levelName, "slurped from disk successfully"});
+
+    using namespace global;
+    int lineNum = 0;
     while (levelData.good()) {
+      lineNum++;
       ENTITY_TYPE currType{};
       getline(levelData, line, '\n');  // getline sets stream bits on error
       stringstream lineStream{line};
-      lineStream >> first_tok;
-      auto type = str_to_type.count(first_tok) ? str_to_type[first_tok]
-                                               : ENTITY_TYPE::unknown;
-
+      lineStream >> entityName;
+      auto type = str_to_type.count(entityName) ? str_to_type[entityName]
+                                                : ENTITY_TYPE::unknown;
+      if (type == global::ENTITY_TYPE::unknown) {
+        logPrintLn({"ERROR: unknown entity <", entityName, "> found in level",
+                    levelName});
+        continue;
+      }
       // add a reverse map of str_to_type
       string modelName;
-      glm::vec3 modelPos;
-
-      unique_ptr<model> modelPtr{};
-
-      switch (type) {
-        case ENTITY_TYPE::hero:
-          lineStream >> modelName >> modelPos.x >> modelPos.y >> modelPos.z;
-          modelPtr = load_model_from_disk(modelName.c_str());
-
-          cout << "hero: " << modelName << " " << glm::to_string(modelPos)
-               << endl;
-          continue;
-        case ENTITY_TYPE::box:
-          lineStream >> modelName >> modelPos.x >> modelPos.y >> modelPos.z;
-          cout << "box: " << modelName << " " << glm::to_string(modelPos)
-               << endl;
-          continue;
-        case ENTITY_TYPE::ground:
-          lineStream >> modelName >> modelPos.x >> modelPos.y >> modelPos.z;
-          cout << "ground: " << modelName << " " << glm::to_string(modelPos)
-               << endl;
-          continue;
-        default:
-          logPrintLn({"unknown line found in level file"});
-          continue;
+      glm::vec3 Pos{};
+      glm::vec3 Rot{};
+      lineStream >> modelName >> Pos.x >> Pos.y >> Pos.z;
+      lineStream >> Rot.x >> Rot.y >> Rot.z;
+      if (lineStream.fail()) {
+        logPrintLn({"ERROR: wrong values on line <", lineNum, ">",
+                    "level:", levelName});
+        continue;
+      }
+      if (slurp::checkFileExist(global::modelPath, modelName, "obj")) {
+        auto modelPtr = load_model_from_disk(modelName.c_str());
+        // need reverse map
+        logPrintLn({type_to_str[type], modelName, glm::to_string(Pos),
+                    glm::to_string(Rot)});
+      } else {
+        logPrintLn({"ERROR: model <", modelName, "> file does not exist"});
       }
     }
   }

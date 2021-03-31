@@ -1,5 +1,21 @@
 OpenGL Version:    3.000 .    3.000 
 texture loaded ( w:  512.000 h:  512.000 nchan:    3.000 ) 
 texture loaded ( w:  512.000 h:  512.000 nchan:    4.000 ) 
-level 'test' slurped from disk successfully 
-avg framerate: 1587.302 
+level test slurped from disk successfully 
+model < cube > slurped from disk successfully 
+box cube vec3(0.000000, 0.000000, 1.000000) vec3(0.000000, 0.000000, 0.000000) 
+ERROR: wrong values on line <    2.000 > level: test 
+ERROR: unknown entity < enemy > found in level test 
+model < cube > slurped from disk successfully 
+box cube vec3(1.000000, 1.000000, 2.000000) vec3(0.000000, 0.000000, 0.000000) 
+model < plane > slurped from disk successfully 
+ground plane vec3(0.000000, 0.000000, 1.000000) vec3(0.000000, 0.000000, 0.000000) 
+avg framerate: 1731.602 
+avg framerate: 1746.725 
+avg framerate: 2000.000 
+avg framerate: 1913.876 
+avg framerate: 1666.667 
+avg framerate: 1970.443 
+avg framerate: 2836.879 
+avg framerate: 2547.771 
+avg framerate: 2366.864 

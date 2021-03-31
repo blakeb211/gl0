@@ -13,13 +13,13 @@
 #include <iostream>
 #include "FrameRater.h"
 #include "Shader.h"
-#include "models.h"
+#include "model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void init_textures();
 unsigned int init_vertices();
-
+void initReverseTypeMap();
 void logOpenGLInfo();
 
 GLFWwindow* initGLFW(unsigned int w,
@@ -28,6 +28,7 @@ GLFWwindow* initGLFW(unsigned int w,
                      GLFWframebuffersizefun);
 
 int main() {
+  initReverseTypeMap();
   // init frame rate
   FrameRater<2000> fr;
   // init log
@@ -144,6 +145,12 @@ unsigned int init_vertices() {
   glBindVertexArray(0);
 
   return VAO;
+}
+
+void initReverseTypeMap() {
+  for (const auto& mapItem : global::str_to_type) {
+    global::type_to_str[mapItem.second] = mapItem.first;
+  }
 }
 
 void init_textures() {

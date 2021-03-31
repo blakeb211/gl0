@@ -8,11 +8,17 @@ loading levels
 	wall creation
 
 
+
 translate 3d coordinates for viewing
 
 camera movement
 
 octree for collisions
+
+multithreaded?
+
+add consistent naming cross the program
+
 
 RESOURCED NEEDED
   meshes

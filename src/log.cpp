@@ -2,6 +2,7 @@
 #include <any>
 #include <cstdio>
 #include <initializer_list>
+#include <string>
 using namespace std;
 
 //****************************************************************
@@ -74,6 +75,12 @@ void logPrintLn(initializer_list<any> il) {
     }
     if (typeid(1u) == i.type()) {
       write_num_to_buffer<unsigned int>(i, buf);
+      continue;
+    }
+    if (typeid(string("a")) == i.type()) {
+      cCount = sprintf(buf, "%s ", any_cast<string>(i).c_str());
+      printf("%s", buf);
+      fwrite(buf, sizeof(char), cCount, fptr);
       continue;
     }
     //****************************************************************
