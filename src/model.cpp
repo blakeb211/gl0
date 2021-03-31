@@ -1,3 +1,4 @@
+#include "..\include\model.h"
 #include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -6,6 +7,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 #include "global.h"
 #include "log.h"
@@ -63,30 +65,38 @@ std::unique_ptr<model> load_model_from_disk(const char* name) {
       // read normal
     }
     if (firstTok == "f") {
-      string token, firstNum;
+      string token;
       for (int i = 0; i < 3; i++) {
         lineStream >> token;  // example 1//1
 
         std::string delimiter = "//";
-        size_t pos = 0;
-        int faceId, normalId;
-        faceId = normalId = -1;
-
-        pos = token.find(delimiter);
-        if (pos == std::string::npos) {
-          logPrintLn(
-              {"model:", name, "line:", lineNum, "no face delimeter found"});
-        }
-
-        firstNum = token.substr(0, pos);
-        faceId = (unsigned int)atoi(firstNum.c_str());
-        token = token.erase(0, pos + delimiter.length());
-        normalId = (unsigned int)atoi(token.c_str());
+        auto numPair = extract_pair_of_ints(token, delimiter, name, lineNum);
+        auto faceId = numPair.first;
+        auto normalId = numPair.second;
         logPrintLn({"face id: ", faceId, "normal id:", normalId});
       }
     }
   }
   return m;
+}
+
+pair<int, int> extract_pair_of_ints(std::string& token,
+                                    std::string& delimiter,
+                                    const char*& name,
+                                    unsigned int& lineNum) {
+  size_t pos = 0;
+  pos = token.find(delimiter);
+  if (pos == std::string::npos) {
+    logPrintLn({"model:", name, "line:", lineNum, "no face delimeter found"});
+  }
+  string firstNum;
+  int faceId, normalId;
+  faceId = normalId = -1;
+  firstNum = token.substr(0, pos);
+  faceId = (unsigned int)atoi(firstNum.c_str());
+  token = token.erase(0, pos + delimiter.length());
+  normalId = (unsigned int)atoi(token.c_str());
+  return make_pair(faceId, normalId);
 }
 
 // format of level
