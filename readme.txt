@@ -7,8 +7,7 @@ loading levels
 	terrain creation
 	wall creation
 
-
-
+ 
 translate 3d coordinates for viewing
 
 camera movement

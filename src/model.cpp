@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
@@ -36,20 +37,61 @@ unique_ptr<string> modelPath(string name) {
   return path;
 }
 
+// v  float float float
+// vn float float float
+// f  1// 1 22//22 9//9
 std::unique_ptr<model> load_model_from_disk(const char* name) {
   auto m = std::make_unique<model>();
   auto fileData = slurp::get_file_contents(modelPath(name)->c_str());
   logPrintLn({"model <", name, "> slurped from disk successfully"});
+
+  unsigned int lineNum = 0;
+  string line{}, firstTok{};
+
+  while (1) {
+    lineNum++;
+    getline(fileData, line, '\n');
+    if (fileData.fail())
+      break;
+    stringstream lineStream{line};
+    lineStream >> firstTok;
+
+    if (firstTok == "v") {
+      // read vertex
+    }
+    if (firstTok == "vn") {
+      // read normal
+    }
+    if (firstTok == "f") {
+      string token, firstNum;
+      for (int i = 0; i < 3; i++) {
+        lineStream >> token;  // example 1//1
+
+        std::string delimiter = "//";
+        size_t pos = 0;
+        int faceId, normalId;
+        faceId = normalId = -1;
+
+        pos = token.find(delimiter);
+        if (pos == std::string::npos) {
+          logPrintLn(
+              {"model:", name, "line:", lineNum, "no face delimeter found"});
+        }
+
+        firstNum = token.substr(0, pos);
+        faceId = (unsigned int)atoi(firstNum.c_str());
+        token = token.erase(0, pos + delimiter.length());
+        normalId = (unsigned int)atoi(token.c_str());
+        logPrintLn({"face id: ", faceId, "normal id:", normalId});
+      }
+    }
+  }
   return m;
 }
 
 // format of level
 // entity_type  model_name  x y z
 void load_level(string levelName) {
-  //*************************************
-  // update here for new entities
-  //**************************************
-
   auto l = make_unique<level>();
   string line, entityName = "";
 
@@ -61,6 +103,7 @@ void load_level(string levelName) {
 
     using namespace global;
     int lineNum = 0;
+
     while (levelData.good()) {
       lineNum++;
       ENTITY_TYPE currType{};
@@ -74,6 +117,7 @@ void load_level(string levelName) {
                     levelName});
         continue;
       }
+
       // add a reverse map of str_to_type
       string modelName;
       glm::vec3 Pos{};

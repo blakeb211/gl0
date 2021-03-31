@@ -1,5 +1,1 @@
 box cube 0.0 0.0 1.0  0.0 0.0 0.0
-hero sphere 2.0 1.0 3.0 0.0 0.0
-enemy eMod 0.0 0.0 0.0 1.0  1 1
-box cube 1.0 1.0 2.0  0.0 0.0 0.0
-ground plane 0.0 0.0 1.0  0.0 0.0 0.0
