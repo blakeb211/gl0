@@ -1,6 +1,5 @@
 #include "model.h"
 #include <cstdlib>
-#include <glm/glm.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <map>
@@ -16,26 +15,6 @@ using namespace std;
 
 // will need to be able to deep copy models
 
-struct model {
-  model() {
-    for (int i = 0; i < 3; i++) {
-      this->pos[i] = 0;
-      this->rot[i] = 0;
-    }
-  }
-  string name;
-  vector<glm::vec3> vertices;
-  vector<glm::u32vec3> faces;
-  vector<glm::vec3> normals;
-  vector<glm::vec4> colors;
-  glm::vec3 pos;
-  glm::vec3 rot;
-};
-
-struct level {
-  vector<unique_ptr<model>> models;
-};
-
 unique_ptr<string> levelPath(string name) {
   auto path = make_unique<string>(global::levelPath + name + ".txt");
   return path;
@@ -50,7 +29,8 @@ unique_ptr<string> modelPath(string name) {
 // vn float float float
 // f  1// 1 22//22 9//9
 std::unique_ptr<model> load_model_from_disk(const char* name) {
-  auto fileData = slurp::get_file_contents(modelPath(name)->c_str());
+  stringstream fileData{};
+  fileData = slurp::get_file_contents(modelPath(name)->c_str());
 
   // add error checking and return null
   auto m = std::make_unique<model>();
@@ -115,7 +95,7 @@ std::unique_ptr<model> load_model_from_disk(const char* name) {
 
 // format of level
 // entity_type  model_name  x y z
-void load_level(string levelName) {
+unique_ptr<level> load_level(string levelName) {
   auto l = make_unique<level>();
   string line, entityName = "";
 
@@ -182,6 +162,7 @@ void load_level(string levelName) {
       logErr(__FILE__, __LINE__, modelName.c_str());
     }
   }
+  return std::move(l);
 }
 
 pair<int, int> extract_pair_of_ints(string& token,

@@ -39,7 +39,7 @@ int main() {
                                 "Learn OpenGL", framebuffer_size_callback);
   logOpenGLInfo();
   init_textures();
-  load_level("test");
+  auto level = load_level("test");
   // create shader program
   Shader progOne =
       Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");

@@ -1,23 +1,24 @@
 
+lay out a simple level
+
+translate 3d coordinates for viewing
+
+render
+
+camera movement
+
 loading levels
-  meshes 
-  	vertices	
     animation
 
 	terrain creation
 	wall creation
 
  
-translate 3d coordinates for viewing
-
-camera movement
-
 octree for collisions
 
 multithreaded?
 
-add consistent naming cross the program
-
+pick style guide and stick to it
 
 RESOURCED NEEDED
   meshes
