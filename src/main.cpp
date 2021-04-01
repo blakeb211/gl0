@@ -10,7 +10,6 @@
 #include "log.h"
 //
 #include <array>
-#include <iostream>
 #include "FrameRater.h"
 #include "Shader.h"
 #include "model.h"

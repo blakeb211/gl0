@@ -55,7 +55,7 @@ std::unique_ptr<model> load_model_from_disk(const char* name) {
   // add error checking and return null
   auto m = std::make_unique<model>();
   m->name = name;
-  logPrintLn({"model <", name, "> slurped from disk successfully"});
+  logPrintLn({"SUCCESS:: model <", name, "> slurped from disk"});
 
   unsigned int lineNum = 0;
   string line{}, firstTok{};
@@ -113,24 +113,6 @@ std::unique_ptr<model> load_model_from_disk(const char* name) {
   return m;
 }
 
-pair<int, int> extract_pair_of_ints(string& token,
-                                    string& delim,
-                                    const char*& name) {
-  size_t pos = 0;
-  pos = token.find(delim);
-  if (pos == std::string::npos) {
-    logPrintLn({"model:", name, "missing face delimeter"});
-  }
-  string firstNum;
-  int faceId, normalId;
-  faceId = normalId = -1;
-  firstNum = token.substr(0, pos);
-  faceId = (unsigned int)atoi(firstNum.c_str());
-  token = token.erase(0, pos + delim.length());
-  normalId = (unsigned int)atoi(token.c_str());
-  return make_pair(faceId, normalId);
-}
-
 // format of level
 // entity_type  model_name  x y z
 void load_level(string levelName) {
@@ -141,7 +123,7 @@ void load_level(string levelName) {
 
   if (levelExist) {
     auto levelData = slurp::get_file_contents(levelPath(levelName)->c_str());
-    logPrintLn({"level", levelName, "slurped from disk successfully"});
+    logPrintLn({"SUCCESS:: level", levelName, "slurped from disk"});
 
     using namespace global;  // used to pull in ENTITY_TYPE and str_to_type
     int lineNum = 0;
@@ -184,8 +166,14 @@ void load_level(string levelName) {
         modelPtr = load_model_from_disk(modelName.c_str());
         logPrintLn({type_to_str[type], modelName, glm::to_string(Pos),
                     glm::to_string(Rot)});
-        logPrintLn({"model stats |", "verts:", modelPtr->vertices.size(),
+
+        logPrintLn({"model stats |",
+                    "verts, normals, faces:", modelPtr->vertices.size(),
                     modelPtr->normals.size(), modelPtr->faces.size()});
+
+        modelPtr->pos = Pos;
+        modelPtr->rot = Rot;
+        modelPtr->name = modelName;
         l->models.push_back(std::move(modelPtr));
         continue;
       }
@@ -194,4 +182,22 @@ void load_level(string levelName) {
       logErr(__FILE__, __LINE__, modelName.c_str());
     }
   }
+}
+
+pair<int, int> extract_pair_of_ints(string& token,
+                                    string& delim,
+                                    const char*& name) {
+  size_t pos = 0;
+  pos = token.find(delim);
+  if (pos == std::string::npos) {
+    logPrintLn({"model:", name, "missing face delimeter"});
+  }
+  string firstNum;
+  int faceId, normalId;
+  faceId = normalId = -1;
+  firstNum = token.substr(0, pos);
+  faceId = (unsigned int)atoi(firstNum.c_str());
+  token = token.erase(0, pos + delim.length());
+  normalId = (unsigned int)atoi(token.c_str());
+  return make_pair(faceId, normalId);
 }

@@ -83,6 +83,10 @@ void logPrintLn(initializer_list<any> il) {
       fwrite(buf, sizeof(char), cCount, fptr);
       continue;
     }
+    if (typeid(size_t) == i.type()) {
+      write_num_to_buffer<size_t>(i, buf);
+      continue;
+    }
     //****************************************************************
     // add handling for next type here
     //****************************************************************
