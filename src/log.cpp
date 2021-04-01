@@ -105,3 +105,7 @@ void clearBuffer(char* buf, int len) {
     count++;
   }
 }
+
+void logErr(const char* fname, const int lineNum, const char* msg) {
+  logPrintLn({"ERROR: file <", fname, "> line <", lineNum, "> ==", msg});
+}

@@ -30,6 +30,10 @@ stringstream get_file_contents(const char* filename) {
   return stringstream{""};
 }
 
+stringstream get_file_contents(std::string filename) {
+  return get_file_contents(filename.c_str());
+}
+
 // takes a path and a name and returns true if it exists
 bool checkFileExist(const string path, const string fname, const string ext) {
   return filesystem::exists(path + fname + "." + ext);
