@@ -1,7 +1,5 @@
 #pragma once
-#include <sstream>
-#include <string>
-
+#include "gamelib.h"
 namespace slurp {
 std::stringstream get_file_contents(const char*);
 

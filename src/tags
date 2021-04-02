@@ -1,0 +1,31 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.7	//
+_CRT_SECURE_NO_WARNINGS	.\slurp.cpp	1;"	d	file:
+checkFileExist	.\slurp.cpp	/^bool checkFileExist(const string path, const string fname, const string ext) {$/;"	f	namespace:slurp
+clearBuffer	.\log.cpp	/^void clearBuffer(char* buf, int len) {$/;"	f
+closeLog	.\log.cpp	/^bool closeLog() {$/;"	f
+extract_pair_of_ints	.\model.cpp	/^pair<int, int> extract_pair_of_ints(string& token,$/;"	f
+fptr	.\log.cpp	/^static FILE* fptr;$/;"	v	file:
+framebuffer_size_callback	.\main.cpp	/^void framebuffer_size_callback(GLFWwindow* window, int width, int height) {$/;"	f
+get_file_contents	.\slurp.cpp	/^stringstream get_file_contents(const char* filename) {$/;"	f	namespace:slurp
+get_file_contents	.\slurp.cpp	/^stringstream get_file_contents(std::string filename) {$/;"	f	namespace:slurp
+initGLFW	.\main.cpp	/^GLFWwindow* initGLFW(unsigned int w,$/;"	f
+initReverseTypeMap	.\main.cpp	/^void initReverseTypeMap() {$/;"	f
+init_textures	.\main.cpp	/^void init_textures() {$/;"	f
+init_vertices	.\main.cpp	/^unsigned int init_vertices() {$/;"	f
+levelPath	.\model.cpp	/^unique_ptr<string> levelPath(string name) {$/;"	f
+load_level	.\model.cpp	/^unique_ptr<level> load_level(string levelName) {$/;"	f
+load_model_from_disk	.\model.cpp	/^std::unique_ptr<model> load_model_from_disk(const char* name) {$/;"	f
+logErr	.\log.cpp	/^void logErr(const char* fname, const int lineNum, const char* msg) {$/;"	f
+logOpenGLInfo	.\main.cpp	/^void logOpenGLInfo() {$/;"	f
+logPrintLn	.\log.cpp	/^void logPrintLn(initializer_list<any> il) {$/;"	f
+main	.\main.cpp	/^int main() {$/;"	f
+modelPath	.\model.cpp	/^unique_ptr<string> modelPath(string name) {$/;"	f
+processInput	.\main.cpp	/^void processInput(GLFWwindow* window) {$/;"	f
+setLogFile	.\log.cpp	/^bool setLogFile(const char* fname) {$/;"	f
+slurp	.\slurp.cpp	/^namespace slurp {$/;"	n	file:
+write_num_to_buffer	.\log.cpp	/^void write_num_to_buffer(any val, char* buf) {$/;"	f

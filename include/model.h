@@ -1,9 +1,7 @@
 #pragma once
+#include "gamelib.h"
+//
 #include <glm/glm.hpp>
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
 
 struct model {
   model() {

@@ -1,8 +1,8 @@
 #pragma once
-#include <chrono>
-#include <ratio>
-#include <thread>
+#include "gamelib.h"
+//
 #include "circular_buffer.h"
+
 constexpr auto FR_PRINT_FREQ = 5000;
 
 typedef std::chrono::high_resolution_clock::time_point timepoint;

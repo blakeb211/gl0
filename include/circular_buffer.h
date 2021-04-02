@@ -1,10 +1,9 @@
-#include <cstdio>
+#include "gamelib.h"
+//
 
-#include <memory>
-#include <mutex>
-
-template <class T> class circular_buffer {
-public:
+template <class T>
+class circular_buffer {
+ public:
   explicit circular_buffer(size_t size)
       : buf_(std::unique_ptr<T[]>(new T[size])), max_size_(size) {}
 
@@ -69,7 +68,7 @@ public:
     return size;
   }
 
-private:
+ private:
   std::mutex mutex_;
   std::unique_ptr<T[]> buf_;
   size_t head_ = 0;

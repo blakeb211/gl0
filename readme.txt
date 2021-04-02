@@ -7,6 +7,8 @@ render
 
 camera movement
 
+need level editor
+
 loading levels
     animation
 

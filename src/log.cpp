@@ -1,8 +1,6 @@
+#include "gamelib.h"
+//
 #include "log.h"
-#include <any>
-#include <cstdio>
-#include <initializer_list>
-#include <string>
 using namespace std;
 
 //****************************************************************

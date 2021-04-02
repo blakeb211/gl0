@@ -3,12 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
-
+#include "gamelib.h"
 class Shader {
  public:
   unsigned int ID;

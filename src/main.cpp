@@ -9,9 +9,9 @@
 #include "global.h"
 #include "log.h"
 //
-#include <array>
 #include "FrameRater.h"
 #include "Shader.h"
+#include "gamelib.h"
 #include "model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -36,9 +36,9 @@ int main() {
   // glfw: initialize and configure
   // ------------------------------
   GLFWwindow* window = initGLFW(global::SCR_WIDTH, global::SCR_HEIGHT,
-                                "Learn OpenGL", framebuffer_size_callback);
+                                "Learn OpenGL ", framebuffer_size_callback);
   logOpenGLInfo();
-  init_textures();
+  // init_textures();
   auto level = load_level("test");
   // create shader program
   Shader progOne =
@@ -54,9 +54,13 @@ int main() {
     // -----
     processInput(window);
     // create transformations
-    glm::mat4 transform = glm::mat4(1.0f);  // init to identity first
-    transform = glm::rotate(transform, (float)glfwGetTime(),
-                            glm::vec3(0.0f, 0.4f, 1.0f));
+    glm::mat4 transform = glm::mat4(1.0f);
+
+    transform = glm::translate(transform, glm::vec3(0.0, 0.0, 0.0));
+
+    transform = glm::rotate(transform, (float)glfwGetTime() / 2,
+                            glm::vec3(0.0f, 1.0f, 1.0f));
+
     progOne.setMat4("transform", transform);
     // render
     // ------
@@ -70,7 +74,7 @@ int main() {
     // no need to bind it every time, but we'll do
     // so to keep things a bit more organized
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);  // no need to unbind it every time
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse
@@ -106,11 +110,14 @@ unsigned int init_vertices() {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   float vertices[] = {
-      // positions          // colors           // texture coords
-      0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // top right
-      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
-      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
+      // first triangle
+      0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.5f,    // top right
+      0.5f, -0.5f, 1.0f, 1.0f, 0.8f, 0.0f,   // bottom right
+      -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.2f,   // top left
+                                             // second triangle
+      0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f,   // bottom right
+      -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.6f,  // bottom left
+      -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.5f,   // top left
   };
 
   unsigned int VBO, VAO;
@@ -123,15 +130,12 @@ unsigned int init_vertices() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
                         (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
-                        (void*)(6 * sizeof(float)));
-  glEnableVertexAttribArray(2);
   // note that this is allowed, the call to glVertexAttribPointer registered
   // VBO as the vertex attribute's bound vertex buffer object so afterwards we
   // can safely unbind

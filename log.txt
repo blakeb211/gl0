@@ -1,9 +1,7 @@
 OpenGL Version:    3.000 .    3.000 
-texture loaded ( w:  512.000 h:  512.000 nchan:    3.000 ) 
-texture loaded ( w:  512.000 h:  512.000 nchan:    4.000 ) 
 SUCCESS:: level test slurped from disk 
 SUCCESS:: model < cube > slurped from disk 
 box cube vec3(0.000000, 0.000000, 1.000000) vec3(0.000000, 0.000000, 0.000000) 
 model stats | verts, normals, faces:   26.000   26.000   48.000 
-avg framerate: 1619.433 
-avg framerate: 1851.852 
+avg framerate: 1476.015 
+avg framerate: 1002.506 

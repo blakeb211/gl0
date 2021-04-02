@@ -1,19 +1,15 @@
+#include "gamelib.h"
+//
 #include "model.h"
-#include <cstdlib>
+
 #include <glm/gtx/string_cast.hpp>
-#include <iostream>
-#include <map>
-#include <memory>
-#include <sstream>
-#include <string>
-#include <utility>
-#include <vector>
+
 #include "global.h"
 #include "log.h"
 #include "slurp.h"
 using namespace std;
 
-// will need to be able to deep copy models
+// add 3 coords to read scale from model scale from level file
 
 unique_ptr<string> levelPath(string name) {
   auto path = make_unique<string>(global::levelPath + name + ".txt");

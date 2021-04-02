@@ -1,13 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "slurp.h"
-#include <errno.h>
-#include <cstdio>
-#include <cstdlib>
-#include <filesystem>
-#include <sstream>
-#include <string>
-#include <vector>
+#include "gamelib.h"
+//
 #include "log.h"
+#include "slurp.h"
 
 using namespace std;
 
