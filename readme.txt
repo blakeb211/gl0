@@ -27,7 +27,6 @@ octree for collisions
 multithreaded?
 
 
-
 RESOURCED NEEDED
   meshes
   animation
