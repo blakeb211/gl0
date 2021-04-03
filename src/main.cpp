@@ -14,8 +14,8 @@
 #include "gamelib.h"
 #include "model.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
+void framebuf_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow* window, glm::vec3& camOffset);
 void init_textures();
 unsigned int init_vertices();
 void initReverseTypeMap();
@@ -29,15 +29,17 @@ GLFWwindow* initGLFW(unsigned int w,
 int main()
 {
     initReverseTypeMap();
-    // init frame rate
+    // init frame rate counter
     FrameRater<1000> fr;
+
     // init log
     setLogFile("log.txt");
-    float offset = 0.0f;
+
     // glfw: initialize and configure
-    // ------------------------------
-    GLFWwindow* window = initGLFW(global::SCR_WIDTH, global::SCR_HEIGHT,
-        "Learn OpenGL ", framebuffer_size_callback);
+    auto& w = global::SCR_WIDTH;
+    auto& h = global::SCR_HEIGHT;
+    GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
+
     logOpenGLInfo();
     // init_textures();
     auto level = load_level("test");
@@ -45,7 +47,7 @@ int main()
     int VAO = init_vertices();
 
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -63,13 +65,13 @@ int main()
     };
 
     glBindVertexArray(VAO);
-
+    glm::vec3 camOffset { 0.f, 0.f, 0.f };
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
         // input
         // -----
-        processInput(window);
+        processInput(window, camOffset);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         progOne.use();
 
@@ -79,7 +81,7 @@ int main()
 
         model = glm::rotate(model, glm::radians((float)glfwGetTime() * 22.0f),
             glm::vec3(1.0f, 1.0f, 0.0f));
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        view = glm::translate(view, glm::vec3(0.0f + camOffset.x, 0.0f + camOffset.y, -3.0f + camOffset.z));
 
         progOne.setMat4("model", model);
         progOne.setMat4("view", view);
@@ -247,23 +249,35 @@ void init_textures()
 // process all input: query GLFW whether relevant keys are pressed/released
 // this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow* window, glm::vec3& camOff)
 {
-    float offset = 0.0f;
+    const auto camSpeed = 0.01f;
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && offset < 0.5f)
-        offset += 0.01f;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        camOff.x -= camSpeed;
 
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && offset > -0.5f)
-        offset -= 0.01f;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        camOff.x += camSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        camOff.y -= camSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        camOff.y += camSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+        camOff.z += camSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+        camOff.z -= camSpeed;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback
 // function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuf_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
