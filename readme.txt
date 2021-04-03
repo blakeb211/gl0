@@ -1,18 +1,24 @@
 
-lay out a simple level
+do coordinate systems exercises
 
-translate 3d coordinates for viewing
+make camera move with arrow and wsdf keys
 
 render
 
 camera movement
 
-need level editor
+pick style guide and stick to it
 
-loading levels
-    animation
+make game dll
+
+lay out a simple level
+
+make level editor
+
+  animation
 
 	terrain creation
+
 	wall creation
 
  
@@ -20,7 +26,7 @@ octree for collisions
 
 multithreaded?
 
-pick style guide and stick to it
+
 
 RESOURCED NEEDED
   meshes
