@@ -29,7 +29,7 @@ GLFWwindow* initGLFW(unsigned int w,
 int main() {
   initReverseTypeMap();
   // init frame rate
-  FrameRater<2000> fr;
+  FrameRater<1000> fr;
   // init log
   setLogFile("log.txt");
   float offset = 0.0f;
@@ -44,9 +44,12 @@ int main() {
   Shader progOne =
       Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
   int VAO = init_vertices();
+  // Create projection matrix
+  glm::mat4 projection = glm::mat4(1.0f);
+  projection =
+      glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+  glEnable(GL_DEPTH_TEST);
   // Game loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
@@ -54,27 +57,32 @@ int main() {
     // -----
     processInput(window);
     // create transformations
-    glm::mat4 transform = glm::mat4(1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    progOne.use();
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
 
-    transform = glm::translate(transform, glm::vec3(0.0, 0.0, 0.0));
+    model = glm::rotate(model, glm::radians((float)glfwGetTime() * 8.0f),
+                        glm::vec3(1.0f, 0.0f, 0.0f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-    transform = glm::rotate(transform, (float)glfwGetTime() / 2,
-                            glm::vec3(0.0f, 1.0f, 1.0f));
+    // note that we're translating the scene in the reverse direction of where
+    // we want to move
 
-    progOne.setMat4("transform", transform);
+    progOne.setMat4("model", model);
+    progOne.setMat4("view", view);
+    progOne.setMat4("projection", projection);
     // render
     // ------
     glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-
-    progOne.use();
 
     // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     // seeing as we only have a single VAO there's
     // no need to bind it every time, but we'll do
     // so to keep things a bit more organized
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);  // no need to unbind it every time
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse
@@ -110,15 +118,29 @@ unsigned int init_vertices() {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   float vertices[] = {
-      // first triangle
-      0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.5f,    // top right
-      0.5f, -0.5f, 1.0f, 1.0f, 0.8f, 0.0f,   // bottom right
-      -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.2f,   // top left
-                                             // second triangle
-      0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f,   // bottom right
-      -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.6f,  // bottom left
-      -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.5f,   // top left
-  };
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f,
+      0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+      -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+      -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+
+      -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
+
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+      0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
+      0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+      -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f,
+      0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+      -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+      -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
 
   unsigned int VBO, VAO;
   glGenVertexArrays(1, &VAO);
@@ -130,10 +152,10 @@ unsigned int init_vertices() {
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                         (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
   // note that this is allowed, the call to glVertexAttribPointer registered
