@@ -20,37 +20,32 @@ void init_textures();
 unsigned int init_vertices();
 void initReverseTypeMap();
 void logOpenGLInfo();
-
-GLFWwindow* initGLFW(unsigned int w,
-    unsigned int h,
-    const char* title,
-    GLFWframebuffersizefun);
+GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title, GLFWframebuffersizefun);
 
 int main()
 {
     initReverseTypeMap();
-    // init frame rate counter
+
     FrameRater<1000> fr;
 
-    // init log
     setLogFile("log.txt");
 
     // glfw: initialize and configure
     auto& w = global::SCR_WIDTH;
     auto& h = global::SCR_HEIGHT;
     GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
-
     logOpenGLInfo();
-    // init_textures();
+    glEnable(GL_DEPTH_TEST);
+
     auto level = load_level("test");
+
     Shader progOne = Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
     int VAO = init_vertices();
 
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-    glEnable(GL_DEPTH_TEST);
-
+    // this code should be in the level
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),
         glm::vec3(2.0f, 5.0f, -15.0f),
@@ -64,23 +59,20 @@ int main()
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
-    glBindVertexArray(VAO);
     glm::vec3 camOffset { 0.f, 0.f, 0.f };
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
-        // input
-        // -----
-        processInput(window, camOffset);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+        processInput(window, camOffset);
+
         progOne.use();
 
         // create transformations
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
 
-        model = glm::rotate(model, glm::radians((float)glfwGetTime() * 22.0f),
-            glm::vec3(1.0f, 1.0f, 0.0f));
         view = glm::translate(view, glm::vec3(0.0f + camOffset.x, 0.0f + camOffset.y, -3.0f + camOffset.z));
 
         progOne.setMat4("model", model);
@@ -94,7 +86,7 @@ int main()
         glBindVertexArray(VAO);
 
         for (unsigned int i = 0; i < 10; i++) {
-            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
             if ((i + 1) % 3 == 0) {

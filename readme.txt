@@ -1,25 +1,25 @@
 
-do coordinate systems exercises
-
-make camera move with arrow and wsdf keys
-
-render
-
 camera movement
 
-pick style guide and stick to it
+add object properties, like state timings to level text
 
-make game dll
+main loop should run based on level text data
+  object state machine based properties
+  checking win state of level
+
+animation
+
+terrain creation
+
+add menu screen
+
+pick style guide and stick to it
 
 lay out a simple level
 
 make level editor
 
-  animation
-
-	terrain creation
-
-	wall creation
+wall creation
 
  
 octree for collisions
