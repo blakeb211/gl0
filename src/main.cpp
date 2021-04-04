@@ -51,13 +51,16 @@ int main()
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
-    glm::vec3 camOffset { 0.f, 0.f, 0.f };
+    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-        processInput(window, camOffset);
+        processInput(window, cam);
 
         progOne.use();
 
@@ -65,9 +68,14 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
 
-        view = glm::translate(view, glm::vec3(0.0f + camOffset.x, 0.0f + camOffset.y, -3.0f + camOffset.z));
-
         progOne.setMat4("model", model);
+
+        const float radius = 10.0f;
+        float camX = (float)sin(glfwGetTime()) * radius;
+        float camZ = (float)cos(glfwGetTime()) * radius;
+
+        view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+        view = glm::translate(view, glm::vec3(0.0f + camOffset.x, 0.0f + camOffset.y, -3.0f + camOffset.z));
         progOne.setMat4("view", view);
         progOne.setMat4("projection", projection);
         // render
@@ -233,7 +241,7 @@ void init_textures()
 // process all input: query GLFW whether relevant keys are pressed/released
 // this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window, glm::vec3& camOff)
+void processInput(GLFWwindow* window, glm::vec3 camPos, glm ::vec3 camFront, glm::vec3 camUp)
 {
     const auto camSpeed = 0.01f;
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
