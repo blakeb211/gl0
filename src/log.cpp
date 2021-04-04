@@ -1,6 +1,5 @@
 #include "gamelib.h"
 //
-#include "log.h"
 using namespace std;
 
 //****************************************************************

@@ -1,6 +1,5 @@
 OpenGL Version:    3.000 .    3.000 
-Failed to load texture data 
-Failed to load texture data 
-C:\cprojects\gl0\src\slurp.cpp Method: get_file_contents(const char* filename) errno:    2.000 
-avg framerate: 1970.443 
-avg framerate: 2083.333 
+SUCCESS:: level test slurped from disk 
+SUCCESS:: model < cube > slurped from disk 
+box cube vec3(0.000000, 0.000000, 1.000000) vec3(0.000000, 0.000000, 0.000000) 
+model stats | verts, normals, faces:   26.000   26.000   48.000 

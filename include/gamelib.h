@@ -1,10 +1,10 @@
 #pragma once
-#include <errno.h>
 #include <any>
 #include <array>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <errno.h>
 #include <filesystem>
 #include <fstream>
 #include <initializer_list>
@@ -18,3 +18,13 @@
 #include <thread>
 #include <utility>
 #include <vector>
+//
+#include "global.h"
+//
+#include "log.h"
+//
+#include "FrameRater.h"
+#include "Shader.h"
+
+#include "model.h"
+#include "slurp.h"

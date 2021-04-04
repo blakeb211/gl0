@@ -1,18 +1,10 @@
 #include <glad\glad.h>
 //
-#include "global.h"
-#include "log.h"
 #include <GLFW\glfw3.h>
-#include <glm\glm.hpp>
-#include <glm\gtc\matrix_transform.hpp>
-#include <glm\gtc\type_ptr.hpp>
-#include <glm\gtx\string_cast.hpp>
 #include <stb\stb_image.h>
 //
-#include "FrameRater.h"
-#include "Shader.h"
 #include "gamelib.h"
-#include "model.h"
+#include "glm.h"
 
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, glm::vec3& camOffset);
@@ -39,7 +31,7 @@ int main()
 
     auto level = load_level("test");
 
-    Shader progOne = Shader(R"(.\shaders\3pos3color.vs)", R"(.\shaders\colorFromVertex.fs)");
+    auto progOne = Shader(*global::shaderPath("3pos3color.vs"), *global::shaderPath("colorFromVertex.fs"));
     int VAO = init_vertices();
 
     glm::mat4 projection = glm::mat4(1.0f);

@@ -1,7 +1,11 @@
+finish opengl tutorial 
+get objects loading and rendering from level struct
 
 camera movement
 
 add object properties, like state timings to level text
+
+add lighting
 
 main loop should run based on level text data
   object state machine based properties
