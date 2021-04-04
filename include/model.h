@@ -27,5 +27,4 @@ struct level {
 std::unique_ptr<level> load_level(std::string);
 
 std::pair<int, int> extract_pair_of_ints(std::string& token,
-    std::string& delimiter,
-    const char*& name);
+    std::string& delimiter);

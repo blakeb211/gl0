@@ -62,9 +62,10 @@ std::unique_ptr<model> load_model_from_disk(const char* name)
             for (int i = 0; i < 3; i++) {
                 lineStream >> token; // example 1//1
                 std::string delimiter = "//";
-                auto numPair = extract_pair_of_ints(token, delimiter, name);
-                auto faceId = numPair.first;
-                auto normalId = numPair.second;
+                auto [faceId, normalId] = extract_pair_of_ints(token, delimiter);
+                if (faceId == -999 && normalId == -999) {
+                    logErr("ERROR:: < file line # , model name > ::", lineNum, name);
+                }
                 faces[i] = faceId;
                 // logPrintLn({"face id: ", faceId, "normal id:", normalId});
             }
@@ -148,13 +149,12 @@ unique_ptr<level> load_level(string levelName)
 }
 
 pair<int, int> extract_pair_of_ints(string& token,
-    string& delim,
-    const char*& name)
+    string& delim)
 {
     size_t pos = 0;
     pos = token.find(delim);
     if (pos == std::string::npos) {
-        logPrintLn({ "model:", name, "missing face delimeter" });
+        return make_pair(-999, -999); // return on error
     }
     string firstNum;
     int faceId, normalId;
