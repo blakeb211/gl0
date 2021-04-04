@@ -5,18 +5,7 @@
 //
 #include "gamelib.h"
 #include "glm.h"
-
-struct Cam {
-    Cam()
-    {
-        cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-        cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-        cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-    };
-    glm::vec3 cameraPos;
-    glm::vec3 cameraFront;
-    glm::vec3 cameraUp;
-};
+#include "headers.h"
 
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, Cam& cam);
@@ -43,7 +32,7 @@ int main()
 
     auto level = load_level("test");
 
-    auto progOne = Shader(*global::shaderPath("3pos3color.vs"), *global::shaderPath("colorFromVertex.fs"));
+    auto progOne = Shader(*shaderPath("3pos3color.vs"), *shaderPath("colorFromVertex.fs"));
     int VAO = init_vertices();
 
     glm::mat4 projection = glm::mat4(1.0f);
@@ -203,7 +192,7 @@ unsigned int init_vertices()
 void initReverseTypeMap()
 {
     for (const auto& mapItem : global::str_to_type) {
-        global::type_to_str[mapItem.second] = mapItem.first;
+        type_to_str[mapItem.second] = mapItem.first;
     }
 }
 
@@ -271,10 +260,10 @@ void processInput(GLFWwindow* window, Cam& cam)
         cam.cameraPos -= cameraSpeed * cam.cameraFront;
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-        ;
+        __noop;
 
     if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-        ;
+        __noop;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback

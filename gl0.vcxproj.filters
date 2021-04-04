@@ -51,7 +51,7 @@
     <ClCompile Include="add_stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gamelib.cpp">
+    <ClCompile Include="src\headers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,10 +77,10 @@
     <ClInclude Include="include\slurp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\global.h">
+    <ClInclude Include="include\gamelib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\gamelib.h">
+    <ClInclude Include="include\headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

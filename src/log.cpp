@@ -4,10 +4,6 @@
 #include <string>
 using namespace std;
 
-//****************************************************************
-// add handling for next type here
-//****************************************************************
-
 constexpr auto BUFFER_LENGTH = 512;
 
 static FILE* fptr;

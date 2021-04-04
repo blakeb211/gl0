@@ -194,7 +194,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="add_stb.cpp" />
-    <ClCompile Include="src\gamelib.cpp" />
+    <ClCompile Include="src\headers.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\slurp.cpp" />
@@ -217,9 +217,9 @@
   <ItemGroup>
     <ClInclude Include="include\circular_buffer.h" />
     <ClInclude Include="include\framerater.h" />
-    <ClInclude Include="include\gamelib.h" />
+    <ClInclude Include="include\headers.h" />
     <ClInclude Include="include\log.h" />
-    <ClInclude Include="include\global.h" />
+    <ClInclude Include="include\gamelib.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\slurp.h" />
     <ClInclude Include="thirdparty\include\glad\glad.h" />

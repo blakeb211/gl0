@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 //
-#include "gamelib.h"
+#include "headers.h"
 
 using namespace std;
 

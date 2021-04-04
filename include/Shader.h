@@ -1,8 +1,8 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "gamelib.h"
 #include "glm.h"
+#include "headers.h"
 #include <glad/glad.h>
 class Shader {
 public:
