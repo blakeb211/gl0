@@ -193,8 +193,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="add_stb.cpp" />
-    <ClCompile Include="src\headers.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\slurp.cpp" />
