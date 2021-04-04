@@ -20,12 +20,13 @@
 #include <utility>
 #include <vector>
 //
+#include "log.h"
+//
+#include "slurp.h"
+//
 #include "global.h"
 //
-#include "log.h"
 //
 #include "FrameRater.h"
 #include "Shader.h"
-
-#include "model.h"
-#include "slurp.h"
+//

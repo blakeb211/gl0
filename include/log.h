@@ -1,5 +1,7 @@
 #pragma once
-#include "gamelib.h"
+#include <any>
+#include <initializer_list>
+
 // print arguments to log file and screen and add a newline
 void logPrintLn(std::initializer_list<std::any> il);
 
