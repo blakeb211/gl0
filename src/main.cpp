@@ -6,8 +6,20 @@
 #include "gamelib.h"
 #include "glm.h"
 
+struct Cam {
+    Cam()
+    {
+        cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+        cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    };
+    glm::vec3 cameraPos;
+    glm::vec3 cameraFront;
+    glm::vec3 cameraUp;
+};
+
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window, glm::vec3& camOffset);
+void processInput(GLFWwindow* window, Cam& cam);
 void init_textures();
 unsigned int init_vertices();
 void initReverseTypeMap();
@@ -51,16 +63,13 @@ int main()
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
+    Cam camera = Cam();
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-        processInput(window, cam);
+        processInput(window, camera);
 
         progOne.use();
 
@@ -74,8 +83,9 @@ int main()
         float camX = (float)sin(glfwGetTime()) * radius;
         float camZ = (float)cos(glfwGetTime()) * radius;
 
-        view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-        view = glm::translate(view, glm::vec3(0.0f + camOffset.x, 0.0f + camOffset.y, -3.0f + camOffset.z));
+        //view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+        view = glm::lookAt(camera.cameraPos, camera.cameraPos + camera.cameraFront, camera.cameraUp);
+        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         progOne.setMat4("view", view);
         progOne.setMat4("projection", projection);
         // render
@@ -241,29 +251,30 @@ void init_textures()
 // process all input: query GLFW whether relevant keys are pressed/released
 // this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window, glm::vec3 camPos, glm ::vec3 camFront, glm::vec3 camUp)
+void processInput(GLFWwindow* window, Cam& cam)
 {
-    const auto camSpeed = 0.01f;
+
+    const float cameraSpeed = 0.05f; // adjust accordingly
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        camOff.x -= camSpeed;
+        cam.cameraPos += glm::normalize(glm::cross(cam.cameraFront, cam.cameraUp)) * cameraSpeed;
 
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        camOff.x += camSpeed;
+        cam.cameraPos -= glm::normalize(glm::cross(cam.cameraFront, cam.cameraUp)) * cameraSpeed;
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        camOff.y -= camSpeed;
+        cam.cameraPos += cameraSpeed * cam.cameraFront;
 
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        camOff.y += camSpeed;
+        cam.cameraPos -= cameraSpeed * cam.cameraFront;
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-        camOff.z += camSpeed;
+        ;
 
     if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-        camOff.z -= camSpeed;
+        ;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback
