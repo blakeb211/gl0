@@ -2,8 +2,8 @@
 #define SHADER_H
 
 #include "gamelib.h"
+#include "glm.h"
 #include <glad/glad.h>
-#include <glm/glm.hpp>
 class Shader {
 public:
     unsigned int ID;

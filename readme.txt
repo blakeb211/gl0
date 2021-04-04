@@ -25,7 +25,6 @@ make level editor
 
 wall creation
 
- 
 octree for collisions
 
 multithreaded?
@@ -45,6 +44,5 @@ world
     objects hold a reference to world but world does not hold a reference to objects	
 
 game modes
-
 
 create a complete build.bat or cmake file to build this project

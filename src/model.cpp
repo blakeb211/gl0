@@ -1,6 +1,6 @@
 #include "gamelib.h"
 //
-#include <glm/gtx/string_cast.hpp>
+#include "glm.h"
 
 using namespace std;
 
