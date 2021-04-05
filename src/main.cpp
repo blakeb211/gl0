@@ -8,7 +8,7 @@
 #include "headers.h"
 
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window, Cam& cam);
+void processInput(GLFWwindow* window, gxb::Cam& cam);
 void init_textures();
 unsigned int init_vertices();
 void logOpenGLInfo();
@@ -16,22 +16,22 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title, GLFWfram
 
 int main()
 {
-    global::initReverseTypeMap();
+    gxb::initReverseTypeMap();
 
     FrameRater<1000> fr;
 
     setLogFile("log.txt");
 
     // glfw: initialize and configure
-    auto& w = global::SCR_WIDTH;
-    auto& h = global::SCR_HEIGHT;
+    auto& w = gxb::SCR_WIDTH;
+    auto& h = gxb::SCR_HEIGHT;
     GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
     logOpenGLInfo();
     glEnable(GL_DEPTH_TEST);
 
-    auto level = load_level("test");
+    auto level = gxb::load_level("test");
 
-    auto progOne = Shader(*shaderPath("3pos3color.vs"), *shaderPath("colorFromVertex.fs"));
+    auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"), *gxb::shaderPath("colorFromVertex.fs"));
     int VAO = init_vertices();
 
     glm::mat4 projection = glm::mat4(1.0f);
@@ -51,7 +51,7 @@ int main()
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
-    Cam camera = Cam();
+    gxb::Cam camera {};
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
@@ -194,7 +194,7 @@ void init_textures()
     glGenTextures(1, &tex1);
     glBindTexture(GL_TEXTURE_2D, tex1);
     int width, height, nrChannels;
-    std::string filePath { global::texturePath + std::string("wooden_container.jpg") };
+    std::string filePath { gxb::texturePath + std::string("wooden_container.jpg") };
     unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
 
     if (data) {
@@ -214,7 +214,7 @@ void init_textures()
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, tex2);
-    filePath = global::texturePath + std::string("awesomeface.png");
+    filePath = gxb::texturePath + std::string("awesomeface.png");
     data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
 
     if (data) {
@@ -232,9 +232,8 @@ void init_textures()
 // process all input: query GLFW whether relevant keys are pressed/released
 // this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window, Cam& cam)
+void processInput(GLFWwindow* window, gxb::Cam& cam)
 {
-
     const float cameraSpeed = 0.05f; // adjust accordingly
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);

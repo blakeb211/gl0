@@ -6,7 +6,7 @@
 // thread issues.
 //@TODO: Consider wrapping in a namespace
 
-namespace global {
+namespace gxb {
 inline std::string appRoot = std::string { R"(c:\cprojects\gl0\)" };
 inline std::string texturePath = appRoot + R"(textures\)";
 inline std::string rootModelPath = appRoot + R"(models\)";
@@ -27,16 +27,14 @@ inline std::map<std::string, ENTITY_TYPE> str_to_type {
     { "ground", ENTITY_TYPE::ground },
 };
 
-inline std::map<global::ENTITY_TYPE, std::string> type_to_str {};
+inline std::map<ENTITY_TYPE, std::string> type_to_str {};
 
 void initReverseTypeMap()
 {
-    for (const auto& mapItem : global::str_to_type) {
+    for (const auto& mapItem : str_to_type) {
         type_to_str[mapItem.second] = mapItem.first;
     }
 }
-
-} // namespace global
 
 struct model {
     model()
@@ -66,19 +64,19 @@ inline std::pair<int, int> extract_pair_of_ints(std::string& token,
 
 inline std::unique_ptr<std::string> levelPath(std::string name)
 {
-    auto path = std::make_unique<std::string>(global::rootLevelPath + name + ".txt");
+    auto path = std::make_unique<std::string>(rootLevelPath + name + ".txt");
     return path;
 }
 
 inline std::unique_ptr<std::string> modelPath(std::string name)
 {
-    auto path = std::make_unique<std::string>(global::rootModelPath + name + ".obj");
+    auto path = std::make_unique<std::string>(rootModelPath + name + ".obj");
     return path;
 }
 
 inline std::unique_ptr<std::string> shaderPath(std::string name)
 {
-    auto path = std::make_unique<std::string>(global::rootShaderPath + name);
+    auto path = std::make_unique<std::string>(rootShaderPath + name);
     return path;
 }
 
@@ -161,13 +159,11 @@ std::unique_ptr<level> load_level(std::string levelName)
     auto l = std::make_unique<level>();
     std::string line, entityName = "";
 
-    bool levelExist = slurp::checkFileExist(global::rootLevelPath, levelName, "txt");
+    bool levelExist = slurp::checkFileExist(rootLevelPath, levelName, "txt");
 
     if (levelExist) {
         auto levelData = slurp::get_file_contents(levelPath(levelName)->c_str());
         logPrintLn({ "SUCCESS:: level", levelName, "slurped from disk" });
-
-        using namespace global; // used for ENTITY_TYPE, str_to_type, type_to_str
 
         int lineNum = 0;
 
@@ -202,7 +198,7 @@ std::unique_ptr<level> load_level(std::string levelName)
 
             // load model file into level struct
             std::unique_ptr<model> modelPtr;
-            bool modelExist = slurp::checkFileExist(global::rootModelPath, modelName, "obj");
+            bool modelExist = slurp::checkFileExist(rootModelPath, modelName, "obj");
 
             if (modelExist) {
                 modelPtr = load_model_from_disk(modelName.c_str());
@@ -256,3 +252,5 @@ struct Cam {
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
 };
+
+} // namespace global
