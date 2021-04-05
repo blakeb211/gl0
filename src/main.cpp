@@ -11,13 +11,12 @@ void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, Cam& cam);
 void init_textures();
 unsigned int init_vertices();
-void initReverseTypeMap();
 void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title, GLFWframebuffersizefun);
 
 int main()
 {
-    initReverseTypeMap();
+    global::initReverseTypeMap();
 
     FrameRater<1000> fr;
 
@@ -187,13 +186,6 @@ unsigned int init_vertices()
     glBindVertexArray(0);
 
     return VAO;
-}
-
-void initReverseTypeMap()
-{
-    for (const auto& mapItem : global::str_to_type) {
-        type_to_str[mapItem.second] = mapItem.first;
-    }
 }
 
 void init_textures()

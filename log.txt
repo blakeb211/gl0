@@ -3,3 +3,4 @@ SUCCESS:: level test slurped from disk
 SUCCESS:: model < cube > slurped from disk 
 box cube vec3(0.000000, 0.000000, 1.000000) vec3(0.000000, 0.000000, 0.000000) 
 model stats | verts, normals, faces:   26.000   26.000   48.000 
+avg framerate:  719.424 

@@ -27,6 +27,15 @@ inline std::map<std::string, ENTITY_TYPE> str_to_type {
     { "ground", ENTITY_TYPE::ground },
 };
 
+inline std::map<global::ENTITY_TYPE, std::string> type_to_str {};
+
+void initReverseTypeMap()
+{
+    for (const auto& mapItem : global::str_to_type) {
+        type_to_str[mapItem.second] = mapItem.first;
+    }
+}
+
 } // namespace global
 
 struct model {
@@ -54,8 +63,6 @@ inline std::unique_ptr<level> load_level(std::string);
 
 inline std::pair<int, int> extract_pair_of_ints(std::string& token,
     std::string& delimiter);
-
-inline std::map<global::ENTITY_TYPE, std::string> type_to_str {};
 
 inline std::unique_ptr<std::string> levelPath(std::string name)
 {
@@ -160,7 +167,8 @@ std::unique_ptr<level> load_level(std::string levelName)
         auto levelData = slurp::get_file_contents(levelPath(levelName)->c_str());
         logPrintLn({ "SUCCESS:: level", levelName, "slurped from disk" });
 
-        using namespace global; // used to pull in ENTITY_TYPE and str_to_type
+        using namespace global; // used for ENTITY_TYPE, str_to_type, type_to_str
+
         int lineNum = 0;
 
         while (levelData.good()) {
