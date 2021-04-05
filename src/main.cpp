@@ -8,18 +8,23 @@
 #include "headers.h"
 
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window, gxb::Cam& cam);
+void processInput(GLFWwindow* window, gxb::Camera& cam);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void init_textures();
 unsigned int init_vertices();
 void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title, GLFWframebuffersizefun);
 
+gxb::Camera camera {};
+float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
+bool firstMouse = true;
+
 int main()
 {
     gxb::initReverseTypeMap();
 
-    FrameRater<1000> fr;
+    FrameRater<3000> fr;
 
     setLogFile("log.txt");
 
@@ -28,6 +33,8 @@ int main()
     auto& h = gxb::SCR_HEIGHT;
     GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+
     logOpenGLInfo();
     glEnable(GL_DEPTH_TEST);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -38,7 +45,6 @@ int main()
     int VAO = init_vertices();
 
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(60.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
     // this code should be in the level
     glm::vec3 cubePositions[] = {
@@ -54,7 +60,6 @@ int main()
         glm::vec3(-1.3f, 1.0f, -1.5f)
     };
 
-    gxb::Cam camera {};
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
@@ -69,7 +74,6 @@ int main()
 
         // create transformations
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
 
         progOne.setMat4("model", model);
 
@@ -78,9 +82,10 @@ int main()
         float camZ = (float)cos(glfwGetTime()) * radius;
 
         //view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-        view = glm::lookAt(camera.cameraPos, camera.cameraPos + camera.cameraFront, camera.cameraUp);
+        auto view = camera.GetViewMatrix();
         //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         progOne.setMat4("view", view);
+        projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
         progOne.setMat4("projection", projection);
         // render
         // ------
@@ -237,23 +242,23 @@ void init_textures()
 // process all input: query GLFW whether relevant keys are pressed/released
 // this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window, gxb::Cam& cam)
+void processInput(GLFWwindow* window, gxb::Camera& cam)
 {
     const float cameraSpeed = 0.05f; // adjust accordingly
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        cam.cameraPos += glm::normalize(glm::cross(cam.cameraFront, cam.cameraUp)) * cameraSpeed;
+        cam.Position += glm::normalize(glm::cross(cam.Front, cam.Up)) * cameraSpeed;
 
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        cam.cameraPos -= glm::normalize(glm::cross(cam.cameraFront, cam.cameraUp)) * cameraSpeed;
+        cam.Position -= glm::normalize(glm::cross(cam.Front, cam.Up)) * cameraSpeed;
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        cam.cameraPos += cameraSpeed * cam.cameraFront;
+        cam.Position += cameraSpeed * cam.Front;
 
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        cam.cameraPos -= cameraSpeed * cam.cameraFront;
+        cam.Position -= cameraSpeed * cam.Front;
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
         __noop;
@@ -272,7 +277,19 @@ void framebuf_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    __noop;
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 GLFWwindow* initGLFW(unsigned int w,
@@ -303,4 +320,11 @@ GLFWwindow* initGLFW(unsigned int w,
         return nullptr;
     }
     return window;
+}
+
+// glfw: whenever the mouse scroll wheel scrolls, this callback is called
+// ----------------------------------------------------------------------
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    camera.ProcessMouseScroll(yoffset);
 }
