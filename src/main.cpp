@@ -22,7 +22,7 @@ bool firstMouse = true;
 
 int main()
 {
-    gxb::initReverseTypeMap();
+    gxb::initReverseTypeMap(); // creates str_to_type 
 
     FrameRater<3000> fr;
 
