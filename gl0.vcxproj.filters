@@ -102,6 +102,9 @@
     <None Include="shaders\3pos3color.vs">
       <Filter>Shaders</Filter>
     </None>
+    <None Include=".gitignore">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Object Include="models\plane.obj">

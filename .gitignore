@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 *.swp
 *.un~
+
+# game log file
+log.txt

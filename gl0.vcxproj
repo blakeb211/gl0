@@ -226,6 +226,7 @@
     <ClInclude Include="thirdparty\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="shaders\3pos3color.vs" />
     <None Include="shaders\colorFromVertex.fs" />
   </ItemGroup>
