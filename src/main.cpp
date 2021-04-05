@@ -9,6 +9,7 @@
 
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, gxb::Cam& cam);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void init_textures();
 unsigned int init_vertices();
 void logOpenGLInfo();
@@ -26,8 +27,10 @@ int main()
     auto& w = gxb::SCR_WIDTH;
     auto& h = gxb::SCR_HEIGHT;
     GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
     logOpenGLInfo();
     glEnable(GL_DEPTH_TEST);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     auto level = gxb::load_level("test");
 
@@ -55,6 +58,9 @@ int main()
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
+        fr.sleepAndUpdateTimes();
+        float deltaTime = fr.lastTimeInMs();
+
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
         processInput(window, camera);
@@ -103,7 +109,6 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
-        fr.sleep();
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
@@ -263,6 +268,11 @@ void processInput(GLFWwindow* window, gxb::Cam& cam)
 void framebuf_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    __noop;
 }
 
 GLFWwindow* initGLFW(unsigned int w,

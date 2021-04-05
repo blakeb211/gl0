@@ -1,8 +1,10 @@
+finish camera movement
+
+consider vsync instead of pausing
+
 finish opengl tutorial
 
 get objects loading and rendering from level struct
-
-camera movement
 
 add object properties, like state timings to level text
 

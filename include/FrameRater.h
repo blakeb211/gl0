@@ -21,7 +21,7 @@ public:
     {
     }
     auto getFrameCount() { return this->frame_count; }
-    void sleep()
+    void sleepAndUpdateTimes()
     {
         // add to time point
         tp += time_between_frames;
@@ -30,15 +30,21 @@ public:
         auto diff_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
             newTime - lastTime)
                            .count();
-        times.put((double)diff_ms);
 
-        // check for framerates not being met
+        times.put((double)diff_ms);
+        deltaTime = diff_ms;
+        lastTime = newTime;
+
         if (frame_count % FR_PRINT_FREQ == 0) {
             logPrintLn({ "avg framerate:", this->getFrameRate() });
         }
-        lastTime = newTime;
 
+        //@TODO: Should I be pausing here if I we are updating motion based on deltaTime?
         std::this_thread::sleep_until(tp);
+    }
+    float lastTimeInMs()
+    {
+        return this->deltaTime;
     }
 
 private:
@@ -50,7 +56,8 @@ private:
         decltype(time_between_frames)>
         tp;
     timepoint lastTime;
-    circular_buffer<double> times;
+    circular_buffer<double> times; // ms between frames
+    float deltaTime; // ms between last frame
     unsigned long int frame_count;
 
     double getFrameRate(void)

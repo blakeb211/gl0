@@ -140,7 +140,8 @@ inline std::unique_ptr<model> load_model_from_disk(const char* name)
                 std::string delimiter = "//";
                 auto [faceId, normalId] = extract_pair_of_ints(token, delimiter);
                 if (faceId == -999 && normalId == -999) {
-                    logErr("ERROR:: < file line # , model name > ::", lineNum, name);
+                    logErr("ERROR:: < file line # , model name > ::", lineNum,
+                        name);
                 }
                 faces[i] = faceId;
                 // logPrintLn({"face id: ", faceId, "normal id:", normalId});
@@ -171,7 +172,8 @@ std::unique_ptr<level> load_level(std::string levelName)
             lineNum++;
             ENTITY_TYPE currType {};
 
-            getline(levelData, line, '\n'); // getline sets stream bits on error
+            getline(levelData, line,
+                '\n'); // getline sets stream bits on error
 
             std::stringstream lineStream { line };
             lineStream >> entityName;
@@ -182,7 +184,8 @@ std::unique_ptr<level> load_level(std::string levelName)
                 continue;
             }
 
-            // read name of model, model initial position, model initial rotation
+            // read name of model, model initial position, model initial
+            // rotation
             std::string modelName;
             glm::vec3 Pos {};
             glm::vec3 Rot {};
@@ -247,10 +250,16 @@ struct Cam {
         cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
         cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
         cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+        float yaw = -90.0f;
+        float pitch = 0.0f;
+        direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        direction.y = sin(glm::radians(pitch));
+        direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     };
     glm::vec3 cameraPos;
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
+    glm::vec3 direction;
 };
 
-} // namespace global
+} // namespace gxb
