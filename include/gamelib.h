@@ -30,7 +30,7 @@ inline std::map<std::string, ENTITY_TYPE> str_to_type {
 
 inline std::map<ENTITY_TYPE, std::string> type_to_str {};
 
-void initReverseTypeMap()
+void initTypeToStrMap()
 {
     for (const auto& mapItem : str_to_type) {
         type_to_str[mapItem.second] = mapItem.first;

@@ -22,28 +22,31 @@ bool firstMouse = true;
 
 int main()
 {
-    gxb::initReverseTypeMap(); // creates str_to_type 
+    gxb::initTypeToStrMap(); // creates str_to_type 
 
-    FrameRater<3000> fr;
+    FrameRater fr{};
 
     setLogFile("log.txt");
 
-    // glfw: initialize and configure
+    // glfw: initialize and setup callbacks 
     auto& w = gxb::SCR_WIDTH;
     auto& h = gxb::SCR_HEIGHT;
-    GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
+    
+	GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
-
-    logOpenGLInfo();
-    glEnable(GL_DEPTH_TEST);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glEnable(GL_DEPTH_TEST);
+	glfwSwapInterval(1);
+    logOpenGLInfo();
 
     auto level = gxb::load_level("test");
 
     auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"), *gxb::shaderPath("colorFromVertex.fs"));
     int VAO = init_vertices();
 
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
 
     // this code should be in the level
@@ -63,7 +66,7 @@ int main()
     // Game loop
     // -----------
     while (!glfwWindowShouldClose(window)) {
-        fr.sleepAndUpdateTimes();
+        fr.UpdateTimes();
         float deltaTime = fr.lastTimeInMs();
 
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -72,28 +75,23 @@ int main()
 
         progOne.use();
 
-        // create transformations
-        glm::mat4 model = glm::mat4(1.0f);
-
-        progOne.setMat4("model", model);
-
-        const float radius = 10.0f;
-        float camX = (float)sin(glfwGetTime()) * radius;
-        float camZ = (float)cos(glfwGetTime()) * radius;
-
-        //view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-        auto view = camera.GetViewMatrix();
-        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        // set transformations
+	    model = glm::mat4(1.0f);	
+        
+		view = camera.GetViewMatrix();
         progOne.setMat4("view", view);
-        projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
+        
+		projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
         progOne.setMat4("projection", projection);
-        // render
+        
+		// render
         // ------
         glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindVertexArray(VAO);
 
+		
         for (unsigned int i = 0; i < 10; i++) {
             model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
@@ -278,16 +276,16 @@ void framebuf_size_callback(GLFWwindow* window, int width, int height)
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
+        lastX = (float)xpos;
+        lastY = (float)ypos;
         firstMouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float xoffset = (float)xpos - lastX;
+    float yoffset = lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
 
-    lastX = xpos;
-    lastY = ypos;
+    lastX = (float)xpos;
+    lastY = (float)ypos;
 
     camera.ProcessMouseMovement(xoffset, yoffset);
 }
@@ -326,5 +324,5 @@ GLFWwindow* initGLFW(unsigned int w,
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.ProcessMouseScroll(yoffset);
+    camera.ProcessMouseScroll((float)yoffset);
 }
