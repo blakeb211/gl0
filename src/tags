@@ -11,19 +11,19 @@ APIENTRY	..\thirdparty\include\glad\glad.h	32;"	d
 APIENTRY	..\thirdparty\include\glad\glad.h	36;"	d
 APIENTRY	..\thirdparty\src\glad\glad.c	31;"	d	file:
 APIENTRYP	..\thirdparty\include\glad\glad.h	39;"	d
-BACKWARD	..\include\gamelib.h	/^    BACKWARD,$/;"	e	enum:gxb::Camera_Movement
+BACKWARD	..\include\gamelib.h	/^enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };$/;"	e	enum:gxb::Camera_Movement
 CALLBACK	..\thirdparty\include\GLFW\glfw3.h	140;"	d
 CALLBACK	..\thirdparty\include\GLFW\glfw3.h	5886;"	d
-Camera	..\include\gamelib.h	/^    Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch)$/;"	f	class:gxb::Camera
-Camera	..\include\gamelib.h	/^    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)$/;"	f	class:gxb::Camera
+Camera	..\include\gamelib.h	/^    Camera(float posX,$/;"	f	class:gxb::Camera
+Camera	..\include\gamelib.h	/^    Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),$/;"	f	class:gxb::Camera
 Camera	..\include\gamelib.h	/^class Camera {$/;"	c	namespace:gxb
-Camera_Movement	..\include\gamelib.h	/^enum Camera_Movement {$/;"	g	namespace:gxb
-ENTITY_TYPE	..\include\gamelib.h	/^enum class ENTITY_TYPE { unknown,$/;"	c	namespace:gxb
+Camera_Movement	..\include\gamelib.h	/^enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };$/;"	g	namespace:gxb
+ENTITY_TYPE	..\include\gamelib.h	/^enum class ENTITY_TYPE { unknown, hero, box, ground };$/;"	c	namespace:gxb
 FAST_BITS	..\thirdparty\include\stb\stb_image.h	1876;"	d
 FMADD_LANE	..\thirdparty\include\glm\simd\neon.h	125;"	d
 FMADD_LANE	..\thirdparty\include\glm\simd\neon.h	148;"	d
-FORWARD	..\include\gamelib.h	/^    FORWARD,$/;"	e	enum:gxb::Camera_Movement
-FR_PRINT_FREQ	..\include\framerater.h	/^constexpr auto FR_PRINT_FREQ = 5000;$/;"	v
+FORWARD	..\include\gamelib.h	/^enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };$/;"	e	enum:gxb::Camera_Movement
+FR_PRINT_FREQ	..\include\framerater.h	/^constexpr auto FR_PRINT_FREQ = 600;$/;"	v
 FrameRater	..\include\framerater.h	/^    FrameRater()$/;"	f	class:FrameRater
 FrameRater	..\include\framerater.h	/^class FrameRater {$/;"	c
 Front	..\include\gamelib.h	/^    glm::vec3 Front;$/;"	m	class:gxb::Camera
@@ -2237,7 +2237,7 @@ GLuint64EXT	..\thirdparty\include\glad\glad.h	/^typedef khronos_uint64_t GLuint6
 GLushort	..\thirdparty\include\glad\glad.h	/^typedef khronos_uint16_t GLushort;$/;"	t
 GLvdpauSurfaceNV	..\thirdparty\include\glad\glad.h	/^typedef GLintptr GLvdpauSurfaceNV;$/;"	t
 GLvoid	..\thirdparty\include\glad\glad.h	/^typedef void GLvoid;$/;"	t
-GetViewMatrix	..\include\gamelib.h	/^    glm::mat4 GetViewMatrix()$/;"	f	class:gxb::Camera
+GetViewMatrix	..\include\gamelib.h	/^    glm::mat4 GetViewMatrix() {$/;"	f	class:gxb::Camera
 HAVE_WINAPIFAMILY	..\thirdparty\src\glad\glad.c	42;"	d	file:
 HAVE_WINAPIFAMILY	..\thirdparty\src\glad\glad.c	45;"	d	file:
 ID	..\include\shader.h	/^    unsigned int ID;$/;"	m	class:Shader
@@ -2268,7 +2268,7 @@ KHRONOS_SUPPORT_INT64	..\thirdparty\include\KHR\khrplatform.h	196;"	d
 KHRONOS_SUPPORT_INT64	..\thirdparty\include\KHR\khrplatform.h	206;"	d
 KHRONOS_SUPPORT_INT64	..\thirdparty\include\KHR\khrplatform.h	219;"	d
 KHRONOS_TRUE	..\thirdparty\include\KHR\khrplatform.h	/^    KHRONOS_TRUE  = 1,$/;"	e	enum:__anon26
-LEFT	..\include\gamelib.h	/^    LEFT,$/;"	e	enum:gxb::Camera_Movement
+LEFT	..\include\gamelib.h	/^enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };$/;"	e	enum:gxb::Camera_Movement
 MouseSensitivity	..\include\gamelib.h	/^    float MouseSensitivity;$/;"	m	class:gxb::Camera
 MovementSpeed	..\include\gamelib.h	/^    float MovementSpeed;$/;"	m	class:gxb::Camera
 PFNGLACCUMPROC	..\thirdparty\include\glad\glad.h	/^typedef void(APIENTRYP PFNGLACCUMPROC)(GLenum op, GLfloat value);$/;"	t
@@ -3000,16 +3000,16 @@ PFNWGLGETPROCADDRESSPROC_PRIVATE	..\thirdparty\src\glad\glad.c	/^typedef void*(A
 PITCH	..\include\gamelib.h	/^const float PITCH = 0.0f;$/;"	v
 Pitch	..\include\gamelib.h	/^    float Pitch;$/;"	m	class:gxb::Camera
 Position	..\include\gamelib.h	/^    glm::vec3 Position;$/;"	m	class:gxb::Camera
-ProcessKeyboard	..\include\gamelib.h	/^    void ProcessKeyboard(Camera_Movement direction, float deltaTime)$/;"	f	class:gxb::Camera
-ProcessMouseMovement	..\include\gamelib.h	/^    void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)$/;"	f	class:gxb::Camera
-ProcessMouseScroll	..\include\gamelib.h	/^    void ProcessMouseScroll(float yoffset)$/;"	f	class:gxb::Camera
-RIGHT	..\include\gamelib.h	/^    RIGHT$/;"	e	enum:gxb::Camera_Movement
+ProcessKeyboard	..\include\gamelib.h	/^    void ProcessKeyboard(Camera_Movement direction, float deltaTime) {$/;"	f	class:gxb::Camera
+ProcessMouseMovement	..\include\gamelib.h	/^    void ProcessMouseMovement(float xoffset,$/;"	f	class:gxb::Camera
+ProcessMouseScroll	..\include\gamelib.h	/^    void ProcessMouseScroll(float yoffset) {$/;"	f	class:gxb::Camera
+RIGHT	..\include\gamelib.h	/^enum Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };$/;"	e	enum:gxb::Camera_Movement
 Right	..\include\gamelib.h	/^    glm::vec3 Right;$/;"	m	class:gxb::Camera
 SCR_HEIGHT	..\include\gamelib.h	/^inline const unsigned int SCR_HEIGHT = 600;$/;"	v
 SCR_WIDTH	..\include\gamelib.h	/^inline const unsigned int SCR_WIDTH = 800;$/;"	v
 SENSITIVITY	..\include\gamelib.h	/^const float SENSITIVITY = 0.1f;$/;"	v
 SHADER_H	..\include\shader.h	2;"	d
-SPEED	..\include\gamelib.h	/^const float SPEED = 2.5f;$/;"	v
+SPEED	..\include\gamelib.h	/^const float SPEED = 0.5f;$/;"	v
 STBIDEF	..\thirdparty\include\stb\stb_image.h	365;"	d
 STBIDEF	..\thirdparty\include\stb\stb_image.h	367;"	d
 STBI_ASSERT	..\thirdparty\include\stb\stb_image.h	570;"	d
@@ -3090,13 +3090,14 @@ Shader	..\include\shader.h	/^    Shader(std::string vertexStr, std::string fragS
 Shader	..\include\shader.h	/^class Shader {$/;"	c
 Stub	..\thirdparty\include\glm\detail\_swizzle.hpp	/^		struct Stub {};$/;"	s	struct:glm::detail::_swizzle_base2
 Up	..\include\gamelib.h	/^    glm::vec3 Up;$/;"	m	class:gxb::Camera
+UpdateTimes	..\include\framerater.h	/^    void UpdateTimes() {$/;"	f	class:FrameRater
 WINGDIAPI	..\thirdparty\include\GLFW\glfw3.h	133;"	d
 WINGDIAPI	..\thirdparty\include\GLFW\glfw3.h	5881;"	d
 WorldUp	..\include\gamelib.h	/^    glm::vec3 WorldUp;$/;"	m	class:gxb::Camera
 YAW	..\include\gamelib.h	/^const float YAW = -90.0f;$/;"	v
 YCbCr_to_RGB_kernel	..\thirdparty\include\stb\stb_image.h	/^   void (*YCbCr_to_RGB_kernel)(stbi_uc *out, const stbi_uc *y, const stbi_uc *pcb, const stbi_uc *pcr, int count, int step);$/;"	m	struct:__anon34
 Yaw	..\include\gamelib.h	/^    float Yaw;$/;"	m	class:gxb::Camera
-ZOOM	..\include\gamelib.h	/^const float ZOOM = 45.0f;$/;"	v
+ZOOM	..\include\gamelib.h	/^const float ZOOM = 25.0f;$/;"	v
 Zoom	..\include\gamelib.h	/^    float Zoom;$/;"	m	class:gxb::Camera
 _CRT_SECURE_NO_WARNINGS	..\src\slurp.cpp	1;"	d	file:
 _GLAD_IS_SOME_NEW_VERSION	..\thirdparty\src\glad\glad.c	158;"	d	file:
@@ -3388,7 +3389,7 @@ aligned_vec4	..\thirdparty\include\glm\gtc\type_aligned.hpp	/^	typedef aligned_l
 aligned_vec4	..\thirdparty\include\glm\gtc\type_aligned.hpp	/^	typedef aligned_mediump_vec4		aligned_vec4;$/;"	t	namespace:glm
 all_a	..\thirdparty\include\stb\stb_image.h	/^   unsigned int mr,mg,mb,ma, all_a;$/;"	m	struct:__anon42
 app14_color_transform	..\thirdparty\include\stb\stb_image.h	/^   int            app14_color_transform; \/\/ Adobe APP14 tag$/;"	m	struct:__anon34
-appRoot	..\include\gamelib.h	/^inline std::string appRoot = std::string { R"(c:\\cprojects\\gl0\\)" };$/;"	v
+appRoot	..\include\gamelib.h	/^inline std::string appRoot = std::string{R"(c:\\cprojects\\gl0\\)"};$/;"	v
 atan2	..\thirdparty\include\glm\gtx\compatibility.hpp	/^	template<typename T, qualifier Q> GLM_FUNC_QUALIFIER T atan2(T x, T y){return atan(x, y);}																\/\/!< \\brief Arc tangent. Returns an angle whose tangent is y\/x. The signs of x and y are used to determine what quadrant the angle is in. The range of values returned by this function is [-PI, PI]. Results are undefined if x and y are both 0. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
 atan2	..\thirdparty\include\glm\gtx\compatibility.hpp	/^	template<typename T, qualifier Q> GLM_FUNC_QUALIFIER vec<2, T, Q> atan2(const vec<2, T, Q>& x, const vec<2, T, Q>& y){return atan(x, y);}	\/\/!< \\brief Arc tangent. Returns an angle whose tangent is y\/x. The signs of x and y are used to determine what quadrant the angle is in. The range of values returned by this function is [-PI, PI]. Results are undefined if x and y are both 0. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
 atan2	..\thirdparty\include\glm\gtx\compatibility.hpp	/^	template<typename T, qualifier Q> GLM_FUNC_QUALIFIER vec<3, T, Q> atan2(const vec<3, T, Q>& x, const vec<3, T, Q>& y){return atan(x, y);}	\/\/!< \\brief Arc tangent. Returns an angle whose tangent is y\/x. The signs of x and y are used to determine what quadrant the angle is in. The range of values returned by this function is [-PI, PI]. Results are undefined if x and y are both 0. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
@@ -3426,12 +3427,13 @@ bool_type	..\thirdparty\include\glm\detail\type_vec1.hpp	/^		typedef vec<1, bool
 bool_type	..\thirdparty\include\glm\detail\type_vec2.hpp	/^		typedef vec<2, bool, Q> bool_type;$/;"	t	struct:glm::vec
 bool_type	..\thirdparty\include\glm\detail\type_vec3.hpp	/^		typedef vec<3, bool, Q> bool_type;$/;"	t	struct:glm::vec
 bool_type	..\thirdparty\include\glm\detail\type_vec4.hpp	/^		typedef vec<4, bool, Q> bool_type;$/;"	t	struct:glm::vec
-box	..\include\gamelib.h	/^    box,$/;"	m	class:gxb::ENTITY_TYPE
+box	..\include\gamelib.h	/^enum class ENTITY_TYPE { unknown, hero, box, ground };$/;"	m	class:gxb::ENTITY_TYPE
 bpp	..\thirdparty\include\stb\stb_image.h	/^   int bpp, offset, hsz;$/;"	m	struct:__anon42
 bss_	..\thirdparty\include\glm\gtx\io.hpp	/^			basic_state_saver<CTy> const bss_;$/;"	m	class:glm::io::basic_format_saver
 buf_	..\include\circular_buffer.h	/^    std::unique_ptr<T[]> buf_;$/;"	m	class:circular_buffer
 buffer_start	..\thirdparty\include\stb\stb_image.h	/^   stbi_uc buffer_start[128];$/;"	m	struct:__anon29
 buflen	..\thirdparty\include\stb\stb_image.h	/^   int buflen;$/;"	m	struct:__anon29
+buildVAO	..\include\gamelib.h	/^    unsigned int buildVAO() {$/;"	f	struct:gxb::level
 buttons	..\thirdparty\include\GLFW\glfw3.h	/^    unsigned char buttons[15];$/;"	m	struct:GLFWgamepadstate
 bvec1	..\thirdparty\include\glm\ext\vector_bool1.hpp	/^	typedef vec<1, bool, defaultp>		bvec1;$/;"	t	namespace:glm
 bvec1	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<1, bool, defaultp>	bvec1;$/;"	t	namespace:glm
@@ -3577,7 +3579,7 @@ delim_left	..\thirdparty\include\glm\gtx\io.hpp	/^			char_type  delim_left;$/;"	
 delim_right	..\thirdparty\include\glm\gtx\io.hpp	/^			char_type  delim_right;$/;"	m	class:glm::io::format_punct
 delimeter	..\thirdparty\include\glm\gtx\io.hpp	/^		struct delimeter$/;"	s	namespace:glm::io
 delta	..\thirdparty\include\stb\stb_image.h	/^   int    delta[17];   \/\/ old 'firstsymbol' - old 'firstcode'$/;"	m	struct:__anon33
-deltaTime	..\include\framerater.h	/^    float deltaTime; \/\/ ms between last frame$/;"	m	class:FrameRater
+deltaTime	..\include\framerater.h	/^    float deltaTime;		    \/\/ ms between last frame$/;"	m	class:FrameRater
 depth	..\thirdparty\include\stb\stb_image.h	/^   int depth;$/;"	m	struct:__anon40
 dequant	..\thirdparty\include\stb\stb_image.h	/^   stbi__uint16 dequant[4][64];$/;"	m	struct:__anon34
 detail	..\thirdparty\include\glm\detail\_noise.hpp	/^namespace detail$/;"	n	namespace:glm
@@ -3876,8 +3878,7 @@ genTypeEnum	..\thirdparty\include\glm\detail\qualifier.hpp	/^	enum genTypeEnum$/
 genTypeTrait	..\thirdparty\include\glm\detail\qualifier.hpp	/^	struct genTypeTrait$/;"	s	namespace:glm::detail
 genTypeTrait	..\thirdparty\include\glm\detail\qualifier.hpp	/^	struct genTypeTrait<mat<C, R, T> >$/;"	s	namespace:glm::detail
 get	..\include\circular_buffer.h	/^    T get()$/;"	f	class:circular_buffer
-getFrameCount	..\include\framerater.h	/^    auto getFrameCount() { return this->frame_count; }$/;"	f	class:FrameRater
-getFrameRate	..\include\framerater.h	/^    double getFrameRate(void)$/;"	f	class:FrameRater
+getAvgFrameRate	..\include\framerater.h	/^    double getAvgFrameRate(void) {$/;"	f	class:FrameRater
 get_exts	..\thirdparty\src\glad\glad.c	/^static int get_exts(void) {$/;"	f	file:
 get_file_contents	..\src\slurp.cpp	/^stringstream get_file_contents(const char* filename)$/;"	f	namespace:slurp
 get_file_contents	..\src\slurp.cpp	/^stringstream get_file_contents(std::string filename)$/;"	f	namespace:slurp
@@ -6417,7 +6418,7 @@ hdata	..\thirdparty\include\glm\detail\type_half.hpp	/^	typedef short hdata;$/;"
 head_	..\include\circular_buffer.h	/^    size_t head_ = 0;$/;"	m	class:circular_buffer
 height	..\thirdparty\include\GLFW\glfw3.h	/^    int height;$/;"	m	struct:GLFWimage
 height	..\thirdparty\include\GLFW\glfw3.h	/^    int height;$/;"	m	struct:GLFWvidmode
-hero	..\include\gamelib.h	/^    hero,$/;"	m	class:gxb::ENTITY_TYPE
+hero	..\include\gamelib.h	/^enum class ENTITY_TYPE { unknown, hero, box, ground };$/;"	m	class:gxb::ENTITY_TYPE
 highp	..\thirdparty\include\glm\detail\qualifier.hpp	/^		highp = packed_highp, \/\/\/< By default highp qualifier is also packed$/;"	e	enum:glm::qualifier
 highp_bvec1	..\thirdparty\include\glm\ext\vector_bool1_precision.hpp	/^	typedef vec<1, bool, highp>			highp_bvec1;$/;"	t	namespace:glm
 highp_bvec1	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<1, bool, highp>		highp_bvec1;$/;"	t	namespace:glm
@@ -7038,7 +7039,7 @@ img_v_max	..\thirdparty\include\stb\stb_image.h	/^   int img_h_max, img_v_max;$/
 img_x	..\thirdparty\include\stb\stb_image.h	/^   stbi__uint32 img_x, img_y;$/;"	m	struct:__anon29
 img_y	..\thirdparty\include\stb\stb_image.h	/^   stbi__uint32 img_x, img_y;$/;"	m	struct:__anon29
 initGLFW	..\src\main.cpp	/^GLFWwindow* initGLFW(unsigned int w,$/;"	f
-initReverseTypeMap	..\include\gamelib.h	/^void initReverseTypeMap()$/;"	f	namespace:gxb
+initTypeToStrMap	..\include\gamelib.h	/^void initTypeToStrMap() {$/;"	f	namespace:gxb
 init_gentype	..\thirdparty\include\glm\detail\qualifier.hpp	/^	struct init_gentype$/;"	s	namespace:glm::detail
 init_gentype	..\thirdparty\include\glm\detail\qualifier.hpp	/^	struct init_gentype<genType, GENTYPE_MAT>$/;"	s	namespace:glm::detail
 init_gentype	..\thirdparty\include\glm\detail\qualifier.hpp	/^	struct init_gentype<genType, GENTYPE_QUAT>$/;"	s	namespace:glm::detail
@@ -7141,7 +7142,7 @@ khronos_usize_t	..\thirdparty\include\KHR\khrplatform.h	/^typedef unsigned long 
 khronos_usize_t	..\thirdparty\include\KHR\khrplatform.h	/^typedef unsigned long long int khronos_usize_t;$/;"	t
 khronos_utime_nanoseconds_t	..\thirdparty\include\KHR\khrplatform.h	/^typedef khronos_uint64_t       khronos_utime_nanoseconds_t;$/;"	t
 lastTime	..\include\framerater.h	/^    timepoint lastTime;$/;"	m	class:FrameRater
-lastTimeInMs	..\include\framerater.h	/^    float lastTimeInMs()$/;"	f	class:FrameRater
+lastTimeInMs	..\include\framerater.h	/^    float lastTimeInMs() { return this->deltaTime; }$/;"	f	class:FrameRater
 lastX	..\src\main.cpp	/^float lastX = gxb::SCR_WIDTH \/ 2, lastY = gxb::SCR_HEIGHT \/ 2;$/;"	v
 lastY	..\src\main.cpp	/^float lastX = gxb::SCR_WIDTH \/ 2, lastY = gxb::SCR_HEIGHT \/ 2;$/;"	v
 length	..\thirdparty\include\glm\detail\type_mat2x2.hpp	/^		GLM_FUNC_DECL static GLM_CONSTEXPR length_type length() { return 2; }$/;"	f	struct:glm::mat
@@ -7184,7 +7185,7 @@ lerp	..\thirdparty\include\glm\gtx\compatibility.hpp	/^	template<typename T, qua
 lerp	..\thirdparty\include\glm\gtx\compatibility.hpp	/^	template<typename T, qualifier Q> GLM_FUNC_QUALIFIER vec<4, T, Q> lerp(const vec<4, T, Q>& x, const vec<4, T, Q>& y, const vec<4, T, Q>& a){return mix(x, y, a);}	\/\/!< \\brief Returns the component-wise result of x * (1.0 - a) + y * a, i.e., the linear blend of x and y using vector a. The value for a is not restricted to the range [0, 1]. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
 lerp	..\thirdparty\include\glm\gtx\compatibility.hpp	/^	template<typename T> GLM_FUNC_QUALIFIER T lerp(T x, T y, T a){return mix(x, y, a);}																					\/\/!< \\brief Returns x * (1.0 - a) + y * a, i.e., the linear blend of x and y using the floating-point value a. The value for a is not restricted to the range [0, 1]. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
 level	..\include\gamelib.h	/^struct level {$/;"	s	namespace:gxb
-levelPath	..\include\gamelib.h	/^inline std::unique_ptr<std::string> levelPath(std::string name)$/;"	f	namespace:gxb
+levelPath	..\include\gamelib.h	/^inline std::unique_ptr<std::string> levelPath(std::string name) {$/;"	f	namespace:gxb
 lflags	..\thirdparty\include\stb\stb_image.h	/^   int lflags;$/;"	m	struct:__anon45
 libGL	..\thirdparty\src\glad\glad.c	/^static HMODULE libGL;$/;"	v	file:
 libGL	..\thirdparty\src\glad\glad.c	/^static void* libGL;$/;"	v	file:
@@ -7205,14 +7206,14 @@ load_GL_VERSION_3_1	..\thirdparty\src\glad\glad.c	/^static void load_GL_VERSION_
 load_GL_VERSION_3_2	..\thirdparty\src\glad\glad.c	/^static void load_GL_VERSION_3_2(GLADloadproc load) {$/;"	f	file:
 load_GL_VERSION_3_3	..\thirdparty\src\glad\glad.c	/^static void load_GL_VERSION_3_3(GLADloadproc load) {$/;"	f	file:
 load_jpeg_image	..\thirdparty\include\stb\stb_image.h	/^static stbi_uc *load_jpeg_image(stbi__jpeg *z, int *out_x, int *out_y, int *comp, int req_comp)$/;"	f
-load_level	..\include\gamelib.h	/^std::unique_ptr<level> load_level(std::string levelName)$/;"	f	namespace:gxb
-load_model_from_disk	..\include\gamelib.h	/^inline std::unique_ptr<model> load_model_from_disk(const char* name)$/;"	f	namespace:gxb
+load_level	..\include\gamelib.h	/^std::unique_ptr<level> load_level(std::string levelName) {$/;"	f	namespace:gxb
+load_model_from_disk	..\include\gamelib.h	/^inline std::unique_ptr<model> load_model_from_disk(const char* name) {$/;"	f	namespace:gxb
 locale_	..\thirdparty\include\glm\gtx\io.hpp	/^			locale_type     locale_;$/;"	m	class:glm::io::basic_state_saver
 locale_type	..\thirdparty\include\glm\gtx\io.hpp	/^			typedef ::std::locale const            locale_type;$/;"	t	class:glm::io::basic_state_saver::std
 log2	..\thirdparty\include\glm\detail\_fixes.hpp	25;"	d
 logErr	..\src\log.cpp	/^void logErr(const char* fname, const int lineNum, const char* msg)$/;"	f
 logOpenGLInfo	..\src\main.cpp	/^void logOpenGLInfo()$/;"	f
-logPrintLn	..\src\log.cpp	/^void logPrintLn(initializer_list<any> il)$/;"	f
+logPrintLn	..\src\log.cpp	/^void logPrintLn(const initializer_list<any>& il)$/;"	f
 lowp	..\thirdparty\include\glm\detail\qualifier.hpp	/^		lowp = packed_lowp, \/\/\/< By default lowp qualifier is also packed$/;"	e	enum:glm::qualifier
 lowp_bvec1	..\thirdparty\include\glm\ext\vector_bool1_precision.hpp	/^	typedef vec<1, bool, lowp>			lowp_bvec1;$/;"	t	namespace:glm
 lowp_bvec1	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<1, bool, lowp>		lowp_bvec1;$/;"	t	namespace:glm
@@ -8149,9 +8150,9 @@ mg	..\thirdparty\include\stb\stb_image.h	/^   unsigned int mr,mg,mb,ma, all_a;$/
 min	..\thirdparty\include\glm\detail\_fixes.hpp	10;"	d
 minor	..\thirdparty\include\glad\glad.h	/^  int minor;$/;"	m	struct:gladGLversionStruct
 mod289	..\thirdparty\include\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER T mod289(T const& x)$/;"	f	namespace:glm::detail
-model	..\include\gamelib.h	/^    model()$/;"	f	struct:gxb::model
+model	..\include\gamelib.h	/^    model() {$/;"	f	struct:gxb::model
 model	..\include\gamelib.h	/^struct model {$/;"	s	namespace:gxb
-modelPath	..\include\gamelib.h	/^inline std::unique_ptr<std::string> modelPath(std::string name)$/;"	f	namespace:gxb
+modelPath	..\include\gamelib.h	/^inline std::unique_ptr<std::string> modelPath(std::string name) {$/;"	f	namespace:gxb
 models	..\include\gamelib.h	/^    std::vector<std::unique_ptr<model>> models;$/;"	m	struct:gxb::level
 mouse_callback	..\src\main.cpp	/^void mouse_callback(GLFWwindow* window, double xpos, double ypos)$/;"	f
 mr	..\thirdparty\include\stb\stb_image.h	/^   unsigned int mr,mg,mb,ma, all_a;$/;"	m	struct:__anon42
@@ -8471,7 +8472,8 @@ precision	..\thirdparty\include\glm\gtx\io.hpp	/^			unsigned   precision;$/;"	m	
 precision	..\thirdparty\include\glm\gtx\io.hpp	/^		struct precision$/;"	s	namespace:glm::io
 precision_	..\thirdparty\include\glm\gtx\io.hpp	/^			streamsize_type precision_;$/;"	m	class:glm::io::basic_state_saver
 prefix	..\thirdparty\include\stb\stb_image.h	/^   stbi__int16 prefix;$/;"	m	struct:__anon44
-processInput	..\src\main.cpp	/^void processInput(GLFWwindow* window, gxb::Camera& cam)$/;"	f
+printFrameRateIfFreqHasBeenReached	..\include\framerater.h	/^    void printFrameRateIfFreqHasBeenReached() {$/;"	f	class:FrameRater
+processInput	..\src\main.cpp	/^void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime)$/;"	f
 progressive	..\thirdparty\include\stb\stb_image.h	/^   int            progressive;$/;"	m	struct:__anon34
 put	..\include\circular_buffer.h	/^    void put(T item)$/;"	f	class:circular_buffer
 q	..\thirdparty\include\glm\detail\type_vec4.hpp	/^				struct { T s, t, p, q; };$/;"	m	struct:glm::vec::__anon18::__anon21
@@ -8491,6 +8493,7 @@ r	..\thirdparty\include\glm\detail\type_vec4.hpp	/^				struct { T r, g, b, a; };
 r	..\thirdparty\include\glm\detail\type_vec4.hpp	/^			union { T x, r, s; };$/;"	m	union:glm::vec::__anon22
 ratio	..\thirdparty\include\stb\stb_image.h	/^   int flags, bgindex, ratio, transparent, eflags;$/;"	m	struct:__anon45
 raw_coeff	..\thirdparty\include\stb\stb_image.h	/^      void *raw_data, *raw_coeff;$/;"	m	struct:__anon34::__anon35
+raw_data	..\include\gamelib.h	/^    std::vector<float> raw_data;$/;"	m	struct:gxb::model
 raw_data	..\thirdparty\include\stb\stb_image.h	/^      void *raw_data, *raw_coeff;$/;"	m	struct:__anon34::__anon35
 read	..\thirdparty\include\stb\stb_image.h	/^   int      (*read)  (void *user,char *data,int size);   \/\/ fill 'data' with 'size' bytes.  return number of bytes actually read$/;"	m	struct:__anon28
 read_from_callbacks	..\thirdparty\include\stb\stb_image.h	/^   int read_from_callbacks;$/;"	m	struct:__anon29
@@ -8551,7 +8554,7 @@ setVec3	..\include\shader.h	/^    void setVec3(const std::string& name, const gl
 setVec3	..\include\shader.h	/^    void setVec3(const std::string& name, float x, float y, float z) const$/;"	f	class:Shader
 setVec4	..\include\shader.h	/^    void setVec4(const std::string& name, const glm::vec4& value) const$/;"	f	class:Shader
 setVec4	..\include\shader.h	/^    void setVec4(const std::string& name,$/;"	f	class:Shader
-shaderPath	..\include\gamelib.h	/^inline std::unique_ptr<std::string> shaderPath(std::string name)$/;"	f	namespace:gxb
+shaderPath	..\include\gamelib.h	/^inline std::unique_ptr<std::string> shaderPath(std::string name) {$/;"	f	namespace:gxb
 sint	..\thirdparty\include\glm\gtx\integer.hpp	/^	typedef signed int					sint;$/;"	t	namespace:glm
 size	..\include\circular_buffer.h	/^    size_t size() const$/;"	f	class:circular_buffer
 size	..\thirdparty\include\GLFW\glfw3.h	/^    unsigned int size;$/;"	m	struct:GLFWgammaramp
@@ -8567,7 +8570,6 @@ size3_t	..\thirdparty\include\glm\gtx\std_based_type.hpp	/^	typedef vec<3, std::
 size4	..\thirdparty\include\glm\gtx\std_based_type.hpp	/^	typedef vec<4, std::size_t, defaultp>		size4;$/;"	t	namespace:glm
 size4_t	..\thirdparty\include\glm\gtx\std_based_type.hpp	/^	typedef vec<4, std::size_t, defaultp>		size4_t;$/;"	t	namespace:glm
 skip	..\thirdparty\include\stb\stb_image.h	/^   void     (*skip)  (void *user,int n);                 \/\/ skip the next 'n' bytes, or 'unget' the last -n bytes if negative$/;"	m	struct:__anon28
-sleepAndUpdateTimes	..\include\framerater.h	/^    void sleepAndUpdateTimes()$/;"	f	class:FrameRater
 slurp	..\include\slurp.h	/^namespace slurp {$/;"	n
 slurp	..\src\slurp.cpp	/^namespace slurp {$/;"	n	file:
 space	..\thirdparty\include\glm\gtx\io.hpp	/^			char_type  space;$/;"	m	class:glm::io::format_punct
@@ -8891,14 +8893,12 @@ test	..\thirdparty\include\glm\detail\setup.hpp	/^		enum test {value = ~0};$/;"	
 test	..\thirdparty\include\glm\ext\scalar_int_sized.hpp	/^		enum test {value = ~0};$/;"	g	struct:glm::detail::is_int
 test	..\thirdparty\include\glm\ext\scalar_uint_sized.hpp	/^		enum test {value = ~0};$/;"	g	struct:glm::detail::is_int
 texturePath	..\include\gamelib.h	/^inline std::string texturePath = appRoot + R"(textures\\)";$/;"	v
-time_between_frames	..\include\framerater.h	/^    std::chrono::duration<double, std::ratio<1, FPS>> time_between_frames;$/;"	m	class:FrameRater
 timepoint	..\include\framerater.h	/^typedef std::chrono::high_resolution_clock::time_point timepoint;$/;"	t
-times	..\include\framerater.h	/^    circular_buffer<double> times; \/\/ ms between frames$/;"	m	class:FrameRater
+times	..\include\framerater.h	/^    circular_buffer<double> times;  \/\/ ms between frames$/;"	m	class:FrameRater
 toMat3	..\thirdparty\include\glm\gtx\quaternion.hpp	/^	GLM_FUNC_DECL mat<3, 3, T, Q> toMat3($/;"	f	namespace:glm
 toMat4	..\thirdparty\include\glm\gtx\quaternion.hpp	/^	GLM_FUNC_DECL mat<4, 4, T, Q> toMat4($/;"	f	namespace:glm
 toQuat	..\thirdparty\include\glm\gtx\quaternion.hpp	/^	GLM_FUNC_DECL qua<T, Q> toQuat($/;"	f	namespace:glm
 todo	..\thirdparty\include\stb\stb_image.h	/^   int restart_interval, todo;$/;"	m	struct:__anon34
-tp	..\include\framerater.h	/^        tp;$/;"	m	class:FrameRater
 tq	..\thirdparty\include\stb\stb_image.h	/^      int tq;$/;"	m	struct:__anon34::__anon35
 transparent	..\thirdparty\include\stb\stb_image.h	/^   int flags, bgindex, ratio, transparent, eflags;$/;"	m	struct:__anon45
 transpose_type	..\thirdparty\include\glm\detail\type_mat2x2.hpp	/^		typedef mat<2, 2, T, Q> transpose_type;$/;"	t	struct:glm::mat
@@ -9138,8 +9138,8 @@ umat4x3	..\thirdparty\include\glm\gtc\matrix_integer.hpp	/^	typedef mat<4, 3, ui
 umat4x4	..\thirdparty\include\glm\ext\matrix_uint4x4.hpp	/^	typedef mat<4, 4, uint, defaultp>	umat4x4;$/;"	t	namespace:glm
 umat4x4	..\thirdparty\include\glm\fwd.hpp	/^	typedef mat<4, 4, uint, defaultp>	umat4x4;$/;"	t	namespace:glm
 umat4x4	..\thirdparty\include\glm\gtc\matrix_integer.hpp	/^	typedef mat<4, 4, uint, defaultp>				umat4x4;$/;"	t	namespace:glm
-unknown	..\include\gamelib.h	/^enum class ENTITY_TYPE { unknown,$/;"	m	class:gxb::ENTITY_TYPE
-updateCameraVectors	..\include\gamelib.h	/^    void updateCameraVectors()$/;"	f	class:gxb::Camera
+unknown	..\include\gamelib.h	/^enum class ENTITY_TYPE { unknown, hero, box, ground };$/;"	m	class:gxb::ENTITY_TYPE
+updateCameraVectors	..\include\gamelib.h	/^    void updateCameraVectors() {$/;"	f	class:gxb::Camera
 use	..\include\shader.h	/^    void use() const { glUseProgram(ID); }$/;"	f	class:Shader
 uvec1	..\thirdparty\include\glm\ext\vector_uint1.hpp	/^	typedef vec<1, unsigned int, defaultp>			uvec1;$/;"	t	namespace:glm
 uvec1	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<1, uint, defaultp>	uvec1;$/;"	t	namespace:glm
