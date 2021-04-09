@@ -48,8 +48,8 @@ int main() {
 
     auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
 			  *gxb::shaderPath("colorFromVertex.fs"));
-    //int VAO = init_vertices();
-	int VAO = level->buildVAO();
+    int VAO = init_vertices();
+
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);

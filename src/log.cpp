@@ -41,7 +41,7 @@ void write_num_to_buffer(any val, char* buf)
     fwrite(buf, sizeof(char), cCount, fptr);
 }
 
-void logPrintLn(initializer_list<any> il)
+void logPrintLn(const initializer_list<any>& il)
 {
     char buf[BUFFER_LENGTH] = "";
     int cCount = 0;
