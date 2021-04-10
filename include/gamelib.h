@@ -254,6 +254,7 @@ std::unique_ptr<level> load_level(std::string levelName)
                     modelPtr->normals.size(), modelPtr->faces.size() });
 
                 // @TODO: create vertex array for raw triangle data
+                int facesAddedToRaw = 0;
                 auto& v = modelPtr->vertices;
                 for (const auto& face : modelPtr->faces) {
                     // push a float onto vertexarray
@@ -267,8 +268,9 @@ std::unique_ptr<level> load_level(std::string levelName)
                     modelPtr->raw_data.push_back(v[face.z - 1].x);
                     modelPtr->raw_data.push_back(v[face.z - 1].y);
                     modelPtr->raw_data.push_back(v[face.z - 1].z);
+                    facesAddedToRaw++;
                 }
-                logPrintLn({ "model vertices loaded" });
+                logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
                 modelPtr->pos = Pos;
                 modelPtr->rot = Rot;

@@ -106,7 +106,7 @@ int main()
                     glm::vec3(1.0f, 0.3f, 0.5f));
             }
             progOne.setMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+            glDrawArrays(GL_TRIANGLES, 0, level->models[0]->raw_data.size());
         }
 
         glBindVertexArray(0); // no need to unbind it every time
