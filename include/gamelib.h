@@ -47,7 +47,7 @@ struct model {
     }
     std::string name;
     std::vector<glm::vec3> vertices;
-    std::vector<glm::u32vec3> faces;
+    std::vector<glm::vec3> faces;
     std::vector<float> raw_data;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec4> colors;
@@ -257,12 +257,18 @@ std::unique_ptr<level> load_level(std::string levelName)
                 auto& v = modelPtr->vertices;
                 for (const auto& face : modelPtr->faces) {
                     // push a float onto vertexarray
-                    for (int i = 0; i < 3; i++) {
-                        modelPtr->raw_data.push_back(v[modelPtr->faces[i]]].x);
-                        modelPtr->raw_data.push_back(v[modelPtr->faces[i]]].y);
-                        modelPtr->raw_data.push_back(v[modelPtr->faces[i]]].z);
-                    }
+                    // @NOTE: faces integers in object file start at 1 instead of 0
+                    modelPtr->raw_data.push_back(v[face.x - 1].x);
+                    modelPtr->raw_data.push_back(v[face.x - 1].y);
+                    modelPtr->raw_data.push_back(v[face.x - 1].z);
+                    modelPtr->raw_data.push_back(v[face.y - 1].x);
+                    modelPtr->raw_data.push_back(v[face.y - 1].y);
+                    modelPtr->raw_data.push_back(v[face.y - 1].z);
+                    modelPtr->raw_data.push_back(v[face.z - 1].x);
+                    modelPtr->raw_data.push_back(v[face.z - 1].y);
+                    modelPtr->raw_data.push_back(v[face.z - 1].z);
                 }
+                logPrintLn({ "model vertices loaded" });
 
                 modelPtr->pos = Pos;
                 modelPtr->rot = Rot;
