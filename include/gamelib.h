@@ -59,43 +59,50 @@ struct level {
     std::vector<std::unique_ptr<model>> models;
     std::vector<unsigned int> vaos;
     // @TODO: only one VAO built but need different ones for different models
-    unsigned int buildVAO()
+    std::vector<unsigned int> buildVAO()
     {
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
 
-        unsigned int VBO, VAO;
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        // bind the Vertex Array Object first, then bind and set vertex
-        // buffer(s), and then configure vertex attributes(s).
-        glBindVertexArray(VAO);
+        std::vector<unsigned int> VBO(models.size(), 0);
+        std::vector<unsigned int> VAO(models.size(), 0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // @TODO: need to load the vertices into model in drawing order
-        glBufferData(GL_ARRAY_BUFFER, models[0]->raw_data.size() * 4,
-            models[0]->raw_data.data(), GL_STATIC_DRAW);
+        for (size_t i = 0; i < models.size(); i++) {
+            glGenVertexArrays(1, &VAO[i]);
+            glGenBuffers(1, &VBO[i]);
+            // bind the Vertex Array Object first, then bind and set vertex
+            // buffer(s), and then configure vertex attributes(s).
+            glBindVertexArray(VAO[i]);
 
-        // @TODO: need to load the vertices into model in drawing order
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-            (void*)0);
-        glEnableVertexAttribArray(0);
+            glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
+            // @TODO: need to load the vertices into model in drawing order
+            glBufferData(GL_ARRAY_BUFFER, models[i]->raw_data.size() * 4,
+                models[0]->raw_data.data(), GL_STATIC_DRAW);
 
-        //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-        //		      (void*)(3 * sizeof(float)));
-        //glEnableVertexAttribArray(1);
-        // note that this is allowed, the call to glVertexAttribPointer
-        // registered VBO as the vertex attribute's bound vertex buffer object
-        // so afterwards we can safely unbind
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+            // @TODO: need to load the vertices into model in drawing order
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+                (void*)0);
+            glEnableVertexAttribArray(0);
 
-        // You can unbind the VAO afterwards so other VAO calls won't
-        // accidentally modify this VAO, but this rarely happens. Modifying
-        // other VAOs requires a call to glBindVertexArray anyways so we
-        // generally don't unbind VAOs (nor VBOs) when it's not directly
-        // necessary.
-        glBindVertexArray(0);
+            //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+            //		      (void*)(3 * sizeof(float)));
+            //glEnableVertexAttribArray(1);
+            // note that this is allowed, the call to glVertexAttribPointer
+            // registered VBO as the vertex attribute's bound vertex buffer object
+            // so afterwards we can safely unbind
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+            // You can unbind the VAO afterwards so other VAO calls won't
+            // accidentally modify this VAO, but this rarely happens. Modifying
+            // other VAOs requires a call to glBindVertexArray anyways so we
+            // generally don't unbind VAOs (nor VBOs) when it's not directly
+            // necessary.
+            glBindVertexArray(0);
+        }
+        for (int i = 0; i < VAO.size(); i++) {
+
+            printf("VAO / VBO [%d] = %d / %d\n", i, VAO[i], VBO[i]);
+        }
         return VAO;
     }
 };

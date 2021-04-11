@@ -1,5 +1,9 @@
 need to build multiple VAOs so that each model from level file has it's own
 
+models being loaded from disk more than once --> should be saved in an unorded map or a hash of their name stored in them
+
+switching 10 times per frame pauses the game..do I need multiple models per VAO?
+
 finish camera movement
 
 Add player model and camera follows player

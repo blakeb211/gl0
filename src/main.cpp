@@ -47,10 +47,9 @@ int main()
     auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
     auto level = futureLevelPtr.get();
 
-    auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
-        *gxb::shaderPath("colorFromVertex.fs"));
-    //int VAO = init_vertices();
-    int VAO = level->buildVAO();
+    auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"), *gxb::shaderPath("colorFromVertex.fs"));
+
+    auto VAO = level->buildVAO();
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
@@ -82,10 +81,9 @@ int main()
         // ------
         glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        glBindVertexArray(VAO);
-
+        glBindVertexArray(VAO[0]);
         for (unsigned int i = 0; i < level->models.size(); i++) {
+
             model = glm::mat4(1.0f);
             model = glm::translate(model, level->models[i]->pos);
             float angle = 20.0f * i;
@@ -100,9 +98,7 @@ int main()
             progOne.setMat4("model", model);
             glDrawArrays(GL_TRIANGLES, 0, level->models[i]->raw_data.size());
         }
-
         glBindVertexArray(0); // no need to unbind it every time
-
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse
         // moved etc.)
         // -------------------------------------------------------------------------------
