@@ -1,5 +1,9 @@
 finish camera movement
 
+Add player model and camera follows player
+Cube positions should be part of level
+
+
 consider vsync instead of pausing
 
 finish opengl tutorial
