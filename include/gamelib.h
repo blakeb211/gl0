@@ -57,6 +57,8 @@ struct model {
 
 struct level {
     std::vector<std::unique_ptr<model>> models;
+    std::vector<unsigned int> vaos;
+    // @TODO: only one VAO built but need different ones for different models
     unsigned int buildVAO()
     {
         // set up vertex data (and buffer(s)) and configure vertex attributes

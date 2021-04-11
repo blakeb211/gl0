@@ -1,3 +1,5 @@
+need to build multiple VAOs so that each model from level file has it's own
+
 finish camera movement
 
 Add player model and camera follows player
