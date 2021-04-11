@@ -44,7 +44,8 @@ int main()
     glfwSwapInterval(1); // vsync
     logOpenGLInfo();
 
-    auto level = gxb::load_level("test");
+    auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
+    auto level = futureLevelPtr.get();
 
     auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
         *gxb::shaderPath("colorFromVertex.fs"));

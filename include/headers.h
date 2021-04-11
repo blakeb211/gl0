@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <filesystem>
 #include <fstream>
+#include <future>
 #include <initializer_list>
 #include <iostream>
 #include <map>
