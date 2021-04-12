@@ -82,23 +82,15 @@ int main()
         glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(VAO[0]);
-        int totDrawFloats = 0;
+        int totDrawnFloats = 0;
         for (unsigned int i = 0; i < level->models.size(); i++) {
 
             model = glm::mat4(1.0f);
             model = glm::translate(model, level->models[i]->pos);
             float angle = 20.0f * i;
-            if ((i + 1) % 3 == 0) {
-                model = glm::rotate(
-                    model, glm::radians((float)glfwGetTime() * (angle + 1)),
-                    glm::vec3(1.0f, 0.3f, 0.5f));
-            } else {
-                model = glm::rotate(model, glm::radians(angle + 1),
-                    glm::vec3(1.0f, 0.3f, 0.5f));
-            }
             progOne.setMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, totDrawFloats, totDrawFloats + level->models[i]->vertices.size() * 3);
-            totDrawFloats += level->models[i]->vertices.size() * 3;
+            glDrawArrays(GL_TRIANGLES, totDrawnFloats, totDrawnFloats + (level->models[i]->vertices.size() * 3));
+            totDrawnFloats += (level->models[i]->vertices.size() * 3);
         }
 
         glBindVertexArray(0); // no need to unbind it every time
@@ -107,6 +99,7 @@ int main()
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(window);
         glfwPollEvents();
+        fr.printFrameRateIfFreqHasBeenReached();
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
