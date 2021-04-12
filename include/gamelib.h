@@ -67,13 +67,12 @@ struct level {
         std::vector<unsigned int> VBO(models.size(), 0);
         std::vector<unsigned int> VAO(models.size(), 0);
 
+        glGenVertexArrays(1, &VAO[0]);
+        glGenBuffers(1, &VBO[0]);
+        // bind the Vertex Array Object first, then bind and set vertex
+        // buffer(s), and then configure vertex attributes(s).
+        glBindVertexArray(VAO[0]);
         for (size_t i = 0; i < models.size(); i++) {
-            glGenVertexArrays(1, &VAO[i]);
-            glGenBuffers(1, &VBO[i]);
-            // bind the Vertex Array Object first, then bind and set vertex
-            // buffer(s), and then configure vertex attributes(s).
-            glBindVertexArray(VAO[i]);
-
             glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
             // @TODO: need to load the vertices into model in drawing order
             glBufferData(GL_ARRAY_BUFFER, models[i]->raw_data.size() * 4,
@@ -99,6 +98,7 @@ struct level {
             // necessary.
             glBindVertexArray(0);
         }
+
         for (int i = 0; i < VAO.size(); i++) {
 
             printf("VAO / VBO [%d] = %d / %d\n", i, VAO[i], VBO[i]);
