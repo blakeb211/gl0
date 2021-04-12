@@ -58,6 +58,7 @@ struct model {
 struct level {
     std::vector<std::unique_ptr<model>> models;
     std::vector<unsigned int> vaos;
+    std::vector<float> raw_data;
     // @TODO: only one VAO built but need different ones for different models
     std::vector<unsigned int> buildVAO()
     {
@@ -72,32 +73,30 @@ struct level {
         // bind the Vertex Array Object first, then bind and set vertex
         // buffer(s), and then configure vertex attributes(s).
         glBindVertexArray(VAO[0]);
-        for (size_t i = 0; i < models.size(); i++) {
-            glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
-            // @TODO: need to load the vertices into model in drawing order
-            glBufferData(GL_ARRAY_BUFFER, models[i]->raw_data.size() * 4,
-                models[0]->raw_data.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+        // @TODO: need to load the vertices into model in drawing order
+        glBufferData(GL_ARRAY_BUFFER, this->raw_data.size() * 4,
+            this->raw_data.data(), GL_STATIC_DRAW);
 
-            // @TODO: need to load the vertices into model in drawing order
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-                (void*)0);
-            glEnableVertexAttribArray(0);
+        // @TODO: need to load the vertices into model in drawing order
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+            (void*)0);
+        glEnableVertexAttribArray(0);
 
-            //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-            //		      (void*)(3 * sizeof(float)));
-            //glEnableVertexAttribArray(1);
-            // note that this is allowed, the call to glVertexAttribPointer
-            // registered VBO as the vertex attribute's bound vertex buffer object
-            // so afterwards we can safely unbind
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+        //		      (void*)(3 * sizeof(float)));
+        //glEnableVertexAttribArray(1);
+        // note that this is allowed, the call to glVertexAttribPointer
+        // registered VBO as the vertex attribute's bound vertex buffer object
+        // so afterwards we can safely unbind
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-            // You can unbind the VAO afterwards so other VAO calls won't
-            // accidentally modify this VAO, but this rarely happens. Modifying
-            // other VAOs requires a call to glBindVertexArray anyways so we
-            // generally don't unbind VAOs (nor VBOs) when it's not directly
-            // necessary.
-            glBindVertexArray(0);
-        }
+        // You can unbind the VAO afterwards so other VAO calls won't
+        // accidentally modify this VAO, but this rarely happens. Modifying
+        // other VAOs requires a call to glBindVertexArray anyways so we
+        // generally don't unbind VAOs (nor VBOs) when it's not directly
+        // necessary.
+        glBindVertexArray(0);
 
         for (int i = 0; i < VAO.size(); i++) {
 
@@ -262,21 +261,22 @@ std::unique_ptr<level> load_level(std::string levelName)
                     "verts, normals, faces:", modelPtr->vertices.size(),
                     modelPtr->normals.size(), modelPtr->faces.size() });
 
-                // @TODO: create vertex array for raw triangle data
+                // create one giant raw_data array on the level to hold all model triangles
+                // @Note: vertices are in raw data in the order that model is in the models vector
                 int facesAddedToRaw = 0;
                 auto& v = modelPtr->vertices;
                 for (const auto& face : modelPtr->faces) {
                     // push a float onto vertexarray
                     // @NOTE: faces integers in object file start at 1 instead of 0
-                    modelPtr->raw_data.push_back(v[face.x - 1].x);
-                    modelPtr->raw_data.push_back(v[face.x - 1].y);
-                    modelPtr->raw_data.push_back(v[face.x - 1].z);
-                    modelPtr->raw_data.push_back(v[face.y - 1].x);
-                    modelPtr->raw_data.push_back(v[face.y - 1].y);
-                    modelPtr->raw_data.push_back(v[face.y - 1].z);
-                    modelPtr->raw_data.push_back(v[face.z - 1].x);
-                    modelPtr->raw_data.push_back(v[face.z - 1].y);
-                    modelPtr->raw_data.push_back(v[face.z - 1].z);
+                    l->raw_data.push_back(v[face.x - 1].x);
+                    l->raw_data.push_back(v[face.x - 1].y);
+                    l->raw_data.push_back(v[face.x - 1].z);
+                    l->raw_data.push_back(v[face.y - 1].x);
+                    l->raw_data.push_back(v[face.y - 1].y);
+                    l->raw_data.push_back(v[face.y - 1].z);
+                    l->raw_data.push_back(v[face.z - 1].x);
+                    l->raw_data.push_back(v[face.z - 1].y);
+                    l->raw_data.push_back(v[face.z - 1].z);
                     facesAddedToRaw++;
                 }
                 logPrintLn({ "faces added to raw_data:", facesAddedToRaw });

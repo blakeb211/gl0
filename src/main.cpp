@@ -82,6 +82,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(VAO[0]);
+        int totDrawFloats = 0;
         for (unsigned int i = 0; i < level->models.size(); i++) {
 
             model = glm::mat4(1.0f);
@@ -96,8 +97,10 @@ int main()
                     glm::vec3(1.0f, 0.3f, 0.5f));
             }
             progOne.setMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, 0, level->models[i]->raw_data.size());
+            glDrawArrays(GL_TRIANGLES, totDrawFloats, totDrawFloats + level->models[i]->vertices.size() * 3);
+            totDrawFloats += level->models[i]->vertices.size() * 3;
         }
+
         glBindVertexArray(0); // no need to unbind it every time
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse
         // moved etc.)
