@@ -88,9 +88,11 @@ int main()
             model = glm::mat4(1.0f);
             model = glm::translate(model, level->models[i]->pos);
             float angle = 20.0f * i;
+            progOne.setVec3("color", glm::vec3(0.1f * i, i * 0.3f, 0.7f));
             progOne.setMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, totDrawnFloats, totDrawnFloats + (level->models[i]->vertices.size() * 3));
-            totDrawnFloats += (level->models[i]->vertices.size() * 3);
+            int numFloatsCurrModel = level->models[i]->faces.size() * 9;
+            glDrawArrays(GL_TRIANGLES, totDrawnFloats, numFloatsCurrModel);
+            totDrawnFloats += numFloatsCurrModel;
         }
 
         glBindVertexArray(0); // no need to unbind it every time

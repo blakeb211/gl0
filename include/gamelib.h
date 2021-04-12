@@ -48,7 +48,6 @@ struct model {
     std::string name;
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> faces;
-    std::vector<float> raw_data;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec4> colors;
     glm::vec3 pos;
