@@ -13,6 +13,7 @@ public:
         : lastTime { std::chrono::high_resolution_clock::now() }
         , times { circular_buffer<double>(400) }
         , frame_count { 0 }
+        , deltaTime { 0.0f }
     {
     }
     void UpdateTimes()
