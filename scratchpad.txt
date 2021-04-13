@@ -1,0 +1,20 @@
+
+
+struct mesh {
+	vector<glm::vec3> verts;
+	vector<glm::vec3> normals;
+
+};
+
+
+struct model {
+	model_code;
+	vector<glm::vec3> colors;
+};
+
+struct level {
+	vector<mesh> mesh; // large
+	vector<model> model; // smaller
+
+};
+
