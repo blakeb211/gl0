@@ -39,6 +39,14 @@ void initTypeToStrMap()
     }
 }
 
+struct mesh {
+    std::size_t hash_code;
+    std::vector<glm::vec4> colors;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> faces;
+    std::vector<glm::vec3> normals;
+};
+
 struct model {
     model()
     {
