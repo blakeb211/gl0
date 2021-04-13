@@ -1,8 +1,6 @@
 models being loaded from disk more than once --> should be saved in an unorded map or a hash of their name stored in them
 
-switching 10 times per frame pauses the game..do I need multiple models per VAO?
-
-finish camera movement
+finish game-ready camera movement
 
 Add player model and camera follows player
 Cube positions should be part of level
