@@ -215,6 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\circular_buffer.h" />
+    <ClInclude Include="include\colors.h" />
     <ClInclude Include="include\framerater.h" />
     <ClInclude Include="include\glm.h" />
     <ClInclude Include="include\headers.h" />

@@ -74,7 +74,7 @@ struct level {
         glBindVertexArray(VAO[0]);
         glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
         // @TODO: need to load the vertices into model in drawing order
-        glBufferData(GL_ARRAY_BUFFER, this->raw_data.size() * 4,
+        glBufferData(GL_ARRAY_BUFFER, this->raw_data.size() * sizeof(float),
             this->raw_data.data(), GL_STATIC_DRAW);
 
         // @TODO: need to load the vertices into model in drawing order
