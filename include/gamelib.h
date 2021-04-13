@@ -17,6 +17,8 @@ inline std::string rootShaderPath = appRoot + R"(shaders\)";
 inline const unsigned int SCR_WIDTH = 800;
 inline const unsigned int SCR_HEIGHT = 600;
 
+inline std::hash<std::string> strHasher;
+
 enum class ENTITY_TYPE { unknown,
     hero,
     box,
@@ -52,6 +54,7 @@ struct model {
     std::vector<glm::vec4> colors;
     glm::vec3 pos;
     glm::vec3 rot;
+    std::size_t hash_code;
 };
 
 struct level {
@@ -282,6 +285,7 @@ std::unique_ptr<level> load_level(std::string levelName)
 
                 modelPtr->pos = Pos;
                 modelPtr->rot = Rot;
+                modelPtr->hash_code = strHasher(modelName);
                 modelPtr->name = modelName;
                 l->models.push_back(std::move(modelPtr));
                 continue;
