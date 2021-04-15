@@ -270,8 +270,9 @@ std::unique_ptr<level> load_level(std::string levelName)
                 continue;
             }
 
-            // @TODO: still need to be adding an object to level even if the mesh already exists.
-            // currently we are returning from this function too early.
+            // @TODO:
+            // create static member function for whether mesh exists
+            // check if mesh has already been loaded, if not, load it
             size_t mesh_id = strHasher(meshName);
             if (l->meshExists(mesh_id)) {
                 logPrintLn({ "Mesh ", mesh_id, "already loaded" });
