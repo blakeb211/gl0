@@ -93,7 +93,8 @@ int main()
             float angle = 20.0f * i;
             progOne.setVec3("color", col::list[i]);
             progOne.setMat4("model", model);
-            int numVertsCurrModel = level->meshes[level->getModelMeshIdx(i)]->faces.size() * 3;
+
+            int numVertsCurrModel = level->models[i]->faces.size() * 3;
             glDrawArrays(GL_TRIANGLES, totVertsDrawn, numVertsCurrModel);
             totVertsDrawn += numVertsCurrModel;
         }
