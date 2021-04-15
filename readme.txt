@@ -1,8 +1,4 @@
 models being loaded from disk more than once --> should be saved in an unorded map or a hash of their name stored in them
-need to change model struct to object
-need to create a mesh struct
-objects have a meshid and meshes in the mesh vector have a mesh id
-add a vector of mesh to the level
 
 finish game-ready camera movement
 
@@ -41,6 +37,7 @@ wall creation
 octree for collisions
 
 multithreaded?
+
 
 RESOURCED NEEDED
   meshes
