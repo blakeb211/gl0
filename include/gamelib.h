@@ -47,8 +47,8 @@ struct mesh {
     std::vector<glm::vec3> normals;
 };
 
-struct model {
-    model()
+struct object {
+    object()
     {
         for (int i = 0; i < 3; i++) {
             this->pos[i] = 0;
@@ -66,7 +66,7 @@ struct model {
 };
 
 struct level {
-    std::vector<std::unique_ptr<model>> models;
+    std::vector<std::unique_ptr<object>> models;
     std::vector<unsigned int> vaos;
     std::vector<float> raw_data;
     // @TODO: only one VAO built but need different ones for different models
@@ -142,7 +142,7 @@ inline std::unique_ptr<std::string> shaderPath(std::string name)
 // namespace // v  float float float
 // vn float float float
 // f  1// 1 22//22 9//9
-inline std::unique_ptr<model> load_model_from_disk(const char* name)
+inline std::unique_ptr<object> load_model_from_disk(const char* name)
 {
     using std::string;
     using std::stringstream;
@@ -150,7 +150,7 @@ inline std::unique_ptr<model> load_model_from_disk(const char* name)
     fileData = slurp::get_file_contents(modelPath(name)->c_str());
 
     // add error checking and return null
-    auto m = std::make_unique<model>();
+    auto m = std::make_unique<object>();
     m->name = name;
     logPrintLn({ "SUCCESS:: model <", name, "> slurped from disk" });
 
@@ -259,7 +259,7 @@ std::unique_ptr<level> load_level(std::string levelName)
             }
 
             // load model file into level struct
-            std::unique_ptr<model> modelPtr;
+            std::unique_ptr<object> modelPtr;
             bool modelExist = slurp::checkFileExist(rootModelPath, modelName, "obj");
 
             if (modelExist) {
