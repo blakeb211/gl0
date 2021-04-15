@@ -40,16 +40,16 @@ void initTypeToStrMap()
 }
 
 struct mesh {
-    std::string name;
     std::size_t hash_code;
+    std::vector<glm::vec4> colors;
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> faces;
     std::vector<glm::vec3> normals;
 };
 
 // @TODO: rename to object
-struct object {
-    object()
+struct model {
+    model()
     {
         for (int i = 0; i < 3; i++) {
             this->pos[i] = 0;
@@ -58,6 +58,9 @@ struct object {
     }
     std::string name;
     //@TODO: switch to mesh
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> faces;
+    std::vector<glm::vec3> normals;
     std::vector<glm::vec4> colors;
     glm::vec3 pos;
     glm::vec3 rot;
@@ -65,12 +68,12 @@ struct object {
 };
 
 struct level {
-    std::vector<std::unique_ptr<object>> models;
-    std::vector<std::unique_ptr<mesh>> meshes;
+    std::vector<std::unique_ptr<model>> models;
     std::vector<unsigned int> vaos;
+    std::vector<mesh> meshes;
     std::vector<float> raw_data;
-
-    std::vector<unsigned int> buildVAO()
+    // @TODO: only one VAO built but need different ones for different models
+    static std::vector<unsigned int> buildVAO()
     {
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
@@ -114,16 +117,6 @@ struct level {
         }
         return VAO;
     }
-    // return true if a mesh with that mesh_id is already loaded
-    bool meshExists(size_t mesh_id)
-    {
-        for (const auto& currMesh : this->meshes) {
-            if (currMesh->hash_code == mesh_id) {
-                return true;
-            }
-        }
-        return false;
-    }
 };
 
 inline std::unique_ptr<level> load_level(std::string);
@@ -154,7 +147,7 @@ inline std::unique_ptr<std::string> shaderPath(std::string name)
 // f  1// 1 22//22 9//9
 
 //@TODO mesh should be added to level meshes vector, so this fxn should take a level parameter
-inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name)
+inline std::unique_ptr<model> load_mesh_from_disk(const char* name)
 {
     using std::string;
     using std::stringstream;
@@ -162,7 +155,7 @@ inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name)
     fileData = slurp::get_file_contents(modelPath(name)->c_str());
 
     // add error checking and return null
-    auto m = std::make_unique<mesh>();
+    auto m = std::make_unique<model>();
     m->name = name;
     logPrintLn({ "SUCCESS:: model <", name, "> slurped from disk" });
 
@@ -257,10 +250,10 @@ std::unique_ptr<level> load_level(std::string levelName)
 
             // read name of model, model initial position, model initial
             // rotation
-            std::string meshName;
+            std::string modelName;
             glm::vec3 Pos {};
             glm::vec3 Rot {};
-            lineStream >> meshName;
+            lineStream >> modelName;
             lineStream >> Pos.x >> Pos.y >> Pos.z;
             lineStream >> Rot.x >> Rot.y >> Rot.z;
 
@@ -273,32 +266,35 @@ std::unique_ptr<level> load_level(std::string levelName)
             // @TODO:
             // create static member function for whether mesh exists
             // check if mesh has already been loaded, if not, load it
-            size_t mesh_id = strHasher(meshName);
+            size_t mesh_id = strHasher(modelName);
             if (l->meshExists(mesh_id)) {
-                logPrintLn({ "Mesh ", mesh_id, "already loaded" });
-                continue;
+                // use existing mesh
+            } else {
+
+                // load mesh
             }
 
             // load model file into level struct
-            std::unique_ptr<object> objectPtr;
-            std::unique_ptr<mesh> meshPtr;
-            bool modelFileExists = slurp::checkFileExist(rootModelPath, meshName, "obj");
 
-            if (modelFileExists) {
-                meshPtr = load_mesh_from_disk(meshName.c_str());
-                logPrintLn({ type_to_str[type], meshName, glm::to_string(Pos),
+            std::unique_ptr<model> modelPtr;
+            bool modelExist = slurp::checkFileExist(rootModelPath, modelName, "obj");
+
+            if (modelExist) {
+                modelPtr = load_mesh_from_disk(modelName.c_str());
+                logPrintLn({ type_to_str[type], modelName, glm::to_string(Pos),
                     glm::to_string(Rot) });
 
                 logPrintLn({ "model stats |",
-                    "verts, normals, faces:", meshPtr->vertices.size(),
-                    meshPtr->normals.size(), meshPtr->faces.size() });
+                    "verts, normals, faces:", modelPtr->vertices.size(),
+                    modelPtr->normals.size(), modelPtr->faces.size() });
 
                 // create one giant raw_data array on the level to hold all model triangles
                 // @Note: vertices are in raw data in the order that model is in the models vector
                 int facesAddedToRaw = 0;
-                auto& v = meshPtr->vertices;
-                for (const auto& face : meshPtr->faces) {
-                    // faces integers in object file start at 1 instead of 0
+                auto& v = modelPtr->vertices;
+                for (const auto& face : modelPtr->faces) {
+                    // push a float onto vertexarray
+                    // @NOTE: faces integers in object file start at 1 instead of 0
                     l->raw_data.push_back(v[face.x - 1].x);
                     l->raw_data.push_back(v[face.x - 1].y);
                     l->raw_data.push_back(v[face.x - 1].z);
@@ -312,20 +308,16 @@ std::unique_ptr<level> load_level(std::string levelName)
                 }
                 logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
-                objectPtr->pos = Pos;
-                objectPtr->rot = Rot;
-                const size_t meshHashId = strHasher(meshName);
-                objectPtr->mesh_id = meshHashId;
-                meshPtr->hash_code = meshHashId;
-                meshPtr->name = meshName;
-                objectPtr->name = entityName;
-                l->models.push_back(std::move(objectPtr));
-                l->meshes.push_back(std::move(meshPtr));
+                modelPtr->pos = Pos;
+                modelPtr->rot = Rot;
+                modelPtr->mesh_id = strHasher(modelName);
+                modelPtr->name = modelName;
+                l->models.push_back(std::move(modelPtr));
                 continue;
             }
 
             // can only reach this line if there was an error
-            logErr(__FILE__, __LINE__, meshName.c_str());
+            logErr(__FILE__, __LINE__, modelName.c_str());
         }
     }
     return std::move(l);
