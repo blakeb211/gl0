@@ -161,7 +161,6 @@ inline std::unique_ptr<std::string> shaderPath(std::string name)
 // vn float float float
 // f  1// 1 22//22 9//9
 
-//@TODO mesh should be added to level meshes vector, so this fxn should take a level parameter
 inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name)
 {
     using std::string;
