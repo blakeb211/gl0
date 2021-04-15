@@ -57,7 +57,6 @@ struct object {
         }
     }
     std::string name;
-    //@TODO: switch to mesh
     std::vector<glm::vec4> colors;
     glm::vec3 pos;
     glm::vec3 rot;
@@ -69,7 +68,17 @@ struct level {
     std::vector<std::unique_ptr<mesh>> meshes;
     std::vector<unsigned int> vaos;
     std::vector<float> raw_data;
-
+    size_t getModelMeshIdx(size_t modelIdx)
+    {
+        const auto meshCount = meshes.size();
+        const auto meshToFind = models[modelIdx]->mesh_id;
+        for (int i = 0; i < meshCount; i++) {
+            if (meshes[i]->hash_code == meshToFind) {
+                return i;
+            }
+        }
+        logErr(__FILE__, __LINE__, "could not find mesh with that id");
+    }
     std::vector<unsigned int> buildVAO()
     {
         // set up vertex data (and buffer(s)) and configure vertex attributes
@@ -84,11 +93,10 @@ struct level {
         // buffer(s), and then configure vertex attributes(s).
         glBindVertexArray(VAO[0]);
         glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-        // @TODO: need to load the vertices into model in drawing order
+
         glBufferData(GL_ARRAY_BUFFER, this->raw_data.size() * sizeof(float),
             this->raw_data.data(), GL_STATIC_DRAW);
 
-        // @TODO: need to load the vertices into model in drawing order
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
             (void*)0);
         glEnableVertexAttribArray(0);
@@ -272,15 +280,23 @@ std::unique_ptr<level> load_level(std::string levelName)
 
             // @TODO: still need to be adding an object to level even if the mesh already exists.
             // currently we are returning from this function too early.
-            size_t mesh_id = strHasher(meshName);
-            if (l->meshExists(mesh_id)) {
-                logPrintLn({ "Mesh ", mesh_id, "already loaded" });
+            auto objectPtr = std::make_unique<object>();
+            auto meshPtr = std::make_unique<mesh>();
+            objectPtr->pos = Pos;
+            objectPtr->rot = Rot;
+            const size_t meshHashId = strHasher(meshName);
+            objectPtr->mesh_id = meshHashId;
+            meshPtr->hash_code = meshHashId;
+            meshPtr->name = meshName;
+            objectPtr->name = entityName;
+            l->models.push_back(std::move(objectPtr));
+
+            if (l->meshExists(meshHashId)) {
+                logPrintLn({ "Mesh ", meshHashId, "already loaded" });
                 continue;
             }
 
             // load model file into level struct
-            std::unique_ptr<object> objectPtr;
-            std::unique_ptr<mesh> meshPtr;
             bool modelFileExists = slurp::checkFileExist(rootModelPath, meshName, "obj");
 
             if (modelFileExists) {
@@ -311,14 +327,6 @@ std::unique_ptr<level> load_level(std::string levelName)
                 }
                 logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
-                objectPtr->pos = Pos;
-                objectPtr->rot = Rot;
-                const size_t meshHashId = strHasher(meshName);
-                objectPtr->mesh_id = meshHashId;
-                meshPtr->hash_code = meshHashId;
-                meshPtr->name = meshName;
-                objectPtr->name = entityName;
-                l->models.push_back(std::move(objectPtr));
                 l->meshes.push_back(std::move(meshPtr));
                 continue;
             }
