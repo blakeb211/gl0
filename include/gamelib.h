@@ -295,12 +295,6 @@ std::unique_ptr<level> load_level(std::string levelName)
                 continue;
             }
 
-            logPrintLn({
-                "mesh being loaded mesh id:",
-                meshHashId,
-                "mesh name:",
-                meshName,
-            });
             // load model file into level struct
             bool modelFileExists = slurp::checkFileExist(rootModelPath, meshName, "obj");
 
