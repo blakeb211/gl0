@@ -148,6 +148,9 @@ inline std::unique_ptr<std::string> shaderPath(std::string name)
 // namespace // v  float float float
 // vn float float float
 // f  1// 1 22//22 9//9
+//
+//
+// TODO: This should return a mesh
 inline std::unique_ptr<object> load_model_from_disk(const char* name)
 {
     using std::string;
@@ -278,9 +281,10 @@ std::unique_ptr<level> load_level(std::string levelName)
             if (!modelExist) {
                 // can only reach this line if model file was not found
                 logErr(__FILE__, __LINE__, meshName.c_str());
-                throw;
+                return nullptr;
             }
             if (meshAlreadyLoaded) {
+                // add vertices and faces into raw_data from existing mesh
 
             } else {
                 // read in vertices, normals, and faces from disk
