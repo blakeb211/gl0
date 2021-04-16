@@ -49,6 +49,7 @@ struct mesh {
 
 struct object {
     object()
+        : hash_code { 0 }
     {
         for (int i = 0; i < 3; i++) {
             this->pos[i] = 0;
@@ -250,10 +251,10 @@ std::unique_ptr<level> load_level(std::string levelName)
 
             // read name of model, model initial position, model initial
             // rotation
-            std::string modelName;
+            std::string meshName;
             glm::vec3 Pos {};
             glm::vec3 Rot {};
-            lineStream >> modelName;
+            lineStream >> meshName;
             lineStream >> Pos.x >> Pos.y >> Pos.z;
             lineStream >> Rot.x >> Rot.y >> Rot.z;
 
@@ -264,16 +265,26 @@ std::unique_ptr<level> load_level(std::string levelName)
             }
 
             // load model file into level struct
-            std::unique_ptr<object> objectPtr;
-            bool modelExist = slurp::checkFileExist(rootModelPath, modelName, "obj");
-            bool meshAlreadyLoaded = l->isMeshAlreadyLoaded(strHasher(modelName));
-            if (modelExist) {
+            auto objectPtr = std::make_unique<object>();
+            auto meshPtr = std::make_unique<mesh>();
 
-                if (meshAlreadyLoaded) {
-                    __noop;
-                }
+            size_t meshHashCode = strHasher(meshName);
+            bool modelExist = slurp::checkFileExist(rootModelPath, meshName, "obj");
+            bool meshAlreadyLoaded = l->isMeshAlreadyLoaded(meshHashCode);
 
-                objectPtr = load_model_from_disk(modelName.c_str());
+            objectPtr->name = entityName;
+            objectPtr->hash_code = strHasher(meshName);
+
+            if (!modelExist) {
+                // can only reach this line if model file was not found
+                logErr(__FILE__, __LINE__, meshName.c_str());
+                throw;
+            }
+            if (meshAlreadyLoaded) {
+
+            } else {
+                // read in vertices, normals, and faces from disk
+                objectPtr = load_model_from_disk(meshName.c_str());
                 //
                 //
                 //
@@ -286,44 +297,41 @@ std::unique_ptr<level> load_level(std::string levelName)
                 //
                 //
                 //
-                logPrintLn({ type_to_str[type], modelName, glm::to_string(Pos),
+                logPrintLn({ type_to_str[type], meshName, glm::to_string(Pos),
                     glm::to_string(Rot) });
 
                 logPrintLn({ "model stats |",
                     "verts, normals, faces:", objectPtr->vertices.size(),
                     objectPtr->normals.size(), objectPtr->faces.size() });
 
-                // create one giant raw_data array on the level to hold all model triangles
-                // @Note: vertices are in raw data in the order that model is in the models vector
-                int facesAddedToRaw = 0;
-                auto& v = objectPtr->vertices;
-                for (const auto& face : objectPtr->faces) {
-                    // push a float onto vertexarray
-                    // @NOTE: faces integers in object file start at 1 instead of 0
-                    l->raw_data.push_back(v[face.x - 1].x);
-                    l->raw_data.push_back(v[face.x - 1].y);
-                    l->raw_data.push_back(v[face.x - 1].z);
-                    l->raw_data.push_back(v[face.y - 1].x);
-                    l->raw_data.push_back(v[face.y - 1].y);
-                    l->raw_data.push_back(v[face.y - 1].z);
-                    l->raw_data.push_back(v[face.z - 1].x);
-                    l->raw_data.push_back(v[face.z - 1].y);
-                    l->raw_data.push_back(v[face.z - 1].z);
-                    facesAddedToRaw++;
-                }
-                logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
-
-                objectPtr->pos = Pos;
-                objectPtr->rot = Rot;
-                objectPtr->hash_code = strHasher(modelName);
-                objectPtr->name = modelName;
-                l->models.push_back(std::move(objectPtr));
-                continue;
+                // end
             }
 
-            // can only reach this line if there was an error
-            logErr(__FILE__, __LINE__, modelName.c_str());
-        }
+            // create one giant raw_data array on the level to hold all model triangles
+            // @Note: vertices are in raw data in the order that model is in the models vector
+            int facesAddedToRaw = 0;
+            auto& v = objectPtr->vertices;
+            for (const auto& face : objectPtr->faces) {
+                // push a float onto vertexarray
+                // @NOTE: faces integers in object file start at 1 instead of 0
+                l->raw_data.push_back(v[face.x - 1].x);
+                l->raw_data.push_back(v[face.x - 1].y);
+                l->raw_data.push_back(v[face.x - 1].z);
+                l->raw_data.push_back(v[face.y - 1].x);
+                l->raw_data.push_back(v[face.y - 1].y);
+                l->raw_data.push_back(v[face.y - 1].z);
+                l->raw_data.push_back(v[face.z - 1].x);
+                l->raw_data.push_back(v[face.z - 1].y);
+                l->raw_data.push_back(v[face.z - 1].z);
+                facesAddedToRaw++;
+            }
+            logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
+
+            objectPtr->pos = Pos;
+            objectPtr->rot = Rot;
+            objectPtr->name = meshName;
+            l->models.push_back(std::move(objectPtr));
+        } // end while
     }
     return std::move(l);
 }

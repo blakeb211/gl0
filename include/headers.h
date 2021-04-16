@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <errno.h>
+#include <exception>
 #include <filesystem>
 #include <fstream>
 #include <future>
