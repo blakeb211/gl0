@@ -1,4 +1,5 @@
-models being loaded from disk more than once --> should be saved in an unorded map or a hash of their name stored in them
+models being loaded from disk more than once
+	** change load_model_from_desk to load a mesh instead of an object 
 
 finish game-ready camera movement
 

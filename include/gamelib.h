@@ -57,10 +57,10 @@ struct object {
         }
     }
     std::string name;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> faces;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec4> colors;
+    std::vector<glm::vec3> vertices; // delete
+    std::vector<glm::vec3> faces;    // delete
+    std::vector<glm::vec3> normals;  // delete
+    std::vector<glm::vec4> colors;   
     glm::vec3 pos;
     glm::vec3 rot;
     std::size_t hash_code;
@@ -284,12 +284,18 @@ std::unique_ptr<level> load_level(std::string levelName)
                 return nullptr;
             }
             if (meshAlreadyLoaded) {
-                // add vertices and faces into raw_data from existing mesh
 
+				// @TODO: load object pointer vertices, faces, normals from existing mesh instead of from disk
+				// 
+				//
+				//
+				//
+				//
+				//
+				//
             } else {
                 // read in vertices, normals, and faces from disk
                 objectPtr = load_model_from_disk(meshName.c_str());
-                //
                 //
                 //
                 //
@@ -300,7 +306,7 @@ std::unique_ptr<level> load_level(std::string levelName)
                 //
                 //
                 //
-                //
+
                 logPrintLn({ type_to_str[type], meshName, glm::to_string(Pos),
                     glm::to_string(Rot) });
 
