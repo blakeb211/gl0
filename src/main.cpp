@@ -85,14 +85,19 @@ int main()
         clearScreen();
         glBindVertexArray(VAO[0]);
         int totVertsDrawn = 0;
-        for (size_t i = 0; i < level->models.size(); i++) {
+        for (size_t i = 0; i < level->objects.size(); i++) {
 
             model = glm::mat4(1.0f);
-            model = glm::translate(model, level->models[i]->pos);
+            model = glm::translate(model, level->objects[i]->pos);
             float angle = 20.0f * i;
             progOne.setVec3("color", col::list[i]);
             progOne.setMat4("model", model);
-            int numVertsCurrModel = level->models[i]->faces.size() * 3;
+			// @TODO: access the mesh of the current OBJECT
+			auto meshPtr = level->getMesh(level->objects[i]->hash_code);
+			if (meshPtr == nullptr) {
+				printf("error: meshPtr == nullptr\n");
+			}
+            int numVertsCurrModel = meshPtr->faces.size() * 3;
             glDrawArrays(GL_TRIANGLES, totVertsDrawn, numVertsCurrModel);
             totVertsDrawn += numVertsCurrModel;
         }

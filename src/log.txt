@@ -2,29 +2,29 @@ OpenGL Version:    3.000 .    3.000
 SUCCESS:: level test slurped from disk 
 SUCCESS:: model < cube > slurped from disk 
 hero cube vec3(0.000000, 0.000000, 10.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces:   26.000   26.000   48.000 
 faces added to raw_data:   48.000 
+model stats | verts, normals, faces:   26.000   26.000   48.000 
 SUCCESS:: model < sphere > slurped from disk 
 hero sphere vec3(0.000000, 5.000000, 5.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces:  482.000  482.000  960.000 
 faces added to raw_data:  960.000 
+model stats | verts, normals, faces:  482.000  482.000  960.000 
 SUCCESS:: model < cube > slurped from disk 
 hero cube vec3(0.000000, 10.000000, 0.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces:   26.000   26.000   48.000 
 faces added to raw_data:   48.000 
+model stats | verts, normals, faces:   26.000   26.000   48.000 
 SUCCESS:: model < cube > slurped from disk 
 hero cube vec3(0.000000, 15.000000, -5.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces:   26.000   26.000   48.000 
 faces added to raw_data:   48.000 
+model stats | verts, normals, faces:   26.000   26.000   48.000 
 SUCCESS:: model < sphere > slurped from disk 
 hero sphere vec3(0.000000, 20.000000, -10.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces:  482.000  482.000  960.000 
 faces added to raw_data:  960.000 
+model stats | verts, normals, faces:  482.000  482.000  960.000 
 SUCCESS:: model < plane > slurped from disk 
 ground plane vec3(0.000000, -2.000000, -10.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces: 12490.000 12490.000 24976.000 
 faces added to raw_data: 24976.000 
+model stats | verts, normals, faces: 12490.000 12490.000 24976.000 
 SUCCESS:: model < plane > slurped from disk 
 ground plane vec3(0.000000, -2.000000, -6.000000) vec3(0.000000, 0.000000, 0.000000) 
-model stats | verts, normals, faces: 12490.000 12490.000 24976.000 
 faces added to raw_data: 24976.000 
+model stats | verts, normals, faces: 12490.000 12490.000 24976.000 

@@ -40,6 +40,14 @@ void initTypeToStrMap()
 }
 
 struct object {
+    object()
+        : hash_code { 0 }
+    {
+        for (int i = 0; i < 3; i++) {
+            this->pos[i] = 0;
+            this->rot[i] = 0;
+        }
+    }
     std::size_t hash_code;
     std::vector<glm::vec4> colors;
     glm::vec3 pos;
@@ -49,20 +57,13 @@ struct object {
 struct mesh {
     mesh()
         : hash_code { 0 }
-    {
-        for (int i = 0; i < 3; i++) {
-            this->pos[i] = 0;
-            this->rot[i] = 0;
-        }
-    }
+    {}
     std::string name;
     std::size_t hash_code;
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> faces;
     std::vector<glm::vec3> normals;
     std::vector<glm::vec4> colors;
-    glm::vec3 pos;
-    glm::vec3 rot;
 };
 
 struct level {
@@ -116,6 +117,14 @@ struct level {
     }
 
     bool isMeshAlreadyLoaded(size_t hashCode) { return false; }
+	mesh * getMesh(size_t hashCode) {
+		for (const auto & mesh : this->models) {
+		   if (mesh->hash_code == hashCode) {
+			return mesh.get();
+		   }
+		}
+		return nullptr;
+	}
 };
 
 inline std::unique_ptr<level> load_level(std::string);
@@ -330,8 +339,8 @@ std::unique_ptr<level> load_level(std::string levelName)
             }
             logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
-            meshPtr->pos = Pos;
-            meshPtr->rot = Rot;
+            objectPtr->pos = Pos;
+            objectPtr->rot = Rot;
             meshPtr->name = meshName;
 
             logPrintLn({ "model stats |",
