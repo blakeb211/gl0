@@ -85,6 +85,7 @@ int main()
         clearScreen();
         glBindVertexArray(VAO[0]);
         int totVertsDrawn = 0;
+        printf("objects.size:%d\n", level->objects.size());
         for (size_t i = 0; i < level->objects.size(); i++) {
 
             model = glm::mat4(1.0f);
@@ -92,11 +93,13 @@ int main()
             float angle = 20.0f * i;
             progOne.setVec3("color", col::list[i]);
             progOne.setMat4("model", model);
-			// @TODO: access the mesh of the current OBJECT
-			auto meshPtr = level->getMesh(level->objects[i]->hash_code);
-			if (meshPtr == nullptr) {
-				printf("error: meshPtr == nullptr\n");
-			}
+            // @TODO: access the mesh of the current OBJECT
+            auto meshPtr = level->getMesh(level->objects[i]->hash_code);
+            if (meshPtr == nullptr) {
+                printf("error: meshPtr == nullptr\n");
+                printf("object[i]->name = %s\n", level->objects[i]->name);
+                printf("object[i]->hash_code = %d\n", level->objects[i]->hash_code);
+            }
             int numVertsCurrModel = meshPtr->faces.size() * 3;
             glDrawArrays(GL_TRIANGLES, totVertsDrawn, numVertsCurrModel);
             totVertsDrawn += numVertsCurrModel;

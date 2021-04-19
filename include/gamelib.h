@@ -52,12 +52,14 @@ struct object {
     std::vector<glm::vec4> colors;
     glm::vec3 pos;
     glm::vec3 rot;
+    std::string name;
 };
 
 struct mesh {
     mesh()
         : hash_code { 0 }
-    {}
+    {
+    }
     std::string name;
     std::size_t hash_code;
     std::vector<glm::vec3> vertices;
@@ -117,14 +119,15 @@ struct level {
     }
 
     bool isMeshAlreadyLoaded(size_t hashCode) { return false; }
-	mesh * getMesh(size_t hashCode) {
-		for (const auto & mesh : this->models) {
-		   if (mesh->hash_code == hashCode) {
-			return mesh.get();
-		   }
-		}
-		return nullptr;
-	}
+    mesh* getMesh(size_t hashCode)
+    {
+        for (const auto& mesh : this->models) {
+            if (mesh->hash_code == hashCode) {
+                return mesh.get();
+            }
+        }
+        return nullptr;
+    }
 };
 
 inline std::unique_ptr<level> load_level(std::string);
@@ -273,14 +276,18 @@ std::unique_ptr<level> load_level(std::string levelName)
             auto meshPtr = std::make_unique<mesh>();
             auto objectPtr = std::make_unique<object>();
 
+            meshPtr->name = meshName;
+            objectPtr->name = entityName;
+
+            objectPtr->pos = Pos;
+            objectPtr->rot = Rot;
+
             size_t meshHashCode = strHasher(meshName);
+            meshPtr->hash_code = meshHashCode;
+            objectPtr->hash_code = meshHashCode;
+
             bool modelExist = slurp::checkFileExist(rootModelPath, meshName, "obj");
             bool meshAlreadyLoaded = l->isMeshAlreadyLoaded(meshHashCode);
-
-            meshPtr->name = entityName;
-            meshPtr->hash_code = strHasher(meshName);
-
-          
 
             if (!modelExist) {
                 // can only reach this line if model file was not found
@@ -339,15 +346,12 @@ std::unique_ptr<level> load_level(std::string levelName)
             }
             logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
-            objectPtr->pos = Pos;
-            objectPtr->rot = Rot;
-            meshPtr->name = meshName;
-
             logPrintLn({ "model stats |",
                 "verts, normals, faces:", meshPtr->vertices.size(),
                 meshPtr->normals.size(), meshPtr->faces.size() });
 
             l->models.push_back(std::move(meshPtr));
+            l->objects.push_back(std::move(objectPtr));
         } // end while
     }
     return std::move(l);
