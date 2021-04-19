@@ -39,16 +39,15 @@ void initTypeToStrMap()
     }
 }
 
-struct mesh {
+struct object {
     std::size_t hash_code;
     std::vector<glm::vec4> colors;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> faces;
-    std::vector<glm::vec3> normals;
+    glm::vec3 pos;
+    glm::vec3 rot;
 };
 
-struct object {
-    object()
+struct mesh {
+    mesh()
         : hash_code { 0 }
     {
         for (int i = 0; i < 3; i++) {
@@ -57,17 +56,18 @@ struct object {
         }
     }
     std::string name;
-    std::vector<glm::vec3> vertices; // delete
-    std::vector<glm::vec3> faces;    // delete
-    std::vector<glm::vec3> normals;  // delete
-    std::vector<glm::vec4> colors;   
+    std::size_t hash_code;
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> faces;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec4> colors;
     glm::vec3 pos;
     glm::vec3 rot;
-    std::size_t hash_code;
 };
 
 struct level {
-    std::vector<std::unique_ptr<object>> models;
+    std::vector<std::unique_ptr<mesh>> models;
+    std::vector<std::unique_ptr<object>> objects;
     std::vector<unsigned int> vaos;
     std::vector<float> raw_data;
     // @TODO: only one VAO built but need different ones for different models
@@ -94,9 +94,9 @@ struct level {
             (void*)0);
         glEnableVertexAttribArray(0);
 
-        //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+        // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
         //		      (void*)(3 * sizeof(float)));
-        //glEnableVertexAttribArray(1);
+        // glEnableVertexAttribArray(1);
         // note that this is allowed, the call to glVertexAttribPointer
         // registered VBO as the vertex attribute's bound vertex buffer object
         // so afterwards we can safely unbind
@@ -110,16 +110,12 @@ struct level {
         glBindVertexArray(0);
 
         for (int i = 0; i < VAO.size(); i++) {
-
             printf("VAO / VBO [%d] = %d / %d\n", i, VAO[i], VBO[i]);
         }
         return VAO;
     }
 
-    bool isMeshAlreadyLoaded(size_t hashCode)
-    {
-        return false;
-    }
+    bool isMeshAlreadyLoaded(size_t hashCode) { return false; }
 };
 
 inline std::unique_ptr<level> load_level(std::string);
@@ -145,13 +141,12 @@ inline std::unique_ptr<std::string> shaderPath(std::string name)
     return path;
 }
 
-// namespace // v  float float float
+// v  float float float
 // vn float float float
 // f  1// 1 22//22 9//9
 //
 //
-// TODO: This should return a mesh
-inline std::unique_ptr<object> load_model_from_disk(const char* name)
+inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name)
 {
     using std::string;
     using std::stringstream;
@@ -159,7 +154,7 @@ inline std::unique_ptr<object> load_model_from_disk(const char* name)
     fileData = slurp::get_file_contents(modelPath(name)->c_str());
 
     // add error checking and return null
-    auto m = std::make_unique<object>();
+    auto m = std::make_unique<mesh>();
     m->name = name;
     logPrintLn({ "SUCCESS:: model <", name, "> slurped from disk" });
 
@@ -252,8 +247,6 @@ std::unique_ptr<level> load_level(std::string levelName)
                 continue;
             }
 
-            // read name of model, model initial position, model initial
-            // rotation
             std::string meshName;
             glm::vec3 Pos {};
             glm::vec3 Rot {};
@@ -268,15 +261,17 @@ std::unique_ptr<level> load_level(std::string levelName)
             }
 
             // load model file into level struct
-            auto objectPtr = std::make_unique<object>();
             auto meshPtr = std::make_unique<mesh>();
+            auto objectPtr = std::make_unique<object>();
 
             size_t meshHashCode = strHasher(meshName);
             bool modelExist = slurp::checkFileExist(rootModelPath, meshName, "obj");
             bool meshAlreadyLoaded = l->isMeshAlreadyLoaded(meshHashCode);
 
-            objectPtr->name = entityName;
-            objectPtr->hash_code = strHasher(meshName);
+            meshPtr->name = entityName;
+            meshPtr->hash_code = strHasher(meshName);
+
+          
 
             if (!modelExist) {
                 // can only reach this line if model file was not found
@@ -284,18 +279,18 @@ std::unique_ptr<level> load_level(std::string levelName)
                 return nullptr;
             }
             if (meshAlreadyLoaded) {
-
-				// @TODO: load object pointer vertices, faces, normals from existing mesh instead of from disk
-				// 
-				//
-				//
-				//
-				//
-				//
-				//
+                // @TODO: load mesh pointer vertices, faces, normals from
+                // existing mesh instead of from disk
+                //
+                //
+                //
+                //
+                //
+                //
+                //
             } else {
                 // read in vertices, normals, and faces from disk
-                objectPtr = load_model_from_disk(meshName.c_str());
+                meshPtr = load_mesh_from_disk(meshName.c_str());
                 //
                 //
                 //
@@ -310,18 +305,16 @@ std::unique_ptr<level> load_level(std::string levelName)
                 logPrintLn({ type_to_str[type], meshName, glm::to_string(Pos),
                     glm::to_string(Rot) });
 
-                logPrintLn({ "model stats |",
-                    "verts, normals, faces:", objectPtr->vertices.size(),
-                    objectPtr->normals.size(), objectPtr->faces.size() });
-
                 // end
             }
 
-            // create one giant raw_data array on the level to hold all model triangles
-            // @Note: vertices are in raw data in the order that model is in the models vector
+            // create one giant raw_data array on the level to hold all model
+            // triangles
+            // @Note: vertices are in raw data in the order that model is in the
+            // models vector
             int facesAddedToRaw = 0;
-            auto& v = objectPtr->vertices;
-            for (const auto& face : objectPtr->faces) {
+            auto& v = meshPtr->vertices;
+            for (const auto& face : meshPtr->faces) {
                 // push a float onto vertexarray
                 // @NOTE: faces integers in object file start at 1 instead of 0
                 l->raw_data.push_back(v[face.x - 1].x);
@@ -337,10 +330,15 @@ std::unique_ptr<level> load_level(std::string levelName)
             }
             logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
-            objectPtr->pos = Pos;
-            objectPtr->rot = Rot;
-            objectPtr->name = meshName;
-            l->models.push_back(std::move(objectPtr));
+            meshPtr->pos = Pos;
+            meshPtr->rot = Rot;
+            meshPtr->name = meshName;
+
+            logPrintLn({ "model stats |",
+                "verts, normals, faces:", meshPtr->vertices.size(),
+                meshPtr->normals.size(), meshPtr->faces.size() });
+
+            l->models.push_back(std::move(meshPtr));
         } // end while
     }
     return std::move(l);
