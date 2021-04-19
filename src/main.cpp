@@ -85,7 +85,6 @@ int main()
         clearScreen();
         glBindVertexArray(VAO[0]);
         int totVertsDrawn = 0;
-        printf("objects.size:%d\n", level->objects.size());
         for (size_t i = 0; i < level->objects.size(); i++) {
 
             model = glm::mat4(1.0f);

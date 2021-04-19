@@ -49,10 +49,9 @@ struct object {
         }
     }
     std::size_t hash_code;
-    std::vector<glm::vec4> colors;
+    std::string name;
     glm::vec3 pos;
     glm::vec3 rot;
-    std::string name;
 };
 
 struct mesh {
@@ -65,7 +64,6 @@ struct mesh {
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> faces;
     std::vector<glm::vec3> normals;
-    std::vector<glm::vec4> colors;
 };
 
 struct level {
@@ -111,19 +109,15 @@ struct level {
         // generally don't unbind VAOs (nor VBOs) when it's not directly
         // necessary.
         glBindVertexArray(0);
-
-        for (int i = 0; i < VAO.size(); i++) {
-            printf("VAO / VBO [%d] = %d / %d\n", i, VAO[i], VBO[i]);
-        }
         return VAO;
     }
 
     bool isMeshAlreadyLoaded(size_t hashCode) { return false; }
     mesh* getMesh(size_t hashCode)
     {
-        for (const auto& mesh : this->models) {
-            if (mesh->hash_code == hashCode) {
-                return mesh.get();
+        for (int i = 0; i < models.size(); i++) {
+            if (models[i]->hash_code == hashCode) {
+                return models[i].get();
             }
         }
         return nullptr;
@@ -276,14 +270,14 @@ std::unique_ptr<level> load_level(std::string levelName)
             auto meshPtr = std::make_unique<mesh>();
             auto objectPtr = std::make_unique<object>();
 
+            // set meshPtr properties
             meshPtr->name = meshName;
-            objectPtr->name = entityName;
-
-            objectPtr->pos = Pos;
-            objectPtr->rot = Rot;
-
             size_t meshHashCode = strHasher(meshName);
             meshPtr->hash_code = meshHashCode;
+
+            objectPtr->name = entityName;
+            objectPtr->pos = Pos;
+            objectPtr->rot = Rot;
             objectPtr->hash_code = meshHashCode;
 
             bool modelExist = slurp::checkFileExist(rootModelPath, meshName, "obj");
@@ -317,12 +311,12 @@ std::unique_ptr<level> load_level(std::string levelName)
                 //
                 //
                 //
-
-                logPrintLn({ type_to_str[type], meshName, glm::to_string(Pos),
-                    glm::to_string(Rot) });
-
                 // end
             }
+
+            // set meshPtr properties
+            meshPtr->name = meshName;
+            meshPtr->hash_code = meshHashCode;
 
             // create one giant raw_data array on the level to hold all model
             // triangles
@@ -347,8 +341,10 @@ std::unique_ptr<level> load_level(std::string levelName)
             logPrintLn({ "faces added to raw_data:", facesAddedToRaw });
 
             logPrintLn({ "model stats |",
-                "verts, normals, faces:", meshPtr->vertices.size(),
-                meshPtr->normals.size(), meshPtr->faces.size() });
+                "verts, normals, faces, hash_code:", meshPtr->vertices.size(),
+                meshPtr->normals.size(), meshPtr->faces.size(), meshPtr->hash_code });
+
+            assert(meshPtr->hash_code != 0);
 
             l->models.push_back(std::move(meshPtr));
             l->objects.push_back(std::move(objectPtr));
