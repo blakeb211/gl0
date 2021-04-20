@@ -1,7 +1,9 @@
-models being loaded from disk more than once
-	** change load_model_from_desk to load a mesh instead of an object 
+finish opengl lighting section 
 
-finish game-ready camera movement
+models being loaded from disk more than once --> 
+refer to level-mesh-entity-pseudocode.txt
+
+get camera movement similar to how it'll be in the game
 
 Add player model and camera follows player
 Cube positions should be part of level
@@ -9,7 +11,6 @@ Add floor tiles to test level
 
 consider vsync instead of pausing
 
-finish opengl tutorial
 
 get objects loading and rendering from level struct
 

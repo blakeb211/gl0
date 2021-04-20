@@ -1,0 +1,17 @@
+
+struct level {
+	unique_ptr<vector<float>> raw_data;
+	
+
+
+}
+
+struct mesh {
+	int hash_code;
+	string name;
+}
+
+object {
+	first_raw_index;
+	num_vertices;
+}
