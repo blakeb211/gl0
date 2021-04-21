@@ -1,5 +1,6 @@
 #pragma once
 #include <any>
+#include <optional>
 #include <array>
 #include <cassert>
 #include <chrono>

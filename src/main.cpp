@@ -84,7 +84,7 @@ int main()
         // ------
         clearScreen();
         glBindVertexArray(VAO[0]);
-        int totVertsDrawn = 0;
+        unsigned totVertsDrawn = 0;
         for (size_t i = 0; i < level->objects.size(); i++) {
             model = glm::mat4(1.0f);
             model = glm::translate(model, level->objects[i]->pos);
@@ -96,7 +96,7 @@ int main()
             auto meshPtr = level->getMesh(level->objects[i]->hash_code);
             assert(meshPtr != nullptr);
 
-            int numVertsCurrModel = meshPtr->faces.size() * 3;
+            unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
 
             // @TODO: get first_vert and num_verts from the mesh
             glDrawArrays(GL_TRIANGLES, totVertsDrawn, numVertsCurrModel);

@@ -6,11 +6,7 @@ refer to level-mesh-entity-pseudocode.txt
 get camera movement similar to how it'll be in the game
 
 Add player model and camera follows player
-Cube positions should be part of level
 Add floor tiles to test level
-
-consider vsync instead of pausing
-
 
 get objects loading and rendering from level struct
 
@@ -39,7 +35,6 @@ wall creation
 octree for collisions
 
 multithreaded?
-
 
 RESOURCED NEEDED
   meshes

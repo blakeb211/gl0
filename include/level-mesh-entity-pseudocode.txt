@@ -1,17 +1,19 @@
 
 struct level {
-	unique_ptr<vector<float>> raw_data;
+	vector<float> raw_data;
 	
 
 
 }
 
 struct mesh {
-	int hash_code;
 	string name;
+	size_t hash_code;
+	size_t first_raw_index;
+	size_t num_vertices;
 }
 
 object {
-	first_raw_index;
-	num_vertices;
+	size_t hash_code;
+	vec3 pos, rot;
 }
