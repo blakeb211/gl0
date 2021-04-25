@@ -1,13 +1,21 @@
 #include "log.h"
 //
+#include <array>
 #include <cstdio>
+#include <fmt\core.h>
 #include <fmt\format.h>
+#include <fmt\os.h>
 #include <string>
+
 using namespace std;
 
 constexpr auto BUFFER_LENGTH = 512;
 
 static FILE *fptr;
+
+// @TODO: replace sprintf with fmt::format
+// @TODO : replace printf with fmt::print
+// @TODO : replace cstyle file pointer with ???
 
 bool closeLog() {
   if (fptr != NULL) {
@@ -40,6 +48,9 @@ template <class T> void write_num_to_buffer(any val, char *buf) {
 
 void logPrintLn(const initializer_list<any> &il) {
   char buf[BUFFER_LENGTH] = "";
+  // @TODO : switch buf to buffer
+  array<char, BUFFER_LENGTH> buffer{};
+
   int cCount = 0;
   for (auto &i : il) {
     const char *typeName = i.type().name();
@@ -49,8 +60,9 @@ void logPrintLn(const initializer_list<any> &il) {
       continue;
     }
     if (typeid(const char *) == i.type()) {
-      cCount = sprintf(buf, "%s ", any_cast<const char *>(i));
-      printf("%s", buf);
+      string s = fmt::format("{}", any_cast<const char *>(i));
+      cCount = s.length();
+      fmt::print(s);
       fwrite(buf, sizeof(char), cCount, fptr);
       continue;
     }
