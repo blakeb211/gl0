@@ -230,7 +230,6 @@ inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name)
 // entity_type  model_name  x y z
 inline std::unique_ptr<level> load_level(std::string levelName)
 {
-    int meshesLoadedFromDisk = 0;
     auto l = std::make_unique<level>();
     std::string line, entityName = "";
 
@@ -304,7 +303,6 @@ inline std::unique_ptr<level> load_level(std::string levelName)
             } else {
                 // read in vertices, normals, and faces from disk
                 meshPtr = load_mesh_from_disk(meshName.c_str());
-                meshesLoadedFromDisk++;
                 //
             }
 
@@ -345,7 +343,8 @@ inline std::unique_ptr<level> load_level(std::string levelName)
             l->objects.push_back(std::move(objectPtr));
         } // end while
     }
-    logPrintLn({ "meshes loaded from disk:", meshesLoadedFromDisk });
+    logPrintLn({ "objects created:", l->objects.size() });
+    logPrintLn({ "meshes loaded from disk:", l->models.size() });
     return std::move(l);
 }
 

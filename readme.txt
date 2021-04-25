@@ -1,7 +1,7 @@
 finish opengl lighting section 
 
-models being loaded from disk more than once --> 
 refer to level-mesh-entity-pseudocode.txt
+models being loaded from disk more than once --> 
 
 get camera movement similar to how it'll be in the game
 

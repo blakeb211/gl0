@@ -4,3 +4,12 @@ model stats | verts, normals, faces, hash_code:   26.000   26.000   48.000 55032
 model stats | verts, normals, faces, hash_code:   26.000   26.000   48.000 5503224543670688768.000 
 model stats | verts, normals, faces, hash_code:  482.000  482.000  960.000 9915782786907617280.000 
 model stats | verts, normals, faces, hash_code: 12490.000 12490.000 24976.000 18257050065998780416.000 
+model stats | verts, normals, faces, hash_code: 12490.000 12490.000 24976.000 18257050065998780416.000 
+model stats | verts, normals, faces, hash_code: 12490.000 12490.000 24976.000 18257050065998780416.000 
+model stats | verts, normals, faces, hash_code: 12490.000 12490.000 24976.000 18257050065998780416.000 
+model stats | verts, normals, faces, hash_code: 12490.000 12490.000 24976.000 18257050065998780416.000 
+model stats | verts, normals, faces, hash_code: 12490.000 12490.000 24976.000 18257050065998780416.000 
+objects created:    9.000 
+meshes loaded from disk:    3.000 
+avg framerate:   61.814 
+avg framerate:   61.920 
