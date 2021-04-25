@@ -9,12 +9,8 @@
 
 using namespace std;
 
-constexpr auto BUFFER_LENGTH = 512;
-
 static FILE *fptr;
 
-// @TODO: replace sprintf with fmt::format
-// @TODO : replace printf with fmt::print
 // @TODO : replace cstyle file pointer with ???
 
 bool closeLog() {
@@ -28,11 +24,11 @@ bool closeLog() {
   return false;
 }
 
-bool setLogFile(const char *fname) {
-  if (strcmp(fname, "") == 0) {
+bool setLogFile(std::string fname) {
+  if (fname.empty())
     return false;
-  }
-  fptr = fopen(fname, "w+");
+
+  fptr = fopen(fname.c_str(), "w+");
   if (fptr != NULL) {
     return true;
   } else {
@@ -40,81 +36,68 @@ bool setLogFile(const char *fname) {
   }
 }
 
-template <class T> void write_num_to_buffer(any val, char *buf) {
-  int cCount = sprintf(buf, "%8.3Lf ", (long double)any_cast<T>(val));
-  printf("%s", buf);
-  fwrite(buf, sizeof(char), cCount, fptr);
+template <class T> void write_num_to_buffer(any val) {
+  string s = fmt::format("{:03.2f}  ", (long double)any_cast<T>(val));
+  fmt::print(s);
+  fwrite(s.data(), sizeof(char), s.length(), fptr);
 }
 
 void logPrintLn(const initializer_list<any> &il) {
-  char buf[BUFFER_LENGTH] = "";
-  // @TODO : switch buf to buffer
-  array<char, BUFFER_LENGTH> buffer{};
 
   int cCount = 0;
   for (auto &i : il) {
     const char *typeName = i.type().name();
-    clearBuffer(buf, BUFFER_LENGTH);
     if (typeid(0.1f) == i.type()) {
-      write_num_to_buffer<float>(i, buf);
+      write_num_to_buffer<float>(i);
       continue;
     }
     if (typeid(const char *) == i.type()) {
-      string s = fmt::format("{}", any_cast<const char *>(i));
-      cCount = s.length();
+      string s = fmt::format("{} ", any_cast<const char *>(i));
       fmt::print(s);
-      fwrite(buf, sizeof(char), cCount, fptr);
+      fwrite(s.data(), sizeof(char), s.length(), fptr);
       continue;
     }
     if (typeid(char *) == i.type()) {
-      cCount = sprintf(buf, "%s ", any_cast<char *>(i));
-      printf("%s", buf);
-      fwrite(buf, sizeof(char), cCount, fptr);
+      string s = fmt::format("{} ", any_cast<char *>(i));
+      fmt::print(s);
+      fwrite(s.data(), sizeof(char), s.length(), fptr);
       continue;
     }
     if (typeid(1) == i.type()) {
-      write_num_to_buffer<int>(i, buf);
+      write_num_to_buffer<int>(i);
       continue;
     }
     if (typeid(1.0) == i.type()) {
-      write_num_to_buffer<double>(i, buf);
+      write_num_to_buffer<double>(i);
       continue;
     }
     if (typeid(1u) == i.type()) {
-      write_num_to_buffer<unsigned int>(i, buf);
+      write_num_to_buffer<unsigned int>(i);
       continue;
     }
     if (typeid(string("a")) == i.type()) {
-      cCount = sprintf(buf, "%s ", any_cast<string>(i).c_str());
-      printf("%s", buf);
-      fwrite(buf, sizeof(char), cCount, fptr);
+      string s = fmt::format("{} ", any_cast<string>(i));
+      fmt::print(s);
+      fwrite(s.data(), sizeof(char), s.length(), fptr);
       continue;
     }
     if (typeid(size_t) == i.type()) {
-      write_num_to_buffer<size_t>(i, buf);
+      write_num_to_buffer<size_t>(i);
       continue;
     }
     //****************************************************************
     // add handling for next type here
     //****************************************************************
 
-    cCount =
-        sprintf(buf, "ERROR: need to add new type to logPrint:<%s>", typeName);
-    printf("%s", buf);
-    fwrite(buf, sizeof(char), cCount, fptr);
+    string s =
+        fmt::format("ERROR: need to add new type to logPrint:<{}> ", typeName);
+    fmt::print(s);
+    fwrite(s.data(), sizeof(char), s.length(), fptr);
   }
   // print a new line at the end regardless of what got printed
-  cCount = sprintf(buf, "%s", "\n\0");
-  printf("%s", buf);
-  fwrite(buf, sizeof(char), cCount, fptr);
-}
-
-void clearBuffer(char *buf, int len) {
-  int count = 0;
-  while (count < len) {
-    buf[count] = '\0';
-    count++;
-  }
+  string s = fmt::format("\n");
+  fmt::print(s);
+  fwrite(s.data(), sizeof(char), s.length(), fptr);
 }
 
 void logErr(const char *fname, const int lineNum, const char *msg) {
