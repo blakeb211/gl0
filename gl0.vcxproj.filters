@@ -48,8 +48,11 @@
     <ClCompile Include="thirdparty\src\glad\glad.c">
       <Filter>ThirdParty\Source</Filter>
     </ClCompile>
-    <ClCompile Include="stb_image.cpp">
+    <ClCompile Include="src\stb_image.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\src\fmt\format.cc">
+      <Filter>ThirdParty\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="include\camera.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\include\fmt\format.h">
+      <Filter>ThirdParty\Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,8 @@
+replace c-style calls with fmtlib for logging
+
 finish opengl lighting section 
 
-refer to level-mesh-entity-pseudocode.txt
-models being loaded from disk more than once --> 
+models being loaded from disk more than once 
 
 get camera movement similar to how it'll be in the game
 
