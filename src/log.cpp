@@ -99,6 +99,6 @@ void logPrintLn(const initializer_list<any> &il) {
   fwrite(s.data(), sizeof(char), s.length(), fptr);
 }
 
-void logErr(const char *fname, const int lineNum, string msg) {
+void logErr(const string fname, const int lineNum, const string msg) {
   logPrintLn({"ERROR: file <", fname, "> line <", lineNum, "> ==", msg});
 }
