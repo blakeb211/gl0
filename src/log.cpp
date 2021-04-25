@@ -1,6 +1,5 @@
 #include "log.h"
 //
-#include <array>
 #include <cstdio>
 #include <fmt\core.h>
 #include <fmt\format.h>
@@ -100,6 +99,6 @@ void logPrintLn(const initializer_list<any> &il) {
   fwrite(s.data(), sizeof(char), s.length(), fptr);
 }
 
-void logErr(const char *fname, const int lineNum, const char *msg) {
+void logErr(const char *fname, const int lineNum, string msg) {
   logPrintLn({"ERROR: file <", fname, "> line <", lineNum, "> ==", msg});
 }
