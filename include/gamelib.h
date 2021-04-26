@@ -16,13 +16,7 @@ inline std::string rootShaderPath = appRoot + R"(shaders\)";
 inline const unsigned int SCR_WIDTH = 800;
 inline const unsigned int SCR_HEIGHT = 600;
 
-inline int g_seed;
 inline std::hash<std::string> strHasher;
-
-inline int fastrand() {
-  g_seed = (214013 * g_seed + 2531011);
-  return (g_seed >> 16) & 0x7FFF;
-}
 
 enum class ENTITY_TYPE { unknown, hero, box, ground };
 
@@ -40,14 +34,30 @@ void initTypeToStrMap() {
   }
 }
 
-struct object {
-  object() : hash_code{0} {
-    for (int i = 0; i < 3; i++) {
-      this->pos[i] = 0;
-      this->rot[i] = 0;
-    }
+//********************************************************
+//					IdFactory
+//********************************************************
+struct IdFactory {
+  static unsigned getNewId() {
+    int retVal = 0;
+    retVal = count_;
+    count_++;
+    return retVal;
   }
-  std::size_t hash_code;
+
+private:
+  IdFactory() {}
+  static unsigned count_;
+};
+//********************************************************
+
+unsigned IdFactory::count_ = 0;
+
+struct object {
+  object()
+      : pos{0, 0, 0}, rot{0, 0, 0}, mesh_id{0}, id{IdFactory::getNewId()} {}
+  const unsigned id;
+  std::size_t mesh_id;
   std::string name;
   glm::vec3 pos;
   glm::vec3 rot;
@@ -63,7 +73,7 @@ struct mesh {
 };
 
 struct level {
-  std::vector<std::unique_ptr<mesh>> models;
+  std::vector<std::unique_ptr<mesh>> meshes;
   std::vector<std::unique_ptr<object>> objects;
   std::vector<unsigned int> vaos;
   std::vector<float> raw_data;
@@ -71,8 +81,8 @@ struct level {
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
 
-    std::vector<unsigned int> VBO(models.size(), 0);
-    std::vector<unsigned int> VAO(models.size(), 0);
+    std::vector<unsigned int> VBO(meshes.size(), 0);
+    std::vector<unsigned int> VAO(meshes.size(), 0);
 
     glGenVertexArrays(1, &VAO[0]);
     glGenBuffers(1, &VBO[0]);
@@ -105,9 +115,9 @@ struct level {
   }
 
   mesh *getMesh(size_t hashCode) {
-    for (int i = 0; i < models.size(); i++) {
-      if (models[i]->hash_code == hashCode) {
-        return models[i].get();
+    for (int i = 0; i < meshes.size(); i++) {
+      if (meshes[i]->hash_code == hashCode) {
+        return meshes[i].get();
       }
     }
     return nullptr;
@@ -270,7 +280,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
       objectPtr->name = entityName;
       objectPtr->pos = Pos;
       objectPtr->rot = Rot;
-      objectPtr->hash_code = meshHashCode;
+      objectPtr->mesh_id = meshHashCode;
 
       bool modelExist = slurp::checkFileExist(rootModelPath, meshName, "obj");
       bool meshAlreadyLoaded =
@@ -305,7 +315,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
       // @TODO: save the starting vertex in the raw_data array to the
       // object struct
       // @Note: vertices are in raw data in the order that model is in the
-      // models vector
+      // meshes vector
       int facesAddedToRaw = 0;
       auto &v = meshPtr->vertices;
       for (const auto &face : meshPtr->faces) {
@@ -330,13 +340,13 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
       assert(meshPtr->hash_code != 0);
 
       if (!meshAlreadyLoaded)
-        l->models.push_back(std::move(meshPtr));
+        l->meshes.push_back(std::move(meshPtr));
 
       l->objects.push_back(std::move(objectPtr));
     } // end while
   }
   logPrintLn("objects created:", l->objects.size());
-  logPrintLn("meshes loaded from disk:", l->models.size());
+  logPrintLn("meshes loaded from disk:", l->meshes.size());
   return std::move(l);
 }
 

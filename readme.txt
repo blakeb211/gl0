@@ -1,10 +1,11 @@
+control character
+
 finish opengl lighting section 
 
 use inheritance for the entity base  
 
 add GL_DRAW_ARRAY start position to mesh struct
 
-control character
 
 have camera follow character
 
