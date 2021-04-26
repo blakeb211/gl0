@@ -199,7 +199,7 @@ inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name)
             glm::vec3 normal;
             lineStream >> normal.x >> normal.y >> normal.z;
             if (lineStream.fail()) {
-                logPrintLn({ "error reading normal coords" });
+                logPrintLn("error reading normal coords");
             }
             m->normals.push_back(normal);
         }
@@ -237,7 +237,7 @@ inline std::unique_ptr<level> load_level(std::string levelName)
 
     if (levelExist) {
         auto levelData = slurp::get_file_contents(levelPath(levelName)->c_str());
-        logPrintLn({ "SUCCESS:: level", levelName, "slurped from disk" });
+        logPrintLn("SUCCESS:: level", levelName, "slurped from disk");
 
         int lineNum = 0;
 
@@ -265,8 +265,8 @@ inline std::unique_ptr<level> load_level(std::string levelName)
             lineStream >> Rot.x >> Rot.y >> Rot.z;
 
             if (lineStream.fail()) {
-                logPrintLn({ "ERROR: wrong values on line <", lineNum, ">",
-                    "level:", levelName });
+                logPrintLn("ERROR: wrong values on line <", lineNum, ">",
+                    "level:", levelName);
                 continue;
             }
 
@@ -331,9 +331,9 @@ inline std::unique_ptr<level> load_level(std::string levelName)
                 facesAddedToRaw++;
             }
 
-            logPrintLn({ "model stats |", "verts, normals, faces, hash_code:",
+            logPrintLn("model stats |", "verts, normals, faces, hash_code:",
                 meshPtr->vertices.size(), meshPtr->normals.size(),
-                meshPtr->faces.size(), meshPtr->hash_code });
+                meshPtr->faces.size(), meshPtr->hash_code);
 
             assert(meshPtr->hash_code != 0);
 
@@ -343,8 +343,8 @@ inline std::unique_ptr<level> load_level(std::string levelName)
             l->objects.push_back(std::move(objectPtr));
         } // end while
     }
-    logPrintLn({ "objects created:", l->objects.size() });
-    logPrintLn({ "meshes loaded from disk:", l->models.size() });
+    logPrintLn("objects created:", l->objects.size());
+    logPrintLn("meshes loaded from disk:", l->models.size());
     return std::move(l);
 }
 

@@ -91,13 +91,6 @@ void logPrintLn(const initializer_list<any>& il) {
 	write_to_screen_and_disk<const string>(
 	    "ERROR: add type <{}> to logPrintLn", typeName);
     }
-    // print a new line at the end regardless of what got printed
-    write_to_screen_and_disk<const char*>("{}", "\n");
-}
-
-template <typename... T>
-void logPrint(T const&... args) {
-    ([&](any const& element) { logPrintLn({element}); }(args), ...);
 }
 
 void logErr(const string fname, const int lineNum, const string msg) {
