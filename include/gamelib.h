@@ -53,8 +53,8 @@ private:
 
 unsigned IdFactory::count_ = 0;
 
-struct object {
-  object()
+struct entity {
+  entity()
       : pos{0, 0, 0}, rot{0, 0, 0}, mesh_id{0}, id{IdFactory::getNewId()} {}
   const unsigned id;
   std::size_t mesh_id;
@@ -74,7 +74,7 @@ struct mesh {
 
 struct level {
   std::vector<std::unique_ptr<mesh>> meshes;
-  std::vector<std::unique_ptr<object>> objects;
+  std::vector<std::unique_ptr<entity>> objects;
   std::vector<unsigned int> vaos;
   std::vector<float> raw_data;
   std::vector<unsigned int> buildVAO() {
@@ -272,7 +272,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 
       // load model file into level struct
       auto meshPtr = std::make_unique<mesh>();
-      auto objectPtr = std::make_unique<object>();
+      auto objectPtr = std::make_unique<entity>();
 
       // set meshPtr properties
       size_t meshHashCode = strHasher(meshName);
@@ -313,7 +313,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
       // create one giant raw_data array on the level to hold all model
       // triangles
       // @TODO: save the starting vertex in the raw_data array to the
-      // object struct
+      // entity struct
       // @Note: vertices are in raw data in the order that model is in the
       // meshes vector
       int facesAddedToRaw = 0;
