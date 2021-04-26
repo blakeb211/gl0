@@ -1,14 +1,14 @@
-OpenGL Version:        3 .        3 
+OpenGL Version: 3        . 3        
  SUCCESS:: level test slurped from disk 
- model stats | verts, normals, faces, hash_code: 26.00  26.00  48.00  5503224543670688768.00  
- model stats | verts, normals, faces, hash_code: 26.00  26.00  48.00  5503224543670688768.00  
- model stats | verts, normals, faces, hash_code: 482.00  482.00  960.00  9915782786907617280.00  
- model stats | verts, normals, faces, hash_code: 8.00  8.00  12.00  18257050065998780416.00  
- model stats | verts, normals, faces, hash_code: 8.00  8.00  12.00  18257050065998780416.00  
- model stats | verts, normals, faces, hash_code: 8.00  8.00  12.00  18257050065998780416.00  
- model stats | verts, normals, faces, hash_code: 8.00  8.00  12.00  18257050065998780416.00  
- model stats | verts, normals, faces, hash_code: 8.00  8.00  12.00  18257050065998780416.00  
- model stats | verts, normals, faces, hash_code: 8.00  8.00  12.00  18257050065998780416.00  
- objects created: 9.00  
- meshes loaded from disk: 3.00  
+ model stats | verts, normals, faces, hash_code: 26       26       48       5503224543670688896 
+ model stats | verts, normals, faces, hash_code: 26       26       48       5503224543670688896 
+ model stats | verts, normals, faces, hash_code: 482      482      960      9915782786907616376 
+ model stats | verts, normals, faces, hash_code: 8        8        12       18257050065998780757 
+ model stats | verts, normals, faces, hash_code: 8        8        12       18257050065998780757 
+ model stats | verts, normals, faces, hash_code: 8        8        12       18257050065998780757 
+ model stats | verts, normals, faces, hash_code: 8        8        12       18257050065998780757 
+ model stats | verts, normals, faces, hash_code: 8        8        12       18257050065998780757 
+ model stats | verts, normals, faces, hash_code: 8        8        12       18257050065998780757 
+ objects created: 9        
+ meshes loaded from disk: 3        
  
