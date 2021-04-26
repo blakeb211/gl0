@@ -1,4 +1,7 @@
 replace c-style calls with fmtlib for logging
+fix logger to print ints, doubles, size_t etc differently
+ask in chat how to do a template instead of logPrintLn({
+improve model pretty printing
 
 finish opengl lighting section 
 
