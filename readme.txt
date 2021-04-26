@@ -1,8 +1,17 @@
 finish opengl lighting section 
 
-models being loaded from disk more than once 
+use inheritance for the entity base  
+
+add GL_DRAW_ARRAY start position to mesh struct
+
+control character
+
+have camera follow character
 
 get camera movement similar to how it'll be in the game
+
+models being loaded from disk more than once 
+
 
 Add player model and camera follows player
 Add floor tiles to test level
