@@ -51,7 +51,7 @@ void write_to_screen_and_disk(const string fmt, any val) {
 void logPrintLn(const initializer_list<any>& il) {
     for (auto& i : il) {
 	const string typeName{i.type().name()};
-
+	buf.fill('-');
 	if (typeid(0.1f) == i.type()) {
 	    write_to_screen_and_disk<float>("{:<8.3f} ", i);
 	    continue;
@@ -87,7 +87,6 @@ void logPrintLn(const initializer_list<any>& il) {
 	//****************************************************************
 	// add handling for next type here
 	//****************************************************************
-
 	write_to_screen_and_disk<const string>(
 	    "ERROR: add type <{}> to logPrintLn", typeName);
     }
