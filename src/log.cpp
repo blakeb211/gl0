@@ -95,6 +95,11 @@ void logPrintLn(const initializer_list<any>& il) {
     write_to_screen_and_disk<const char*>("{}", "\n");
 }
 
+template <typename... T>
+void logPrint(T const&... args) {
+    ([&](any const& element) { logPrintLn({element}); }(args), ...);
+}
+
 void logErr(const string fname, const int lineNum, const string msg) {
     logPrintLn({"ERROR: file <", fname, "> line <", lineNum, "> ==", msg});
 }
