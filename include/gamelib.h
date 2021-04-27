@@ -65,16 +65,18 @@ struct entity {
 };
 
 struct mesh {
-    mesh() : hash_code{0} {}
+    mesh() : hash_code{0}, pos_first_vert{0} {}
     std::string name;
     std::size_t hash_code;
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> faces;
     std::vector<glm::vec3> normals;
+    size_t pos_first_vert;
 };
 
 struct level {
     std::vector<std::unique_ptr<mesh>> meshes;
+    std::vector<int> mesh_first_vertex;
     std::vector<std::unique_ptr<entity>> objects;
     std::vector<unsigned int> vaos;
     std::vector<float> raw_data;
@@ -318,40 +320,44 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 	    // entity struct
 	    // @Note: vertices are in raw data in the order that model is in the
 	    // meshes vector
-	    int facesAddedToRaw = 0;
-	    auto& v = meshPtr->vertices;
-	    for (const auto& face : meshPtr->faces) {
-		// push a float onto vertexarray
-		// @NOTE: faces integers in object file start at 1 instead of 0
-		l->raw_data.push_back(v[(size_t)face.x - 1].x);
-		l->raw_data.push_back(v[(size_t)face.x - 1].y);
-		l->raw_data.push_back(v[(size_t)face.x - 1].z);
-		l->raw_data.push_back(v[(size_t)face.y - 1].x);
-		l->raw_data.push_back(v[(size_t)face.y - 1].y);
-		l->raw_data.push_back(v[(size_t)face.y - 1].z);
-		l->raw_data.push_back(v[(size_t)face.z - 1].x);
-		l->raw_data.push_back(v[(size_t)face.z - 1].y);
-		l->raw_data.push_back(v[(size_t)face.z - 1].z);
-		facesAddedToRaw++;
-	    }
-	    const std::string spacer(15 - meshName.length(), ' ');
-	    logPrintLn(meshName, spacer, meshPtr->vertices.size(),
-		       meshPtr->normals.size(), meshPtr->faces.size(),
-		       meshPtr->hash_code);
+	    if (!meshAlreadyLoaded) {
+		int facesAddedToRaw = 0;
+		auto& v = meshPtr->vertices;
+		meshPtr->pos_first_vert = l->raw_data.size() / 3;
+		for (const auto& face : meshPtr->faces) {
+		    // push a float onto vertexarray
+		    // @NOTE: faces integers in object file start at 1 instead
+		    // of 0
+		    l->raw_data.push_back(v[(size_t)face.x - 1].x);
+		    l->raw_data.push_back(v[(size_t)face.x - 1].y);
+		    l->raw_data.push_back(v[(size_t)face.x - 1].z);
+		    l->raw_data.push_back(v[(size_t)face.y - 1].x);
+		    l->raw_data.push_back(v[(size_t)face.y - 1].y);
+		    l->raw_data.push_back(v[(size_t)face.y - 1].z);
+		    l->raw_data.push_back(v[(size_t)face.z - 1].x);
+		    l->raw_data.push_back(v[(size_t)face.z - 1].y);
+		    l->raw_data.push_back(v[(size_t)face.z - 1].z);
+		    facesAddedToRaw++;
+		}
+		const std::string spacer(15 - meshName.length(), ' ');
+		logPrintLn(meshName, spacer, meshPtr->vertices.size(),
+			   meshPtr->normals.size(), meshPtr->faces.size(),
+			   meshPtr->hash_code);
 
-	    assert(meshPtr->hash_code != 0);
-
-	    if (!meshAlreadyLoaded)
+		assert(meshPtr->hash_code != 0);
 		l->meshes.push_back(std::move(meshPtr));
+	    }
 
 	    logPrintLn("pushing back obj => type:",
 		       type_to_str[entityPtr->type], "id:", entityPtr->id);
 	    l->objects.push_back(std::move(entityPtr));
+
 	}  // end while
+	logPrintLn("objects created:", l->objects.size());
+	logPrintLn("meshes loaded from disk:", l->meshes.size());
+	return std::move(l);
     }
-    logPrintLn("objects created:", l->objects.size());
-    logPrintLn("meshes loaded from disk:", l->meshes.size());
-    return std::move(l);
+	return nullptr;
 }
 
 }  // namespace gxb

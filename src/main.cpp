@@ -82,7 +82,6 @@ int main() {
     // ------
     clearScreen();
     glBindVertexArray(VAO[0]);
-    unsigned totVertsDrawn = 0;
 	size_t colorId = 0;
 	const size_t numColor = col::list.size();
 	for (size_t i = 0; i < level->objects.size(); i++) {
@@ -101,8 +100,7 @@ int main() {
       unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
 
       // @TODO: get first_vert and num_verts from the mesh
-      glDrawArrays(GL_TRIANGLES, totVertsDrawn, numVertsCurrModel);
-      totVertsDrawn += numVertsCurrModel;
+      glDrawArrays(GL_TRIANGLES, meshPtr->pos_first_vert, numVertsCurrModel);
     }
 
     glBindVertexArray(0);
