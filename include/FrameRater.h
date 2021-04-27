@@ -33,7 +33,7 @@ public:
     void printFrameRateIfFreqHasBeenReached()
     {
         if (this->frame_count % FR_PRINT_FREQ == 0) {
-            logPrintLn({ "avg framerate:", this->getAvgFrameRate() });
+            logPrintLn("avg framerate:", this->getAvgFrameRate());
         }
     }
 

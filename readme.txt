@@ -1,8 +1,10 @@
 control character
 
+improve error msgs
+
 finish opengl lighting section 
 
-use inheritance for the entity base  
+entities inherit from entity 
 
 add GL_DRAW_ARRAY start position to mesh struct
 

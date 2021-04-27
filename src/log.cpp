@@ -40,7 +40,7 @@ bool setLogFile(std::string fname) {
 
 template <class T>
 void write_to_screen_and_disk(const string fmt, any val) {
-    const static string fmt_ = fmt;
+    const string fmt_ = fmt;
     const auto arg_ = any_cast<T>(val);
     auto cnt_ = fmt::formatted_size(fmt_, arg_);
     auto _ = fmt::format_to_n(buf.begin(), cnt_, fmt_, arg_);
@@ -93,5 +93,5 @@ void logPrintLn(const initializer_list<any>& il) {
 }
 
 void logErr(const string fname, const int lineNum, const string msg) {
-    logPrintLn({"ERROR: file <", fname, "> line <", lineNum, "> ==", msg});
+    logPrintLn("ERROR: file <", fname, "> line <", lineNum, "> ==", msg);
 }

@@ -83,12 +83,16 @@ int main() {
     clearScreen();
     glBindVertexArray(VAO[0]);
     unsigned totVertsDrawn = 0;
-    for (size_t i = 0; i < level->objects.size(); i++) {
+	size_t colorId = 0;
+	const size_t numColor = col::list.size();
+	for (size_t i = 0; i < level->objects.size(); i++) {
       model = glm::mat4(1.0f);
       model = glm::translate(model, level->objects[i]->pos);
 
       float angle = 20.0f * i;
-      progOne.setVec3("color", col::list[i]);
+	  
+	  colorId = (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
+      progOne.setVec3("color", col::list[colorId]);
       progOne.setMat4("model", model);
 
       auto meshPtr = level->getMesh(level->objects[i]->mesh_id);
