@@ -9,7 +9,6 @@ have camera follow character
 get camera movement similar to how it'll be in the game
 
 Add player model and camera follows player
-Add floor tiles to test level
 
 get objects loading and rendering from level struct
 

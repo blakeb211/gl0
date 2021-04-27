@@ -9,7 +9,7 @@ void logPrintLn(const std::initializer_list<std::any>& il);
 template<typename ... T>
 void logPrintLn(T const& ... args) {
    
-    ([&](std::any const& element) {
+    ([&](auto const& element) {
    
    logPrintLn({element});
 
