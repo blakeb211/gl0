@@ -6,12 +6,6 @@ entities inherit from entity
 
 have camera follow character
 
-get camera movement similar to how it'll be in the game
-
-Add player model and camera follows player
-
-get objects loading and rendering from level struct
-
 add object properties, like state timings to level text
 
 add lighting

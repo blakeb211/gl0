@@ -63,6 +63,7 @@ set textwidth=120
 set undofile
 set visualbell
 set wildmenu
+set window=36
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
@@ -75,7 +76,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd main.cpp
-edit c:\cprojects\gl0\src\log.cpp
+edit c:\cprojects\gl0\src\main.cpp
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -101,7 +102,7 @@ setlocal cinkeys=0{,0},0),0],:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
-setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
+setlocal comments=sl:/*,mb:\ *,elx:\ */
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
@@ -210,18 +211,23 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 11) / 23)
+let s:l = 240 - ((31 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+240
+normal! 06|
 tabnext 1
+badd +31 c:\cprojects\gl0\src\log.cpp
+badd +205 c:\cprojects\gl0\src\main.cpp
 badd +3 c:\cprojects\gl0\readme.txt
-badd +2 c:\cprojects\gl0\src\main.cpp
-badd +210 c:\cprojects\gl0\include\gamelib.h
+badd +80 c:\cprojects\gl0\include\gamelib.h
 badd +114 C:\Program\ Files\ (x86)\Vim\vimrc
-badd +0 c:\cprojects\gl0\src\log.cpp
+badd +8 c:\cprojects\gl0\levels\test.txt
+badd +6 c:\cprojects\gl0\include\framerater.h
+badd +49 c:\cprojects\joint_allocator_example.cpp
+badd +4 c:\cprojects\gl0\src\log.txt
+badd +12 c:\cprojects\gl0\include\log.h
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
@@ -233,7 +239,6 @@ if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &so = s:so_save | let &siso = s:siso_save
-nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :
