@@ -211,21 +211,25 @@ void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
 	level->objects[0]->pos.x += cameraSpeed * deltaTime;
-    // cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, deltaTime);
+	cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, deltaTime);
+    }
 
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
 	level->objects[0]->pos.x -= cameraSpeed * deltaTime;
-	//cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, deltaTime);
+	cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, deltaTime);
+    }
 
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	level->objects[0]->pos.z += cameraSpeed * deltaTime;
-	//cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, deltaTime);
-
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 	level->objects[0]->pos.z -= cameraSpeed * deltaTime;
-	//cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
+	cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, deltaTime);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+	level->objects[0]->pos.z += cameraSpeed * deltaTime;
+	cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
+    }
 
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 	__noop;

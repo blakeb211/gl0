@@ -49,9 +49,6 @@ OpenGL Version: 3        . 3
  ERROR: wrong values on line < 43       > level: test 
  objects created: 42       
  meshes loaded from disk: 3        
- avg framerate: 58.901   
- avg framerate: 62.150   
- avg framerate: 61.977   
- avg framerate: 61.900   
- avg framerate: 61.910   
+ avg framerate: 60.087   
+ avg framerate: 61.920   
  
