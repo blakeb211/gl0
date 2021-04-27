@@ -88,8 +88,6 @@ int main() {
       model = glm::mat4(1.0f);
       model = glm::translate(model, level->objects[i]->pos);
 
-      float angle = 20.0f * i;
-	  
 	  colorId = (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
       progOne.setVec3("color", col::list[colorId]);
       progOne.setMat4("model", model);
@@ -98,8 +96,6 @@ int main() {
       assert(meshPtr != nullptr);
 
       unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
-
-      // @TODO: get first_vert and num_verts from the mesh
       glDrawArrays(GL_TRIANGLES, meshPtr->pos_first_vert, numVertsCurrModel);
     }
 
