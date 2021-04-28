@@ -267,7 +267,12 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 	    lineStream >> Pos.x >> Pos.y >> Pos.z;
 	    lineStream >> Rot.x >> Rot.y >> Rot.z;
 
-	    if (lineStream.fail()) {
+	    const bool lineStreamBad = lineStream.fail();
+	    if (lineStreamBad && levelData.eof()) {
+		break;
+	    }
+
+	    if (lineStreamBad) {
 		logPrintLn("ERROR: wrong values on line <", lineNum, ">",
 			   "level:", levelName);
 		continue;
@@ -292,7 +297,8 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 
 	    if (!modelExist) {
 		// can only reach this line if model file was not found
-		logErr(__FILE__, __LINE__, meshName.c_str());
+		logPrintLn("ERROR::missing mesh file:", meshName,
+			   "while loading level:", levelName);
 		return nullptr;
 	    }
 	    if (meshAlreadyLoaded) {
@@ -348,8 +354,8 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 		l->meshes.push_back(std::move(meshPtr));
 	    }
 
-	    logPrintLn("pushing back obj => type:",
-		       type_to_str[entityPtr->type], "id:", entityPtr->id);
+	    //    logPrintLn("pushing back obj => type:",
+	    //	       type_to_str[entityPtr->type], "id:", entityPtr->id);
 	    l->objects.push_back(std::move(entityPtr));
 
 	}  // end while
@@ -357,7 +363,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 	logPrintLn("meshes loaded from disk:", l->meshes.size());
 	return std::move(l);
     }
-	return nullptr;
+    return nullptr;
 }
 
 }  // namespace gxb

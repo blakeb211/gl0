@@ -31,7 +31,6 @@ std::unique_ptr<gxb::level> level = nullptr;
 
 int main() {
     gxb::initTypeToStrMap();  // creates str_to_type
-
     FrameRater fr{};
 
     setLogFile("log.txt");
@@ -230,7 +229,10 @@ void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime) {
 	level->objects[0]->pos.z += cameraSpeed * deltaTime;
 	cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
     }
-
+	
+	cam.Position.x = level->objects[0]->pos.x;
+	cam.Position.y = level->objects[0]->pos.y + 5;
+	cam.Position.z = level->objects[0]->pos.z + 16;
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 	__noop;
 
