@@ -1,10 +1,17 @@
-control character
+camera on a rail system
+
+need collision detection
+need gravity
+
+need lighting
+
+need level editor
 
 finish opengl lighting section 
 
 entities inherit from entity 
 
-have camera follow character
+camera on a rail --> camera follows a bezier through the level
 
 add object properties, like state timings to level text
 
