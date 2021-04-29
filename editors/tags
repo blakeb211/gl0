@@ -4627,7 +4627,7 @@ buffered_file	..\thirdparty\include\fmt\os.h	/^  explicit buffered_file(FILE* f)
 buffered_file	..\thirdparty\include\fmt\os.h	/^class buffered_file {$/;"	c
 buffered_file	..\thirdparty\src\fmt\os.cc	/^buffered_file::buffered_file(cstring_view filename, cstring_view mode) {$/;"	f	class:buffered_file
 buflen	..\thirdparty\include\stb\stb_image.h	/^   int buflen;$/;"	m	struct:__anon45
-buildVAO	..\include\gamelib.h	/^    std::vector<unsigned int> buildVAO() {$/;"	f	struct:gxb::level
+buildVAO	..\src\main.cpp	/^std::vector<unsigned int> buildVAO(const gxb::level* l) {$/;"	f
 burly_wood	..\thirdparty\include\fmt\color.h	/^  burly_wood = 0xDEB887,               \/\/ rgb(222,184,135)$/;"	m	class:color
 buttons	..\thirdparty\include\GLFW\glfw3.h	/^    unsigned char buttons[15];$/;"	m	struct:GLFWgamepadstate
 bvec1	..\thirdparty\include\glm\ext\vector_bool1.hpp	/^	typedef vec<1, bool, defaultp>		bvec1;$/;"	t	namespace:glm
@@ -11870,7 +11870,6 @@ vec1	..\thirdparty\include\glm\ext\vector_float1.hpp	/^	typedef vec<1, float, de
 vec1	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<1, float, defaultp>		vec1;$/;"	t	namespace:glm
 vec2	..\thirdparty\include\glm\ext\vector_float2.hpp	/^	typedef vec<2, float, defaultp>	vec2;$/;"	t	namespace:glm
 vec2	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<2, float, defaultp>		vec2;$/;"	t	namespace:glm
-vec3	..\editors\bezier_test.cpp	/^struct vec3 {$/;"	s	file:
 vec3	..\thirdparty\include\glm\ext\vector_float3.hpp	/^	typedef vec<3, float, defaultp>		vec3;$/;"	t	namespace:glm
 vec3	..\thirdparty\include\glm\fwd.hpp	/^	typedef vec<3, float, defaultp>		vec3;$/;"	t	namespace:glm
 vec4	..\thirdparty\include\glm\ext\vector_float4.hpp	/^	typedef vec<4, float, defaultp>		vec4;$/;"	t	namespace:glm
@@ -12032,7 +12031,6 @@ wzzw	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, 
 wzzx	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> wzzx(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
 wzzy	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> wzzy(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
 wzzz	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> wzzz(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
-x	..\editors\bezier_test.cpp	/^    float x, y, z;$/;"	m	struct:vec3	file:
 x	..\editors\olcPixelGameEngine.h	/^		T x = 0;$/;"	m	struct:olc::v2d_generic
 x	..\thirdparty\include\glm\detail\type_quat.hpp	/^					struct { T w, x, y, z; };$/;"	m	struct:glm::qua::__anon17::__anon18
 x	..\thirdparty\include\glm\detail\type_quat.hpp	/^				T w, x, y, z;$/;"	m	struct:glm::qua
@@ -12190,7 +12188,6 @@ xzzy	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, 
 xzzy	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> xzzy(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
 xzzz	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> xzzz(const glm::vec<3, T, Q> &v) {$/;"	f	namespace:glm
 xzzz	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> xzzz(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
-y	..\editors\bezier_test.cpp	/^    float x, y, z;$/;"	m	struct:vec3	file:
 y	..\editors\olcPixelGameEngine.h	/^		T y = 0;$/;"	m	struct:olc::v2d_generic
 y	..\thirdparty\include\glm\detail\type_quat.hpp	/^					struct { T w, x, y, z; };$/;"	m	struct:glm::qua::__anon17::__anon18
 y	..\thirdparty\include\glm\detail\type_quat.hpp	/^				T w, x, y, z;$/;"	m	struct:glm::qua
@@ -12347,7 +12344,6 @@ yzzy	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, 
 yzzy	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> yzzy(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
 yzzz	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> yzzz(const glm::vec<3, T, Q> &v) {$/;"	f	namespace:glm
 yzzz	..\thirdparty\include\glm\gtx\vec_swizzle.hpp	/^	GLM_INLINE glm::vec<4, T, Q> yzzz(const glm::vec<4, T, Q> &v) {$/;"	f	namespace:glm
-z	..\editors\bezier_test.cpp	/^    float x, y, z;$/;"	m	struct:vec3	file:
 z	..\thirdparty\include\glm\detail\type_quat.hpp	/^					struct { T w, x, y, z; };$/;"	m	struct:glm::qua::__anon17::__anon18
 z	..\thirdparty\include\glm\detail\type_quat.hpp	/^				T w, x, y, z;$/;"	m	struct:glm::qua
 z	..\thirdparty\include\glm\detail\type_quat.hpp	/^				T x, y, z, w;$/;"	m	struct:glm::qua

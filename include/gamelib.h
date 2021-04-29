@@ -2,7 +2,7 @@
 #include "camera.h"
 #include "glm.h"
 #include "headers.h"
-
+#include "log.h"
 //@DESIGN: prefer passing a variable around to creating a global. watch out for
 // thread issues.
 

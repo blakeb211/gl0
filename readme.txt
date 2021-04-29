@@ -1,4 +1,5 @@
 factor code so that editors can use gamelib
+	--> almost working but load_level doesn't work in the editor because of logPrintLn
 
 camera on a rail system
 

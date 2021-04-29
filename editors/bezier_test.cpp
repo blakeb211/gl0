@@ -1,16 +1,12 @@
 #define OLC_PGE_APPLICATION
-#define __glad_h_
-#include <vector>
-#include <memory>
+#include "..\include\headers.h"
 #include "olcPixelGameEngine.h"
 #include "..\include\gamelib.h"
 #include "..\include\glm.h" 
 
 using namespace std;
 
-struct vec3 {
-    float x, y, z;
-};
+using vec3 = glm::vec3;
 
 struct camPath {
     camPath() = delete;
@@ -83,7 +79,11 @@ class Example : public olc::PixelGameEngine {
 };
 
 int main() {
-    Example demo;
+	//auto level = gxb::load_level("test"); Example demo;
+	// @TODO: try LogPrintLn here 
+	string s = "test string";
+	logPrintLn("testing logPrintLn", s, "string printed before this");
+	Example demo;
     if (demo.Construct(256, 256, 3, 3, false, true, false))
 	demo.Start();
 
