@@ -1,6 +1,10 @@
 #define OLC_PGE_APPLICATION
+#define __glad_h_
 #include <vector>
+#include <memory>
 #include "olcPixelGameEngine.h"
+#include "..\include\gamelib.h"
+#include "..\include\glm.h" 
 
 using namespace std;
 
@@ -53,7 +57,7 @@ class Example : public olc::PixelGameEngine {
 			    vec3{220.0f, 100.f, 0.f},
 			    vec3{240.0f, 85.f, 0.f},
 			    vec3{256.0f, 95.f, 0.f}};
-	path = new camPath(cps);
+	path = make_unique<camPath>(camPath(cps));
 	cout << "number of control points: " << path->cps.size() << endl;
 	path->createPathFromCps();
 	return true;
@@ -75,12 +79,12 @@ class Example : public olc::PixelGameEngine {
 	
 	return true;
     }
-	camPath* path;
+	unique_ptr<camPath> path;
 };
 
 int main() {
     Example demo;
-    if (demo.Construct(256, 256, 4, 4, false, true, false))
+    if (demo.Construct(256, 256, 3, 3, false, true, false))
 	demo.Start();
 
     return 0;

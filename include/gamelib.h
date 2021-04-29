@@ -80,42 +80,6 @@ struct level {
     std::vector<std::unique_ptr<entity>> objects;
     std::vector<unsigned int> vaos;
     std::vector<float> raw_data;
-    std::vector<unsigned int> buildVAO() {
-	// set up vertex data (and buffer(s)) and configure vertex attributes
-	// ------------------------------------------------------------------
-
-	std::vector<unsigned int> VBO(meshes.size(), 0);
-	std::vector<unsigned int> VAO(meshes.size(), 0);
-
-	glGenVertexArrays(1, &VAO[0]);
-	glGenBuffers(1, &VBO[0]);
-	// bind the Vertex Array Object first, then bind and set vertex
-	// buffer(s), and then configure vertex attributes(s).
-	glBindVertexArray(VAO[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-	glBufferData(GL_ARRAY_BUFFER, this->raw_data.size() * sizeof(float),
-		     this->raw_data.data(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-			      (void*)0);
-	glEnableVertexAttribArray(0);
-
-	// glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-	//		      (void*)(3 * sizeof(float)));
-	// glEnableVertexAttribArray(1);
-	// note that this is allowed, the call to glVertexAttribPointer
-	// registered VBO as the vertex attribute's bound vertex buffer object
-	// so afterwards we can safely unbind
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// You can unbind the VAO afterwards so other VAO calls won't
-	// accidentally modify this VAO, but this rarely happens. Modifying
-	// other VAOs requires a call to glBindVertexArray anyways so we
-	// generally don't unbind VAOs (nor VBOs) when it's not directly
-	// necessary.
-	glBindVertexArray(0);
-	return VAO;
-    }
 
     mesh* getMesh(size_t hashCode) {
 	for (int i = 0; i < meshes.size(); i++) {

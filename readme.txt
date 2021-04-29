@@ -1,3 +1,5 @@
+factor code so that editors can use gamelib
+
 camera on a rail system
 
 need collision detection

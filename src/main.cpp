@@ -3,6 +3,8 @@
 #include <GLFW\glfw3.h>
 #include <stb\stb_image.h>
 //
+#include "FrameRater.h"
+#include "Shader.h"
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
@@ -16,6 +18,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void init_textures();
 void clearScreen();
+std::vector<unsigned int> buildVAO(const gxb::level*); 
 void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w,
 		     unsigned int h,
@@ -56,7 +59,7 @@ int main() {
     auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
 			  *gxb::shaderPath("colorFromVertex.fs"));
 
-    auto VAO = level->buildVAO();
+    auto VAO = buildVAO(level.get());
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
@@ -229,10 +232,10 @@ void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime) {
 	level->objects[0]->pos.z += cameraSpeed * deltaTime;
 	cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
     }
-	
-	cam.Position.x = level->objects[0]->pos.x;
-	cam.Position.y = level->objects[0]->pos.y + 5;
-	cam.Position.z = level->objects[0]->pos.z + 16;
+
+    cam.Position.x = level->objects[0]->pos.x;
+    cam.Position.y = level->objects[0]->pos.y + 5;
+    cam.Position.z = level->objects[0]->pos.z + 16;
     if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 	__noop;
 
@@ -298,4 +301,41 @@ GLFWwindow* initGLFW(unsigned int w,
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     camera.ProcessMouseScroll((float)yoffset);
+}
+
+std::vector<unsigned int> buildVAO(const gxb::level* l) {
+    // set up vertex data (and buffer(s)) and configure vertex attributes
+    // ------------------------------------------------------------------
+
+    std::vector<unsigned int> VBO(l->meshes.size(), 0);
+    std::vector<unsigned int> VAO(l->meshes.size(), 0);
+
+    glGenVertexArrays(1, &VAO[0]);
+    glGenBuffers(1, &VBO[0]);
+    // bind the Vertex Array Object first, then bind and set vertex
+    // buffer(s), and then configure vertex attributes(s).
+    glBindVertexArray(VAO[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+    glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),
+		 l->raw_data.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+			  (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+    //		      (void*)(3 * sizeof(float)));
+    // glEnableVertexAttribArray(1);
+    // note that this is allowed, the call to glVertexAttribPointer
+    // registered VBO as the vertex attribute's bound vertex buffer object
+    // so afterwards we can safely unbind
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // You can unbind the VAO afterwards so other VAO calls won't
+    // accidentally modify this VAO, but this rarely happens. Modifying
+    // other VAOs requires a call to glBindVertexArray anyways so we
+    // generally don't unbind VAOs (nor VBOs) when it's not directly
+    // necessary.
+    glBindVertexArray(0);
+    return VAO;
 }

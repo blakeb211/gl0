@@ -30,7 +30,5 @@
 #include "slurp.h"
 //
 //
-#include "FrameRater.h"
-#include "Shader.h"
 //
 #include "colors.h"

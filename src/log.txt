@@ -2,60 +2,13 @@ OpenGL Version: 3        . 3
  SUCCESS:: level test slurped from disk 
  mesh         v         n         f        hash 
  cube             26       26       48       5503224543670688896 
- pushing back obj => type: hero id: 0        
  sphere           482      482      960      9915782786907616376 
- pushing back obj => type: fruit id: 1        
- pushing back obj => type: fruit id: 2        
- pushing back obj => type: fruit id: 3        
- pushing back obj => type: fruit id: 4        
- pushing back obj => type: fruit id: 5        
  plane            8        8        12       18257050065998780757 
- pushing back obj => type: ground id: 6        
- pushing back obj => type: ground id: 7        
- pushing back obj => type: ground id: 8        
- pushing back obj => type: ground id: 9        
- pushing back obj => type: ground id: 10       
- pushing back obj => type: ground id: 11       
- pushing back obj => type: ground id: 12       
- pushing back obj => type: ground id: 13       
- pushing back obj => type: ground id: 14       
- pushing back obj => type: ground id: 15       
- pushing back obj => type: ground id: 16       
- pushing back obj => type: ground id: 17       
- pushing back obj => type: ground id: 18       
- pushing back obj => type: ground id: 19       
- pushing back obj => type: ground id: 20       
- pushing back obj => type: ground id: 21       
- pushing back obj => type: ground id: 22       
- pushing back obj => type: ground id: 23       
- pushing back obj => type: ground id: 24       
- pushing back obj => type: ground id: 25       
- pushing back obj => type: ground id: 26       
- pushing back obj => type: ground id: 27       
- pushing back obj => type: ground id: 28       
- pushing back obj => type: ground id: 29       
- pushing back obj => type: ground id: 30       
- pushing back obj => type: ground id: 31       
- pushing back obj => type: ground id: 32       
- pushing back obj => type: ground id: 33       
- pushing back obj => type: ground id: 34       
- pushing back obj => type: ground id: 35       
- pushing back obj => type: ground id: 36       
- pushing back obj => type: ground id: 37       
- pushing back obj => type: ground id: 38       
- pushing back obj => type: ground id: 39       
- pushing back obj => type: ground id: 40       
- pushing back obj => type: ground id: 41       
- ERROR: wrong values on line < 43       > level: test 
  objects created: 42       
  meshes loaded from disk: 3        
- avg framerate: 58.326   
- avg framerate: 62.083   
+ avg framerate: 58.858   
  avg framerate: 61.948   
- avg framerate: 61.977   
+ avg framerate: 61.891   
  avg framerate: 62.016   
- avg framerate: 61.987   
- avg framerate: 62.054   
- avg framerate: 62.016   
- avg framerate: 61.987   
+ avg framerate: 61.891   
  
