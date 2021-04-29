@@ -31,6 +31,6 @@ rem start /b /wait "" "xcopy" .\data .\build\data /y /s /e /q
 rem pushd build
 echo --- Compiling game executable.
 
-start /b /wait "" "cl" %common_compiler_flags% /I ..\thirdparty\include\ /I ..\include bezier_test.cpp ..\src\slurp.cpp ..\src\log.cpp ..\thirdparty\src\fmt\os.cc ..\thirdparty\src\fmt\format.cc /link %common_linker_flags% /OUT:%game_executable%
+start /b /wait "" "cl" %common_compiler_flags% /I ..\thirdparty\include\ /I ..\include bezier_test.cpp ..\src\slurp.cpp ..\src\log.cpp ..\thirdparty\src\fmt\os.cc ..\thirdparty\src\fmt\format.cc /link %common_linker_flags% ..\thirdparty\libs\glm_static.lib ..\thirdparty\libs\fmtd.lib /OUT:%game_executable%
 
 echo --- Build completed.
