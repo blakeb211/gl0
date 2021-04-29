@@ -8,7 +8,8 @@ rem set common_compiler_flags= /GL- -MTd -nologo -Gm- -GR-
 rem -Gs- -Gy- -Gw- -EHa- -Od -W3 -wd4201 -wd4100 -wd4189 /Zi -D_CRT_SECURE_NO_WARNINGS /FS %build_options% -I../../data_desk/ -I../../common/
 set common_compiler_flags= /EHsc /MTd /std:c++17
 set common_linker_flags= -opt:ref -incremental:no /Debug:fastlink
-set libs_to_link_to= ..\thirdparty\libs\glm_static.lib ..\thirdparty\libs\fmtd.lib
+set libs_to_link_to= 
+rem ..\thirdparty\libs\glm_static.lib ..\thirdparty\libs\fmtd.lib
 rem set game_linker_flags= user32.lib gdi32.lib winmm.lib 
 
 rem  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
