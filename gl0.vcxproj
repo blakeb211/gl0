@@ -80,8 +80,8 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\cprojects\gl0\include;C:\cprojects\gl0\thirdparty\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\include;.\thirdparty\include;$(IncludePath)</IncludePath>
+    <LibraryPath>.\thirdparty\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
