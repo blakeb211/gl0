@@ -79,11 +79,8 @@ class Example : public olc::PixelGameEngine {
 };
 
 int main() {
-	//auto level = gxb::load_level("test"); Example demo;
-	// @TODO: try LogPrintLn here 
-	string s = "test string";
-	//logPrintLn("testing logPrintLn", s, "string printed before this"); // errors
- 	//logErr(s, 86, s);
+	setLogFile("log.txt");
+	auto level = gxb::load_level("test");
 	Example demo;
     if (demo.Construct(256, 256, 3, 3, false, true, false))
 	demo.Start();
