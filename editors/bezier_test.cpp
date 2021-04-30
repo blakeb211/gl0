@@ -127,6 +127,15 @@ class Example : public olc::PixelGameEngine {
 	frameCnt++;
 	this->Clear(olc::Pixel(olc::DARK_GREY));
 
+	auto keyState = GetKey(olc::Key::V);
+	if (keyState.bReleased) {
+		if (currView == View::ZY) {
+			currView = View::ZX;
+		} else {
+			currView = View::ZY;
+		}
+	}
+
 	// draw axes
 	// ZY
 	// Z = 0 					X = ScreenHeight / 2
@@ -134,6 +143,7 @@ class Example : public olc::PixelGameEngine {
 	// Y = 0 					ScreenHeight / 2
 	// Y = WorldYMax 			0
 	//
+	
 	if (frameCnt % 15 == 0) {
 	    const auto z_data_max_it =
 		std::max_element(path->pts.begin(), path->pts.end(), comp_zmax);
@@ -208,7 +218,7 @@ class Example : public olc::PixelGameEngine {
 	    case View::ZY:
 		const std::string z_label_left = "Z (0)";
 		const std::string y_label_top = "Y (" + to_string((int)WORLD_Y_MAX) + ")";
-		auto [x,y] = world_to_screen(this, View::ZY, glm::vec3{0.f, -1.f , 0.f}); 
+		auto [x,y] = world_to_screen(this, View::ZY, glm::vec3{0.f, -2.f , 0.f}); 
 		DrawString(x, y, z_label_left, olc::WHITE, 1);
 		tie(x,y) = world_to_screen(this, View::ZY, glm::vec3{0.f, WORLD_Y_MAX, (z_data_max + 2) / 2.f});
 		DrawString(x, y, y_label_top, olc::WHITE, 1);
@@ -218,7 +228,7 @@ class Example : public olc::PixelGameEngine {
 		{
 		const std::string z_label_left = "Z (0)";
 		const std::string y_label_top = "X (" + to_string((int)WORLD_X_MAX) + ")";
-		auto [x,y] = world_to_screen(this, View::ZX, glm::vec3{-10.f, 0.f , 0.f}); 
+		auto [x,y] = world_to_screen(this, View::ZX, glm::vec3{-2.f, 0.f , 0.f}); 
 		DrawString(x, y, z_label_left, olc::WHITE, 1);
 		tie(x,y) = world_to_screen(this, View::ZX, glm::vec3{WORLD_X_MAX, 0.f, (z_data_max + 2) / 2.f});
 		DrawString(x, y, y_label_top, olc::WHITE, 1);
