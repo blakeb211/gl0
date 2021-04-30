@@ -203,27 +203,17 @@ class Example : public olc::PixelGameEngine {
 	};
 	
 	// draw axis labels
+	const std::string z_label_left = "Z (10)";
+	const std::string z_label_right = "Z (" + to_string((int)z_data_max) + ")";
 	switch (currView) {
 		{
 	    case View::ZY:
-		const std::string z_label_left = "Z (0)";
-		const std::string y_label_top = "Y (" + to_string((int)WORLD_Y_MAX) + ")";
-		auto [x,y] = world_to_screen(this, View::ZY, glm::vec3{0.f, -1.f , 0.f}); 
+		auto [x,y] = world_to_screen(this, View::ZY, glm::vec3{0.f, -10.f , 10.f}); 
 		DrawString(x, y, z_label_left, olc::WHITE, 1);
-		tie(x,y) = world_to_screen(this, View::ZY, glm::vec3{0.f, WORLD_Y_MAX, (z_data_max + 2) / 2.f});
-		DrawString(x, y, y_label_top, olc::WHITE, 1);
 		break;
 		}
 	    case View::ZX:
-		{
-		const std::string z_label_left = "Z (0)";
-		const std::string y_label_top = "X (" + to_string((int)WORLD_X_MAX) + ")";
-		auto [x,y] = world_to_screen(this, View::ZX, glm::vec3{-10.f, 0.f , 0.f}); 
-		DrawString(x, y, z_label_left, olc::WHITE, 1);
-		tie(x,y) = world_to_screen(this, View::ZX, glm::vec3{WORLD_X_MAX, 0.f, (z_data_max + 2) / 2.f});
-		DrawString(x, y, y_label_top, olc::WHITE, 1);
 		break;
-		}
 	};
 	return true;
     }
