@@ -81,15 +81,13 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View v
 	case View::ZY:
 	    // Y is still Y but shifted
 	    // Z is shown on the X-Axis
-	    y_offset = gm->ScreenHeight() / 2;
 	    x_offset = 10;
-
-	    //y_scale = WORLD_Y_MAX / y_data_max;
-		y_scale = WORLD_Y_MAX / (y_data_max); 
 	    x_scale = (gm->ScreenWidth() - x_offset) / (z_data_max + x_offset);
-
-	    y_coord = gm->ScreenHeight() - (in.y + y_offset) * y_scale; 
 	    x_coord = x_offset + in.z * x_scale;
+	    y_offset = gm->ScreenHeight() / 2;
+	    y_scale = WORLD_Y_MAX / y_data_max;
+	    y_coord = gm->ScreenHeight() - (in.y + y_offset) * y_scale; 
+
 	    break;
 	case View::ZX:
 	    break;
@@ -104,11 +102,11 @@ class Example : public olc::PixelGameEngine {
     Example() { sAppName = "Example"; }
     bool OnUserCreate() override {
 	// Called once at the start, so create things here
-	vector<vec3> cps = {vec3{0.0f, 10.0f, 0.f},  vec3{0.0f, 10.0f, 0.f},
-			    vec3{0.f, 15.0f, 85.f},  vec3{0.f, 15.0f, 100.f},
+	vector<vec3> cps = {vec3{0.0f, 10.0f, 0.f},  vec3{0.0f, 20.0f, 30.f},
+			    vec3{0.f, 15.0f, 65.f},  vec3{0.f, 15.0f, 100.f},
 			    vec3{0.f, 18.0f, 110.f}, vec3{0.f, 22.0f, 120.f},
 			    vec3{0.f, 20.0f, 150.f}, vec3{0.f, 19.0f, 180.f},
-			    vec3{0.f, 20.0f, 200.f}};
+			    vec3{0.f, 10.0f, 200.f}};
 	path = make_unique<camPath>(camPath(cps));
 	cout << "number of control points: " << path->cps.size() << endl;
 	path->createPathFromCps();
