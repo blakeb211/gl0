@@ -81,12 +81,13 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View v
 	case View::ZY:
 	    // Y is still Y but shifted
 	    // Z is shown on the X-Axis
-	    x_offset = 10;
-	    x_scale = (gm->ScreenWidth() - x_offset) / (z_data_max + x_offset);
+		x_offset = 10;
+	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset); 
 	    x_coord = x_offset + in.z * x_scale;
+
 	    y_offset = gm->ScreenHeight() / 2;
-	    y_scale = WORLD_Y_MAX / y_data_max;
-	    y_coord = gm->ScreenHeight() - (in.y + y_offset) * y_scale; 
+	    y_scale = -1.f * gm->ScreenHeight() / (2.f *  WORLD_Y_MAX); 
+	    y_coord = y_offset + in.y * y_scale 
 
 	    break;
 	case View::ZX:
@@ -124,7 +125,7 @@ class Example : public olc::PixelGameEngine {
 	// Y = 0 					ScreenHeight / 2
 	// Y = WorldYMax 			0
 	//
-	if (frameCnt % 30 == 0) {
+	if (frameCnt % 15 == 0) {
 	    const auto z_data_max_it =
 		std::max_element(path->pts.begin(), path->pts.end(), comp_zmax);
 	    const auto y_data_max_it =
