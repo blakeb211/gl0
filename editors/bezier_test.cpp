@@ -13,6 +13,7 @@ using vec3 = glm::vec3;
 /************************************************/
 size_t frameCnt = 0;
 constexpr auto WORLD_Y_MAX = 30.0f;
+constexpr auto WORLD_X_MAX = 50.0f;
 float z_data_max{};
 float y_data_max{};
 float x_data_max{};
@@ -73,7 +74,6 @@ enum class View {
 };
 
 pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View vw, const glm::vec3 in) {
-    float x{}, y{}, z{};
     float y_offset{}, x_offset{};
     float y_scale{}, x_scale{};
     float x_coord{}, y_coord{};
@@ -87,10 +87,19 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View v
 
 	    y_offset = gm->ScreenHeight() / 2;
 	    y_scale = -1.f * gm->ScreenHeight() / (2.f *  WORLD_Y_MAX); 
-	    y_coord = y_offset + in.y * y_scale 
+	    y_coord = y_offset + in.y * y_scale;
 
 	    break;
 	case View::ZX:
+	    // X data is shown on the Y-Axis
+	    // Z is shown on the X-Axis
+		x_offset = 10;
+	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset); 
+	    x_coord = x_offset + in.z * x_scale;
+
+	    y_offset = gm->ScreenHeight() / 2;
+	    y_scale = -1.f * gm->ScreenHeight() / (2.f *  WORLD_X_MAX); 
+	    y_coord = y_offset + in.x * y_scale;
 	    break;
     };
     return make_pair(x_coord, y_coord);
@@ -98,7 +107,7 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View v
 
 class Example : public olc::PixelGameEngine {
    public:
-    View currView{};
+    View currView{View::ZX};
     unique_ptr<camPath> path;
     Example() { sAppName = "Example"; }
     bool OnUserCreate() override {
@@ -149,6 +158,10 @@ class Example : public olc::PixelGameEngine {
 		DrawLine(xmax /2 , ymax, xmax/2, y0, olc::WHITE);
 		break;
 	    case View::ZX:
+		tie(x0,y0) = world_to_screen(this, View::ZY, glm::vec3{0.f,0.f,0.f});
+		tie(xmax,ymax) = world_to_screen(this, View::ZY, glm::vec3{0.f,WORLD_X_MAX,z_data_max});
+		DrawLine(x0, y0, xmax, y0, olc::WHITE);
+		DrawLine(xmax /2 , ymax, xmax/2, y0, olc::WHITE);
 		break;
 	};
 
@@ -172,6 +185,19 @@ class Example : public olc::PixelGameEngine {
 
 		break;
 	    case View::ZX:
+
+		for (const auto& pt : path->pts) {
+			auto [x,y] = world_to_screen(this, View::ZX, pt); 
+		    Draw(x, y, olc::RED);
+		    DrawCircle(x, y, 3, olc::RED);
+		}
+
+		for (const auto& pt : path->cps) {
+		    // draw circles around control pts
+			auto [x,y] = world_to_screen(this, View::ZX, pt); 
+		    Draw(x, y, olc::GREEN);
+		    DrawCircle(x, y, 3, olc::GREEN);
+		}
 
 		break;
 	};
