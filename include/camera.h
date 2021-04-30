@@ -99,7 +99,7 @@ public:
     // value in both the x and y direction.
     void ProcessMouseMovement(float xoffset,
         float yoffset,
-        GLboolean constrainPitch = true)
+        bool constrainPitch = true)
     {
         xoffset *= MouseSensitivity;
         yoffset *= MouseSensitivity;
