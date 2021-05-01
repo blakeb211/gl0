@@ -1,14 +1,16 @@
 OpenGL Version: 3        . 3        
  SUCCESS:: level test slurped from disk 
  mesh         v         n         f        hash 
- cube             26       26       48       5503224543670688896 
- sphere           482      482      960      9915782786907616376 
- plane            8        8        12       18257050065998780757 
+ cube2            8        8        12       8786376455243170422 
+ sphere2          114      114      224      7182381863870093758 
+ plane2           8        8        12       16713563760156879365 
  objects created: 42       
  meshes loaded from disk: 3        
- avg framerate: 58.858   
- avg framerate: 61.948   
- avg framerate: 61.891   
- avg framerate: 62.016   
- avg framerate: 61.891   
+ avg framerate: 59.728   
+ avg framerate: 62.199   
+ avg framerate: 62.208   
+ avg framerate: 62.199   
+ avg framerate: 61.977   
+ avg framerate: 61.843   
+ avg framerate: 61.996   
  
