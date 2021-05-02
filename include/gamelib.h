@@ -208,7 +208,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 
 	int lineNum = 0;
 
-	logPrintLn("mesh         v         n         f        hash");
+	logPrintLn("mesh         	  v        n        f        hash");
 
 	while (levelData.good()) {
 	    lineNum++;
@@ -318,8 +318,6 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 		l->meshes.push_back(std::move(meshPtr));
 	    }
 
-	    //    logPrintLn("pushing back obj => type:",
-	    //	       type_to_str[entityPtr->type], "id:", entityPtr->id);
 	    l->objects.push_back(std::move(entityPtr));
 
 	}  // end while
