@@ -18,13 +18,14 @@ inline const unsigned int SCR_HEIGHT = 600;
 
 inline std::hash<std::string> strHasher;
 
-enum class ENTITY_TYPE { unknown, hero, box, ground, fruit };
+enum class ENTITY_TYPE { unknown, hero, box, ground, fruit, baddie };
 
 inline std::map<std::string, ENTITY_TYPE> str_to_type{
     {"hero", ENTITY_TYPE::hero},
     {"box", ENTITY_TYPE::box},
     {"ground", ENTITY_TYPE::ground},
     {"fruit", ENTITY_TYPE::fruit},
+    {"baddie", ENTITY_TYPE::baddie},
 };
 
 inline std::map<ENTITY_TYPE, std::string> type_to_str{};
@@ -153,7 +154,7 @@ inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name) {
 
 	if (firstTok == "v") {
 	    // read vertex
-	    glm::vec3 pos{0.f, 0.f, 0.f};
+	    glm::vec3 pos = {0.f, 0.f, 0.f};
 	    lineStream >> pos.x >> pos.y >> pos.z;
 	    if (lineStream.fail()) {
 		logErr(__FILE__, __LINE__, "trouble reading position data");

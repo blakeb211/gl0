@@ -1,10 +1,14 @@
-factor code so that editors can use gamelib
-	--> almost working but load_level doesn't work in the editor because of logPrintLn
-
 camera on a rail system
+add campath to level txt
+camera should find closest path point to players new position
+and smoothly transition there, while looking at a certain direction
+
+generate level using some method
 
 need collision detection
 need gravity
+
+entity types need states
 
 need lighting
 
