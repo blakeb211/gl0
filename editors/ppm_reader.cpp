@@ -1,107 +1,120 @@
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <vector>
-#include <string>
-#include "..\thirdparty\include\glm\glm.hpp"
-#include <memory>
 #include <array>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include "..\thirdparty\include\glm\glm.hpp"
 
-struct RGB
-{
-	unsigned char r,g,b;
+struct RGB {
+    unsigned char r, g, b;
 };
 
 struct ImageRGB {
-	int w,h;
-	std::vector<RGB> data;
+    int w, h;
+    std::vector<RGB> data;
 };
 
-
-
-auto read_ppm_header(std::ifstream & in) {
-	using namespace std;
-	array<string, 4> header;
-	string str_;
-	int hdr_item_count{};
-	while(true) {
-		in >> str_;	
-		// skip comments
-		if (str_.find("#") == 0) {
-			getline(in,str_);
-			str_.clear();
-			continue;
-		}
-		header[hdr_item_count] = str_;
-		if (hdr_item_count == 3) { break;}
-		hdr_item_count++;
-		str_.clear();
+auto read_ppm_header(std::ifstream& in) {
+    using namespace std;
+    array<string, 4> header;
+    string str_;
+    int hdr_item_count{};
+    while (true) {
+	in >> str_;
+	// skip comments
+	if (str_.find("#") == 0) {
+	    getline(in, str_);
+	    str_.clear();
+	    continue;
 	}
-	in.seekg(0, ios_base::beg);	
-	return header;
+	header[hdr_item_count] = str_;
+	if (hdr_item_count == 3) {
+	    break;
+	}
+	hdr_item_count++;
+	str_.clear();
+    }
+    in.seekg(0, ios_base::beg);
+    return header;
 }
 
-std::unique_ptr<ImageRGB> read_ppm() {
-	return std::make_unique<ImageRGB>(ImageRGB{}); 
-}
+std::unique_ptr<ImageRGB> read_img_from_ppm(std::string inName,
+					    bool printHeader = false) {
+    using namespace std;
 
-int main() {	
-	using namespace std;
-	const string inName = R"|(..\levels\test.ppm)|";	
-	ifstream inFile(inName, ios::in | ios::binary);
+    ifstream inFile(inName, ios::in | ios::binary);
 
+    auto img = make_unique<ImageRGB>(ImageRGB{});
 
-	/**************************************/
-	// Read PPM Header
-	/**************************************/
-	const auto hdrFields = array<string, 4> {"ppmType", "width", "height", "maxColVal"};
-	const auto hdr = read_ppm_header(inFile);
+    /**************************************/
+    // Read PPM Header
+    /**************************************/
+    const auto hdrFields =
+	array<string, 4>{"ppmType", "width", "height", "maxColVal"};
+    const auto hdr = read_ppm_header(inFile);
+
+    if (printHeader) {
 	cout << "printing header:" << endl;
-	for (int i =0; i < 4; i++) {
-		cout << hdrFields[i] << ":" << hdr[i] << "\t";
+	for (int i = 0; i < 4; i++) {
+	    cout << hdrFields[i] << ":" << hdr[i] << "\t";
 	}
 	cout << endl;
-	const int width = stoi(hdr[1]);
-	const int height = stoi(hdr[2]);	
+    }
 
-	/**************************************/
-	// Read PPM length 
-	/**************************************/
-	inFile.seekg(0, ios_base::beg);	
-	inFile.seekg(0, ios_base::end);	
-	size_t length = inFile.tellg();
-	cout << "file length (bytes):" << length << endl;
-	inFile.seekg(0, ios_base::beg);	
+    img->w = stoi(hdr[1]);
+    img->h = stoi(hdr[2]);
 
-	vector<unsigned char> buffer{};
-	const auto hdr_length = length - (size_t)(width * height * 3);
-	buffer.resize(length - hdr_length);
-	
-	char c_{}; 
-	unsigned char b_{};
-	inFile.seekg(0, ios_base::beg);
-	inFile.seekg(60, ios_base::beg);
-	
-	while(inFile.good()) {
-		inFile.read(&c_, 1);
-		b_ = static_cast<unsigned char>(c_) ;
-		if (b_ < 256 && b_ > -1)
-		buffer.push_back(c_);
+    /**************************************/
+    // Read PPM fLen
+    /**************************************/
+    namespace fs = std::filesystem;
+    const auto fLen = fs::file_size(inName);
+    const auto hdr_len = fLen - (size_t)(img->w * img->h * 3);
+
+    img->data.reserve(fLen - hdr_len);
+
+    char c_[3]{};
+    RGB col_{};
+    inFile.seekg(0, ios_base::beg);
+    inFile.seekg(hdr_len + 1, ios_base::beg);
+
+    while (true) {
+	inFile.read(c_, 3);
+	if (!inFile.good()) {
+	    break;
 	}
 
-	cout << "buffer.size()" << buffer.size() << endl;
+	col_.r = static_cast<unsigned char>(c_[0]);
+	col_.b = static_cast<unsigned char>(c_[1]);
+	col_.g = static_cast<unsigned char>(c_[2]);
 
-	for (int i = 0; i < buffer.size()-2; i+=3)
-	{
-	    auto r =static_cast<int>(buffer[i]);
-	    auto g =static_cast<int>(buffer[i+1]);
-	    auto b =static_cast<int>(buffer[i+2]);
-		if (r != 0 || g != 0 || b != 0) 
-		{
-		cout << r << " " << g << " " << b << " " << endl;
-		}
+	img->data.push_back(col_);
+    }
+
+    inFile.close();
+    return img;
+}
+
+int main() {
+    using namespace std;
+    string inName = R"|(..\levels\test.ppm)|";
+    auto img = read_img_from_ppm(inName);
+    cout << "pixels saved to image data: " << img->data.size() << endl;
+
+    // print out non_0 vals
+    for (int i = 0; i < img->w; i++) {
+	for (int j = 0; j < img->h; j++) {
+	    const auto idx = i + j * img->w;
+	    if (img->data[idx].r != 0 | img->data[idx].g != 0 |
+		img->data[idx].b != 0) {
+		cout << "pixel (" << i + 1 << "," << j + 1 << ") =";
+		cout << (int)img->data[idx].r << " " << (int)img->data[idx].g << " ";
+		cout << (int)img->data[idx].b << "\n";
+	    }
 	}
-
-	inFile.close();
-	return 0;
+    }
+    return 0;
 }
