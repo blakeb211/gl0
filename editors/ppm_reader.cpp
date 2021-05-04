@@ -79,7 +79,7 @@ std::unique_ptr<ImageRGB> read_img_from_ppm(std::string inName,
     char c_[3]{};
     RGB col_{};
     inFile.seekg(0, ios_base::beg);
-    inFile.seekg(hdr_len + 1, ios_base::beg);
+    inFile.seekg(hdr_len, ios_base::beg);
 
     while (true) {
 	inFile.read(c_, 3);
