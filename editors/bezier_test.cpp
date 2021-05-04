@@ -1,3 +1,7 @@
+// USAGE: This program reads in a level and campath file, lets users modify the campath with the mouse,
+// and then saves the campath.
+// Initial campath is created from a ppm file using a different program.
+//
 #define OLC_PGE_APPLICATION
 #include "..\include\gamelib.h"
 #include "..\include\glm.h"
@@ -5,8 +9,11 @@
 #include "olcPixelGameEngine.h"
 
 // @NOTE: campath editor operates in world coordinators
-using namespace std;
-using vec3 = glm::vec3;
+
+using  std::vector, std::pair, std::cout, glm::vec3, std::endl;
+using std::make_pair, std::make_unique, std::string;
+using std::unique_ptr, std::tie, std::to_string, std::max_element;
+namespace fs = std::filesystem;
 
 /************************************************/
 /*					GLOBALS
@@ -18,7 +25,7 @@ constexpr auto WORLD_X_MAX = 50.0f;
 float z_data_max{};
 float y_data_max{};
 float x_data_max{};
-/************************************************/
+vector<vec3> g_cps_from_file{};
 
 constexpr auto comp_zmax = [](const glm::vec3& a, const glm::vec3& b) -> bool {
     return a.z < b.z;
@@ -30,16 +37,17 @@ constexpr auto comp_xmax = [](const glm::vec3& a, const glm::vec3& b) -> bool {
     return a.x < b.x;
 };
 
+/************************************************/
 //@TODO:
 // pop up pt coords
 // print out camPath points in a table
 // ability to drag control points to change the path
+// ability to save camPath
 
 struct camPath {
     camPath() = delete;
     camPath(vector<vec3> control_points) { cps = control_points; }
     void createPathFromCps() {
-
 	for (int cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
 	    const vec3& p0 = cps[cpIdx];
 	    const vec3& p1 = cps[cpIdx + 1];
@@ -68,7 +76,9 @@ enum class View {
     ZX = 1,
 };
 
-pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View vw, const glm::vec3 in) {
+pair<float, float> world_to_screen(const olc::PixelGameEngine* gm,
+				   const View vw,
+				   const glm::vec3 in) {
     float y_offset{}, x_offset{};
     float y_scale{}, x_scale{};
     float x_coord{}, y_coord{};
@@ -76,24 +86,24 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine * gm, const View v
 	case View::ZY:
 	    // Y is still Y but shifted
 	    // Z is shown on the X-Axis
-		x_offset = 10;
-	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset); 
+	    x_offset = 10;
+	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset);
 	    x_coord = x_offset + in.z * x_scale;
 
 	    y_offset = gm->ScreenHeight() / 2;
-	    y_scale = -1.f * gm->ScreenHeight() / (2.f *  WORLD_Y_MAX); 
+	    y_scale = -1.f * gm->ScreenHeight() / (2.f * WORLD_Y_MAX);
 	    y_coord = y_offset + in.y * y_scale;
 
 	    break;
 	case View::ZX:
 	    // X data is shown on the Y-Axis
 	    // Z is shown on the X-Axis
-		x_offset = 10;
-	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset); 
+	    x_offset = 10;
+	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset);
 	    x_coord = x_offset + in.z * x_scale;
 
 	    y_offset = gm->ScreenHeight() / 2;
-	    y_scale = -1.f * gm->ScreenHeight() / (2.f *  WORLD_X_MAX); 
+	    y_scale = -1.f * gm->ScreenHeight() / (2.f * WORLD_X_MAX);
 	    y_coord = y_offset + in.x * y_scale;
 	    break;
     };
@@ -107,11 +117,8 @@ class Example : public olc::PixelGameEngine {
     Example() { sAppName = "Example"; }
     bool OnUserCreate() override {
 	// Called once at the start, so create things here
-	vector<vec3> cps = {vec3{0.0f, 10.0f, 0.f},  vec3{0.0f, 20.0f, 30.f},
-			    vec3{0.f, 15.0f, 65.f},  vec3{0.f, 15.0f, 100.f},
-			    vec3{0.f, 18.0f, 110.f}, vec3{0.f, 22.0f, 120.f},
-			    vec3{0.f, 20.0f, 150.f}, vec3{0.f, 19.0f, 180.f},
-			    vec3{0.f, 10.0f, 200.f}};
+	// @TODO: these cps should be from a campath file
+	vector<vec3> cps {};
 	path = make_unique<camPath>(camPath(cps));
 	cout << "number of control points: " << path->cps.size() << endl;
 	path->createPathFromCps();
@@ -124,11 +131,11 @@ class Example : public olc::PixelGameEngine {
 
 	auto keyState = GetKey(olc::Key::V);
 	if (keyState.bReleased) {
-		if (currView == View::ZY) {
-			currView = View::ZX;
-		} else {
-			currView = View::ZY;
-		}
+	    if (currView == View::ZY) {
+		currView = View::ZX;
+	    } else {
+		currView = View::ZY;
+	    }
 	}
 
 	// draw axes
@@ -138,14 +145,14 @@ class Example : public olc::PixelGameEngine {
 	// Y = 0 					ScreenHeight / 2
 	// Y = WorldYMax 			0
 	//
-	
+
 	if (frameCnt % 15 == 0) {
 	    const auto z_data_max_it =
-		std::max_element(path->pts.begin(), path->pts.end(), comp_zmax);
+		max_element(path->pts.begin(), path->pts.end(), comp_zmax);
 	    const auto y_data_max_it =
-		std::max_element(path->pts.begin(), path->pts.end(), comp_ymax);
+		max_element(path->pts.begin(), path->pts.end(), comp_ymax);
 	    const auto x_data_max_it =
-		std::max_element(path->pts.begin(), path->pts.end(), comp_xmax);
+		max_element(path->pts.begin(), path->pts.end(), comp_xmax);
 
 	    z_data_max = (*z_data_max_it).z;
 	    y_data_max = (*y_data_max_it).y;
@@ -157,16 +164,20 @@ class Example : public olc::PixelGameEngine {
 	switch (currView) {
 	    case View::ZY:
 		// y = y + ScreenHeight/2
-		tie(x0,y0) = world_to_screen(this, View::ZY, glm::vec3{0.f,0.f,0.f});
-		tie(xmax,ymax) = world_to_screen(this, View::ZY, glm::vec3{0.f,WORLD_Y_MAX,z_data_max});
+		tie(x0, y0) =
+		    world_to_screen(this, View::ZY, glm::vec3{0.f, 0.f, 0.f});
+		tie(xmax, ymax) = world_to_screen(
+		    this, View::ZY, glm::vec3{0.f, WORLD_Y_MAX, z_data_max});
 		DrawLine(x0, y0, xmax, y0, olc::WHITE);
-		DrawLine(xmax /2 , ymax, xmax/2, y0, olc::WHITE);
+		DrawLine(xmax / 2, ymax, xmax / 2, y0, olc::WHITE);
 		break;
 	    case View::ZX:
-		tie(x0,y0) = world_to_screen(this, View::ZY, glm::vec3{0.f,0.f,0.f});
-		tie(xmax,ymax) = world_to_screen(this, View::ZY, glm::vec3{0.f,WORLD_X_MAX,z_data_max});
+		tie(x0, y0) =
+		    world_to_screen(this, View::ZY, glm::vec3{0.f, 0.f, 0.f});
+		tie(xmax, ymax) = world_to_screen(
+		    this, View::ZY, glm::vec3{0.f, WORLD_X_MAX, z_data_max});
 		DrawLine(x0, y0, xmax, y0, olc::WHITE);
-		DrawLine(xmax /2 , ymax, xmax/2, y0, olc::WHITE);
+		DrawLine(xmax / 2, ymax, xmax / 2, y0, olc::WHITE);
 		break;
 	};
 
@@ -176,14 +187,14 @@ class Example : public olc::PixelGameEngine {
 	    case View::ZY:
 
 		for (const auto& pt : path->pts) {
-			auto [x,y] = world_to_screen(this, View::ZY, pt); 
+		    auto [x, y] = world_to_screen(this, View::ZY, pt);
 		    Draw(x, y, olc::RED);
 		    DrawCircle(x, y, 3, olc::RED);
 		}
 
 		for (const auto& pt : path->cps) {
 		    // draw circles around control pts
-			auto [x,y] = world_to_screen(this, View::ZY, pt); 
+		    auto [x, y] = world_to_screen(this, View::ZY, pt);
 		    Draw(x, y, olc::GREEN);
 		    DrawCircle(x, y, 3, olc::GREEN);
 		}
@@ -192,55 +203,74 @@ class Example : public olc::PixelGameEngine {
 	    case View::ZX:
 
 		for (const auto& pt : path->pts) {
-			auto [x,y] = world_to_screen(this, View::ZX, pt); 
+		    auto [x, y] = world_to_screen(this, View::ZX, pt);
 		    Draw(x, y, olc::RED);
 		    DrawCircle(x, y, 3, olc::RED);
 		}
 
 		for (const auto& pt : path->cps) {
 		    // draw circles around control pts
-			auto [x,y] = world_to_screen(this, View::ZX, pt); 
+		    auto [x, y] = world_to_screen(this, View::ZX, pt);
 		    Draw(x, y, olc::GREEN);
 		    DrawCircle(x, y, 3, olc::GREEN);
 		}
 
 		break;
 	};
-	
+
 	// draw axis labels
 	switch (currView) {
-		{
-	    case View::ZY:
-		const std::string z_label_left = "Z(0)";
-		const std::string y_label_top = "Y(" + to_string((int)WORLD_Y_MAX) + ")";
-		float x = 2.0f, y = ScreenHeight() / 2.f + 5.f; 
+	    {
+		case View::ZY:
+		    const string z_label_left = "Z(0)";
+		    const string y_label_top =
+			"Y(" + to_string((int)WORLD_Y_MAX) + ")";
+		    float x = 2.0f, y = ScreenHeight() / 2.f + 5.f;
+		    DrawString(x, y, z_label_left, olc::WHITE, 1);
+		    tie(x, y) = world_to_screen(
+			this, View::ZY,
+			glm::vec3{0.f, WORLD_Y_MAX, (z_data_max + 2) / 2.f});
+		    DrawString(x, y, y_label_top, olc::WHITE, 1);
+		    break;
+	    }
+	    case View::ZX: {
+		const string z_label_left = "Z(0)";
+		const string y_label_top =
+		    "X(" + to_string((int)WORLD_X_MAX) + ")";
+		float x = 2.0f, y = ScreenHeight() / 2.f + 5.f;
 		DrawString(x, y, z_label_left, olc::WHITE, 1);
-		tie(x,y) = world_to_screen(this, View::ZY, glm::vec3{0.f, WORLD_Y_MAX, (z_data_max + 2) / 2.f});
+		tie(x, y) = world_to_screen(
+		    this, View::ZX,
+		    glm::vec3{WORLD_X_MAX, 0.f, (z_data_max + 2) / 2.f});
 		DrawString(x, y, y_label_top, olc::WHITE, 1);
 		break;
-		}
-	    case View::ZX:
-		{
-		const std::string z_label_left = "Z(0)";
-		const std::string y_label_top = "X(" + to_string((int)WORLD_X_MAX) + ")";
-		float x = 2.0f, y = ScreenHeight() / 2.f + 5.f; 
-		DrawString(x, y, z_label_left, olc::WHITE, 1);
-		tie(x,y) = world_to_screen(this, View::ZX, glm::vec3{WORLD_X_MAX, 0.f, (z_data_max + 2) / 2.f});
-		DrawString(x, y, y_label_top, olc::WHITE, 1);
-		break;
-		}
+	    }
 	};
 	return true;
     }
 };
 
-int main() {
-    setLogFile("log.txt");
-    auto level = gxb::load_level("test");
-    Example demo;
-    // this matches a screen dimension of roughly 1000x700
-    if (demo.Construct(500, 350, 2, 2, false, true, false))
-	demo.Start();
+int main(int argc, char** argv) {
+	if (argc != 2) { 
+		cout << argv[0];
+		cout <<  ":must give an arg, either ppm file or level name" << endl; 
+		return -1;
+	}
+	setLogFile("log.txt");
+
+	// read level name
+	string fName{argv[1]};
+	// if this is a level file (no extension), load level and campath
+	
+	cout << "file name" << fName << endl;
+
+	auto level = gxb::load_level("test");
+	Example demo;
+
+	// this matches a screen dimension of roughly 1000x700
+	if (demo.Construct(500, 350, 2, 2, false, true, false)){ 
+	    demo.Start();
+    }
 
     return 0;
 }

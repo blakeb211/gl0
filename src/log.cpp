@@ -6,6 +6,7 @@
 #include <array>
 #include <cstdio>
 #include <string>
+#include <cassert>
 
 using namespace std;
 
@@ -49,6 +50,7 @@ void write_to_screen_and_disk(const string fmt, any val) {
 }
 
 void logPrintLn(const initializer_list<any>& il) {
+	assert(fptr != nullptr);
     for (auto& i : il) {
 	const string typeName{i.type().name()};
 	buf.fill('-');

@@ -155,7 +155,7 @@ ImageLoader_LibPNG	.\olcPixelGameEngine.h	/^		ImageLoader_LibPNG() : ImageLoader
 ImageLoader_LibPNG	.\olcPixelGameEngine.h	/^	class ImageLoader_LibPNG : public olc::ImageLoader$/;"	c	namespace:olc
 ImageLoader_STB	.\olcPixelGameEngine.h	/^		ImageLoader_STB() : ImageLoader()$/;"	f	class:olc::ImageLoader_STB
 ImageLoader_STB	.\olcPixelGameEngine.h	/^	class ImageLoader_STB : public olc::ImageLoader$/;"	c	namespace:olc
-ImageRGB	.\ppm_reader.cpp	/^struct ImageRGB {$/;"	s	file:
+ImageRGB	.\ppm_reader.h	/^struct ImageRGB {$/;"	s
 IsFocused	.\olcPixelGameEngine.h	/^	bool PixelGameEngine::IsFocused() const$/;"	f	class:olc::PixelGameEngine
 J	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 K	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
@@ -267,7 +267,7 @@ Platform_Windows	.\olcPixelGameEngine.h	/^	class Platform_Windows : public olc::
 Q	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 R	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 RETURN	.\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,$/;"	e	enum:olc::Key
-RGB	.\ppm_reader.cpp	/^struct RGB {$/;"	s	file:
+RGB	.\ppm_reader.h	/^struct RGB {$/;"	s
 RIGHT	.\olcPixelGameEngine.h	/^		UP, DOWN, LEFT, RIGHT,$/;"	e	enum:olc::Key
 Renderable	.\olcPixelGameEngine.h	/^	class Renderable$/;"	c	namespace:olc
 Renderer	.\olcPixelGameEngine.h	/^	class Renderer$/;"	c	namespace:olc
@@ -344,7 +344,7 @@ _WINSOCKAPI_	.\olcPixelGameEngine.h	444;"	d
 _WINSOCKAPI_	.\olcPixelGameEngine.h	462;"	d
 a	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
 b	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
-b	.\ppm_reader.cpp	/^    unsigned char r, g, b;$/;"	m	struct:RGB	file:
+b	.\ppm_reader.h	/^    unsigned char r, g, b;$/;"	m	struct:RGB
 bActiveRef	.\olcPixelGameEngine.h	/^		static std::atomic<bool>* bActiveRef;$/;"	m	class:olc::Platform_GLUT
 bAtomActive	.\olcPixelGameEngine.h	/^		static std::atomic<bool> bAtomActive;$/;"	m	class:olc::PixelGameEngine
 bEnableVSYNC	.\olcPixelGameEngine.h	/^		bool		bEnableVSYNC = false;$/;"	m	class:olc::PixelGameEngine
@@ -373,7 +373,7 @@ comp_zmax	.\bezier_test.cpp	/^constexpr auto comp_zmax = [](const glm::vec3& a, 
 cps	.\bezier_test.cpp	/^    vector<vec3> cps;$/;"	m	struct:camPath	file:
 createPathFromCps	.\bezier_test.cpp	/^    void createPathFromCps() {$/;"	f	struct:camPath
 cross	.\olcPixelGameEngine.h	/^		T cross(const v2d_generic& rhs) const { return this->x * rhs.y - this->y * rhs.x; }$/;"	f	struct:olc::v2d_generic
-data	.\ppm_reader.cpp	/^    std::vector<RGB> data;$/;"	m	struct:ImageRGB	file:
+data	.\ppm_reader.h	/^    std::vector<RGB> data;$/;"	m	struct:ImageRGB
 decal	.\olcPixelGameEngine.h	/^		olc::Decal* decal = nullptr;$/;"	m	struct:olc::DecalInstance
 dot	.\olcPixelGameEngine.h	/^		T dot(const v2d_generic& rhs) const { return this->x * rhs.x + this->y * rhs.y; }$/;"	f	struct:olc::v2d_generic
 fBlendFactor	.\olcPixelGameEngine.h	/^		float		fBlendFactor = 1.0f;$/;"	m	class:olc::PixelGameEngine
@@ -386,7 +386,7 @@ fontSprite	.\olcPixelGameEngine.h	/^		Sprite*     fontSprite = nullptr;$/;"	m	cl
 funcHook	.\olcPixelGameEngine.h	/^		std::function<void()> funcHook = nullptr;$/;"	m	struct:olc::LayerDesc
 funcPixelMode	.\olcPixelGameEngine.h	/^		std::function<olc::Pixel(const int x, const int y, const olc::Pixel&, const olc::Pixel&)> funcPixelMode;$/;"	m	class:olc::PixelGameEngine
 g	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
-g	.\ppm_reader.cpp	/^    unsigned char r, g, b;$/;"	m	struct:RGB	file:
+g	.\ppm_reader.h	/^    unsigned char r, g, b;$/;"	m	struct:RGB
 gdistartup	.\olcPixelGameEngine.h	/^	} gdistartup;$/;"	v	typeref:class:olc::GDIPlusStartup
 glDeviceContext	.\olcPixelGameEngine.h	/^		glDeviceContext_t glDeviceContext = 0;$/;"	m	class:olc::Renderer_OGL33
 glDeviceContext_t	.\olcPixelGameEngine.h	/^	typedef HDC glDeviceContext_t;$/;"	t
@@ -396,7 +396,7 @@ glRenderContext_t	.\olcPixelGameEngine.h	/^	typedef HGLRC glRenderContext_t;$/;"
 glRenderContext_t	.\olcPixelGameEngine.h	/^	typedef X11::GLXContext glRenderContext_t;$/;"	t
 glSwapIntervalEXT	.\olcPixelGameEngine.h	/^	static glSwapInterval_t* glSwapIntervalEXT;$/;"	v
 glSwapInterval_t	.\olcPixelGameEngine.h	/^	typedef int(glSwapInterval_t)(X11::Display* dpy, X11::GLXDrawable drawable, int interval);$/;"	t
-h	.\ppm_reader.cpp	/^    int w, h;$/;"	m	struct:ImageRGB	file:
+h	.\ppm_reader.h	/^    int w, h;$/;"	m	struct:ImageRGB
 height	.\olcPixelGameEngine.h	/^		int32_t height = 0;$/;"	m	class:olc::Sprite
 height	.\read_bmp.cpp	/^	unsigned int width, height;$/;"	m	struct:bitmap	file:
 id	.\olcPixelGameEngine.h	/^		int32_t id = -1;$/;"	m	class:olc::Decal
@@ -457,7 +457,6 @@ mag	.\olcPixelGameEngine.h	/^		T mag() const { return T(std::sqrt(x * x + y * y)
 mag2	.\olcPixelGameEngine.h	/^		T mag2() const { return x * x + y * y; }$/;"	f	struct:olc::v2d_generic
 main	.\bezier_test.cpp	/^int main() {$/;"	f
 main	.\olcExampleProgram.cpp	/^int main()$/;"	f
-main	.\ppm_reader.cpp	/^int main() {$/;"	f
 main	.\read_bmp.cpp	/^int main() {$/;"	f
 makeposix	.\olcPixelGameEngine.h	/^	std::string ResourcePack::makeposix(const std::string& path)$/;"	f	class:olc::ResourcePack
 mapFiles	.\olcPixelGameEngine.h	/^		std::map<std::string, sResourceFile> mapFiles;$/;"	m	class:olc::ResourcePack
@@ -595,10 +594,10 @@ ptrPGE	.\olcPixelGameEngine.h	/^	olc::PixelGameEngine* olc::Platform::ptrPGE = n
 ptrPGE	.\olcPixelGameEngine.h	/^	olc::PixelGameEngine* olc::Renderer::ptrPGE = nullptr;$/;"	m	class:olc::olc::Renderer
 pts	.\bezier_test.cpp	/^    vector<vec3> pts;$/;"	m	struct:camPath	file:
 r	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
-r	.\ppm_reader.cpp	/^    unsigned char r, g, b;$/;"	m	struct:RGB	file:
+r	.\ppm_reader.h	/^    unsigned char r, g, b;$/;"	m	struct:RGB
 rcode	.\olcPixelGameEngine.h	/^	enum rcode { FAIL = 0, OK = 1, NO_FILE = -1 };$/;"	g	namespace:olc
-read_img_from_ppm	.\ppm_reader.cpp	/^std::unique_ptr<ImageRGB> read_img_from_ppm(std::string inName,$/;"	f
-read_ppm_header	.\ppm_reader.cpp	/^auto read_ppm_header(std::ifstream& in) {$/;"	f
+read_img_from_ppm	.\ppm_reader.h	/^std::unique_ptr<ImageRGB> read_img_from_ppm(std::string inName) {$/;"	f
+read_ppm_header	.\ppm_reader.h	/^std::pair<int, int> read_ppm_header(std::ifstream& in) {$/;"	f
 rendBlankQuad	.\olcPixelGameEngine.h	/^		olc::Renderable rendBlankQuad;$/;"	m	class:olc::Renderer_OGL33
 renderer	.\olcPixelGameEngine.h	/^	static std::unique_ptr<Renderer> renderer;$/;"	v
 sAppName	.\olcPixelGameEngine.h	/^		std::string sAppName;$/;"	m	class:olc::PixelGameEngine
@@ -642,7 +641,7 @@ vf2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<float> vf2d;$/;"	t	namespace:
 vi2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<int32_t> vi2d;$/;"	t	namespace:olc
 vu2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<uint32_t> vu2d;$/;"	t	namespace:olc
 w	.\olcPixelGameEngine.h	/^		std::vector<float> w;$/;"	m	struct:olc::DecalInstance
-w	.\ppm_reader.cpp	/^    int w, h;$/;"	m	struct:ImageRGB	file:
+w	.\ppm_reader.h	/^    int w, h;$/;"	m	struct:ImageRGB
 wglSwapInterval	.\olcPixelGameEngine.h	/^	static wglSwapInterval_t* wglSwapInterval = nullptr;$/;"	v
 wglSwapInterval_t	.\olcPixelGameEngine.h	/^	typedef BOOL(WINAPI wglSwapInterval_t) (int interval);$/;"	t
 wheel_callback	.\olcPixelGameEngine.h	/^		static EM_BOOL wheel_callback(int eventType, const EmscriptenWheelEvent* e, void* userData)$/;"	f	class:olc::Platform_Emscripten
