@@ -48,7 +48,7 @@ std::unique_ptr<ImageRGB> read_ppm() {
 int main() {	
 	using namespace std;
 	const string inName = R"|(..\levels\test.ppm)|";	
-	ifstream inFile(inName, ios::in);
+	ifstream inFile(inName, ios::in | ios::binary);
 
 
 	/**************************************/
