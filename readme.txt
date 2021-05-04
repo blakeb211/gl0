@@ -1,3 +1,14 @@
+/****************************************
+*		GOALS
+	4 levels
+	generated levels
+	death conditions: 	y = -20, health = 0, 
+	win condition:		touch the final fruit
+	audio
+	animation
+*****************************************/
+
+
 camera on a rail system
 add campath to level txt
 camera should find closest path point to players new position

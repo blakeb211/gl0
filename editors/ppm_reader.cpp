@@ -45,30 +45,49 @@ std::unique_ptr<ImageRGB> read_img_from_ppm(std::string inName) {
     using namespace std;
 	auto img = make_unique<ImageRGB>(ImageRGB{});
 
+	assert(!inName.empty());
 	ifstream in{inName, ios::binary | ios::in};
+	
 	const auto [w,h] = read_ppm_header(in);
-	cout << "width: " << w << " height: " << h << endl;
+	img->w = w;
+	img->h = h;
+
+	const int dat_len = w * h * 3u;
+
+	namespace fs = std::filesystem;
+	const int file_len = fs::file_size(inName); 
+
+	const int hdr_len = file_len - dat_len;
+	assert(hdr_len > 0);
+
+	in.seekg(-dat_len, ios_base::end);
+
+	// read data into img->data	
+	char c[3]{};
+	RGB _rgb{};
+	int pix_read{};
+
+	for (int i = 0; i < dat_len - 1; i+=3) {
+	in.read(c, 3);
+	_rgb.r = static_cast<unsigned char>(c[0]);
+	_rgb.g = static_cast<unsigned char>(c[1]);
+	_rgb.b = static_cast<unsigned char>(c[2]);
+	img->data.push_back(_rgb);
+	pix_read++;
+	}
+	assert(pix_read == img->w * img->h);
 	return img;
 }
 
 int main() {
     using namespace std;
-    string inName = R"|(..\levels\test2.ppm)|";
-
+    string inName = R"|(..\levels\test3.ppm)|";
 
 	auto img = read_img_from_ppm(inName);
-    
-	// print out non_0 vals
-    for (int i = 0; i < img->w; i++) {
-	for (int j = 0; j < img->h; j++) {
-	    const auto idx = i + j * img->w;
-	    if (img->data[idx].r != 0 | img->data[idx].g != 0 |
-		img->data[idx].b != 0) {
-		cout << "pixel (" << i << "," << j << ") =";
-		cout << img->data[idx].r << " " << (int)img->data[idx].g << " ";
-		cout << (int)img->data[idx].b << "\n";
-	    }
-	}
-    }
+	const auto & w = img->w;    
+	const auto & h = img->h;    
+
+	cout << " width:" << w << " height: " << h << endl;
+	cout << " numPix:" << w * h << " == img.data.size: " << img->data.size() << endl;;
     return 0;
 }
