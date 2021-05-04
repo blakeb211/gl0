@@ -10,13 +10,14 @@
 
 camera on a rail system
 
-ppm_reader
-write camPath file from ppm
+make 5 ppm files
 
 starting control points for level come from ppm
 
 open ppm file in bezier editor
-	read write cam path files
+	read ppm files
+	read cam path files
+	write cam path files
 	delete control points
 	move control points with mouse
 	show coords on hover
