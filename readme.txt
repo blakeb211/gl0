@@ -8,13 +8,24 @@
 	animation
 *****************************************/
 
-
 camera on a rail system
-add campath to level txt
+
+ppm_reader
+write camPath file from ppm
+
+starting control points for level come from ppm
+
+open ppm file in bezier editor
+	read write cam path files
+	delete control points
+	move control points with mouse
+	show coords on hover
+
+generate level using some method
+
 camera should find closest path point to players new position
 and smoothly transition there, while looking at a certain direction
 
-generate level using some method
 
 need collision detection
 need gravity
