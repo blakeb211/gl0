@@ -248,6 +248,16 @@ class Example : public olc::PixelGameEngine {
     }
 };
 
+bool is_ppm_file(string fName) {
+	return true;
+}
+
+bool is_level_file(string fName) {
+
+	return true;
+}
+
+
 int main(int argc, char** argv) {
     if (argc != 2) {
 	cout << argv[0];
@@ -264,12 +274,14 @@ int main(int argc, char** argv) {
     vector<vec3> cps{};
     // if this is a ppm file, create a campath from the ppm
     if (is_ppm_file) {
-	g_cps = get_cps_from_ppm(fName);
-    }
-    if (is_level_file) {
-	// if this is a level file (no extension), load level and campath
-	g_cps = get_cps_from_campath(fName);
-    }
+	//g_cps = get_cps_from_ppm(fName);
+    } else if (is_level_file) {
+	// if this is a valid level file, load campath and level
+	//g_cps = get_cps_from_campath(fName);
+    } else {
+		cout << "Not a ppm file or a level file. Exiting.\n";
+		return -1;
+	}
 
 	// construct an engine object using the g_cps as the source of the control points
     // this matches a screen dimension of roughly 1000x700
