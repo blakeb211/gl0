@@ -1,31 +1,31 @@
-// USAGE: This program reads in a level and campath file, lets users modify the campath with the mouse,
-// and then saves the campath.
-// Initial campath is created from a ppm file using a different program.
+// USAGE: This program reads in a level and campath file, lets users modify the
+// campath with the mouse, and then saves the campath. Initial campath is
+// created from a ppm file using a different program.
 //
 #define OLC_PGE_APPLICATION
 #include "..\include\gamelib.h"
 #include "..\include\glm.h"
 #include "..\include\headers.h"
 #include "olcPixelGameEngine.h"
-
+#include "ppm_reader.h"
 // @NOTE: campath editor operates in world coordinators
 
-using  std::vector, std::pair, std::cout, glm::vec3, std::endl;
 using std::make_pair, std::make_unique, std::string;
 using std::unique_ptr, std::tie, std::to_string, std::max_element;
+using std::vector, std::pair, std::cout, glm::vec3, std::endl;
 namespace fs = std::filesystem;
 
-/************************************************/
-/*					GLOBALS
- */
-/************************************************/
+/************************************************
+ *					GLOBALS
+ *
+ ************************************************/
 size_t frameCnt = 0;
 constexpr auto WORLD_Y_MAX = 30.0f;
 constexpr auto WORLD_X_MAX = 50.0f;
 float z_data_max{};
 float y_data_max{};
 float x_data_max{};
-vector<vec3> g_cps_from_file{};
+vector<vec3> g_cps{};
 
 constexpr auto comp_zmax = [](const glm::vec3& a, const glm::vec3& b) -> bool {
     return a.z < b.z;
@@ -48,7 +48,7 @@ struct camPath {
     camPath() = delete;
     camPath(vector<vec3> control_points) { cps = control_points; }
     void createPathFromCps() {
-	for (int cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
+	for (size_t cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
 	    const vec3& p0 = cps[cpIdx];
 	    const vec3& p1 = cps[cpIdx + 1];
 	    const vec3& p2 = cps[cpIdx + 2];
@@ -90,7 +90,7 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine* gm,
 	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset);
 	    x_coord = x_offset + in.z * x_scale;
 
-	    y_offset = gm->ScreenHeight() / 2;
+	    y_offset = gm->ScreenHeight() / 2.f;
 	    y_scale = -1.f * gm->ScreenHeight() / (2.f * WORLD_Y_MAX);
 	    y_coord = y_offset + in.y * y_scale;
 
@@ -102,7 +102,7 @@ pair<float, float> world_to_screen(const olc::PixelGameEngine* gm,
 	    x_scale = gm->ScreenWidth() / (z_data_max + x_offset);
 	    x_coord = x_offset + in.z * x_scale;
 
-	    y_offset = gm->ScreenHeight() / 2;
+	    y_offset = gm->ScreenHeight() / 2.f;
 	    y_scale = -1.f * gm->ScreenHeight() / (2.f * WORLD_X_MAX);
 	    y_coord = y_offset + in.x * y_scale;
 	    break;
@@ -114,14 +114,12 @@ class Example : public olc::PixelGameEngine {
    public:
     View currView{View::ZX};
     unique_ptr<camPath> path;
+
+   public:
     Example() { sAppName = "Example"; }
     bool OnUserCreate() override {
 	// Called once at the start, so create things here
-	// @TODO: these cps should be from a campath file
-	vector<vec3> cps {};
-	path = make_unique<camPath>(camPath(cps));
-	cout << "number of control points: " << path->cps.size() << endl;
-	path->createPathFromCps();
+	this->path = make_unique<camPath>(camPath(g_cps));
 	return true;
     }
 
@@ -160,7 +158,7 @@ class Example : public olc::PixelGameEngine {
 	}
 
 	// draw axes
-	float x0{}, y0{}, xmax{}, ymax{};
+	int x0{}, y0{}, xmax{}, ymax{};
 	switch (currView) {
 	    case View::ZY:
 		// y = y + ScreenHeight/2
@@ -251,26 +249,40 @@ class Example : public olc::PixelGameEngine {
 };
 
 int main(int argc, char** argv) {
-	if (argc != 2) { 
-		cout << argv[0];
-		cout <<  ":must give an arg, either ppm file or level name" << endl; 
-		return -1;
-	}
-	setLogFile("log.txt");
-
-	// read level name
-	string fName{argv[1]};
-	// if this is a level file (no extension), load level and campath
-	
-	cout << "file name" << fName << endl;
-
-	auto level = gxb::load_level("test");
-	Example demo;
-
-	// this matches a screen dimension of roughly 1000x700
-	if (demo.Construct(500, 350, 2, 2, false, true, false)){ 
-	    demo.Start();
+    if (argc != 2) {
+	cout << argv[0];
+	cout << ":must give an argument to run. Either\n";
+	cout << "A) a ppm file to load a campath from a ppm OR\n";
+	cout << "B) a level name to load a level and its campath\n";
+	return -1;
     }
+    setLogFile("log.txt");
+
+    // read level name
+    string fName{argv[1]};
+
+    vector<vec3> cps{};
+    // if this is a ppm file, create a campath from the ppm
+    if (is_ppm_file) {
+	g_cps = get_cps_from_ppm(fName);
+    }
+    if (is_level_file) {
+	// if this is a level file (no extension), load level and campath
+	g_cps = get_cps_from_campath(fName);
+    }
+
+	// construct an engine object using the g_cps as the source of the control points
+    // this matches a screen dimension of roughly 1000x700
+    Example demo;
+    //if (demo.Construct(500, 350, 2, 2, false, true, false)) {
+	//demo.Start();
+    //}
+    //demo.path->createPathFromCps();
+
+    cout << "file name" << fName << endl;
+
+    //auto level = gxb::load_level("test");
+
 
     return 0;
 }
