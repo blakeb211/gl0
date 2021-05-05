@@ -306,7 +306,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 std::vector<unsigned int> buildVAO(const gxb::level* l) {
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-
+	assert(level != nullptr);
     std::vector<unsigned int> VBO(l->meshes.size(), 0);
     std::vector<unsigned int> VAO(l->meshes.size(), 0);
 
