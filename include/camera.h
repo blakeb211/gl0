@@ -122,6 +122,7 @@ public:
 
     // processes input received from a mouse scroll-wheel event. Only requires
     // input on the vertical wheel-axis
+	//
     void ProcessMouseScroll(float yoffset)
     {
         Zoom -= (float)yoffset * SENSITIVITY;
@@ -130,7 +131,16 @@ public:
         if (Zoom > 25.0f)
             Zoom = 25.0f;
     }
+	
+	// move camaera to a specific location	
+	void moveTo(glm::vec3 pos) {
+	Position = pos;
+	}
 
+	// set thing for camera to point towards
+	void lookAt(glm::vec3 pos) {
+
+	}
 private:
     // calculates the front vector from the Camera's (updated) Euler Angles
     void updateCameraVectors()

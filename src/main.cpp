@@ -14,6 +14,7 @@ void processInput_camOnly(GLFWwindow* window,
 			  gxb::Camera& cam,
 			  float deltaTime);
 void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime);
+void processInput_playerOnly(GLFWwindow* window, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void init_textures();
@@ -55,7 +56,8 @@ int main() {
     clearScreen();
 
 	//@TODO: combine into one load later 
-    
+	//@TODO: remove camera free look later    
+	
 	auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
     level = futureLevelPtr.get();
 
@@ -80,9 +82,20 @@ int main() {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	// processInput_camOnly(window, camera, deltaTime);
-	processInput(window, camera, deltaTime);
+	//processInput(window, camera, deltaTime);
+	processInput_playerOnly(window, deltaTime);
 
+	// make camera follow camera path
+	glm::vec3 heroFacingDir{};
+	glm::vec3 lookPos{};
+	glm::vec3 newCamPos{};
+	const auto heroPos = level->objects[0]->pos;
+
+	camera.moveTo(heroPos + glm::vec3{0.f,+5.0f, +15.0f});
+	camera.lookAt(lookPos);
 	progOne.use();
+
+
 
 	// set transformations
 	model = glm::mat4(1.0f);
@@ -184,6 +197,36 @@ void init_textures() {
     }
 }
 
+// process all input: move player only
+// ---------------------------------------------------------------------------------------------------------
+void processInput_playerOnly(GLFWwindow* window,float deltaTime) {
+	constexpr auto playerSpeed = 0.01f;
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+	level->objects[0]->pos.x += playerSpeed * deltaTime;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+	level->objects[0]->pos.x -= playerSpeed * deltaTime;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+	level->objects[0]->pos.z -= playerSpeed * deltaTime;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+	level->objects[0]->pos.z += playerSpeed * deltaTime;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+	__noop;
+
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+	__noop;
+}
+
 // process all input: move camera only
 // ---------------------------------------------------------------------------------------------------------
 void processInput_camOnly(GLFWwindow* window,
@@ -212,7 +255,7 @@ void processInput_camOnly(GLFWwindow* window,
 	__noop;
 }
 
-// process all input: move camera only
+// process all input: move player and camera
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime) {
     const float cameraSpeed = 0.01f;  // adjust accordingly

@@ -8,4 +8,8 @@ OpenGL Version: 3        . 3
  meshes loaded from disk: 3        
  61       points loaded from test .cmp 
  CamPath file for  test  loaded 
+ avg framerate: 59.827   
+ avg framerate: 61.843   
+ avg framerate: 61.862   
+ avg framerate: 61.728   
  
