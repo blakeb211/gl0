@@ -7,6 +7,11 @@
 	audio
 	animation
 *****************************************/
+FILETYPES:
+	.txt	level file
+	.cmp	campath file
+	.ppm	ppm file with initial cps points
+*****************************************/
 
 camera on a rail system
 

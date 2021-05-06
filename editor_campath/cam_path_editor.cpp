@@ -7,6 +7,11 @@
 #include "..\include\headers.h"
 #include "olcPixelGameEngine.h"
 #include "ppm_reader.h"
+
+constexpr auto COORD_SCALE_FACTOR = 3;
+constexpr auto BLUE_SCALE_FACTOR = 3;
+constexpr auto CPS_FROM_PPM_SAMPLING_RATE = 10;
+
 // @NOTE: campath editor operates in world coordinators
 
 using std::make_pair, std::make_unique, std::string;
@@ -112,10 +117,14 @@ class Example : public olc::PixelGameEngine {
    public:
     View currView{View::ZX};
     unique_ptr<CamPath> path;
-	vector<vec3> cps;
+    vector<vec3> cps;
+
    public:
-	Example() = delete;
-    Example(vector<vec3> cps) { sAppName = "Example"; this->cps = cps; }
+    Example() = delete;
+    Example(vector<vec3> cps) {
+	sAppName = "Example";
+	this->cps = cps;
+    }
     bool OnUserCreate() override {
 	// Called once at the start, so create things here
 	this->path = make_unique<CamPath>(cps);
@@ -123,9 +132,8 @@ class Example : public olc::PixelGameEngine {
     }
 
     bool OnUserUpdate(float fElapsedTime) override {
-
 	// @TODO: As cps get moved, erase path and call createPathFromCps()
-	
+
 	frameCnt++;
 	this->Clear(olc::Pixel(olc::DARK_GREY));
 
@@ -250,15 +258,35 @@ class Example : public olc::PixelGameEngine {
     }
 };
 
-bool is_ppm_file(string fName) {
-	return true;
+bool is_ppm_file(fs::path path) {
+    if (path.extension() == ".ppm" && fs::exists(path))
+		return true;
+	return false;
 }
 
 bool is_level_file(string fName) {
-
-	return true;
+    return true;
 }
 
+// get control points from ppm images
+vector<vec3> get_cps_from_ppm(fs::path path) {
+	auto img = read_img_from_ppm(path.string());
+	const auto & w = img->w;
+	const auto & h = img->h;
+
+	cout << "width:" << w << " height:" << h << endl;
+	vector<vec3> cps{};
+
+	for (int i = 0; i < w; i++)
+		for (int j = 0; j < h; j++) {
+			auto rgb = img->data[i + j*w];
+			if (i == 0 || i % 10 == 0)
+			if (rgb.b > 0) {
+				cps.push_back(vec3{i,j,rgb.b});
+			}
+		}
+	return cps; 
+};
 
 int main(int argc, char** argv) {
     if (argc != 2) {
@@ -271,29 +299,35 @@ int main(int argc, char** argv) {
     setLogFile("log.txt");
 
     // read level name
-    string fName{argv[1]};
+    fs::path fPath{argv[1]};
+    cout << "file name entered: " << fPath.filename() << endl;
 
-	vector<vec3> cps{};
+    vector<vec3> cps{};
     // if this is a ppm file, create a campath from the ppm
-    if (is_ppm_file) {
-	//cps = get_cps_from_ppm(fName);
+    if (is_ppm_file(fPath)) {
+		cout << "valid ppm filename given" << endl;
+		cps = get_cps_from_ppm(fPath);
+		for (const auto & v : cps) {
+
+		}
     } else if (is_level_file) {
 	// if this is a valid level file, load campath and level
-	//cps = get_cps_from_campath(fName);
+	// cps = get_cps_from_campath(fName);
     } else {
-		cout << "Not a ppm file or a campath file. Exiting.\n";
-		return -1;
-	}
-	
-	// construct an camPath object inside the engine using cps as the source of the control points
-    Example demo{cps};
-	
-    // this matches a screen dimension of roughly 1000x700
-    //if (demo.Construct(500, 350, 2, 2, false, true, false)) {
-	//demo.Start();
-    //}
+	cout << "Not a ppm file or a campath file. Exiting.\n";
+	return -1;
+    }
 
-    cout << "file name: " << fName << endl;
+    // construct an camPath object inside the engine using cps as the source of
+    // the control points
+	
+    Example demo{cps};
+
+    // this matches a screen dimension of roughly 1000x700
+     if (demo.Construct(500, 350, 2, 2, false, true, false)) {
+     demo.Start();
+    }
+
 
     return 0;
 }
