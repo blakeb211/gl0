@@ -24,8 +24,9 @@ namespace fs = std::filesystem;
  *
  ************************************************/
 size_t frameCnt = 0;
-constexpr auto WORLD_Y_MAX = 30.0f;
-constexpr auto WORLD_X_MAX = 50.0f;
+auto WORLD_Y_MAX = 30.0f;
+auto WORLD_X_MAX = 50.0f;
+
 float z_data_max{100};
 float y_data_max{100};
 float x_data_max{100};
@@ -161,6 +162,8 @@ public:
       z_data_max = (*z_data_max_it).z;
       y_data_max = (*y_data_max_it).y;
       x_data_max = (*x_data_max_it).x;
+      WORLD_Y_MAX = y_data_max + 5;
+      WORLD_X_MAX = x_data_max + 5;
     }
 
     // draw axes
