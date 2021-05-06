@@ -288,7 +288,7 @@ vector<vec3> get_cps_from_ppm(fs::path path) {
   while(1) {
   for (int i = 0; i < w; i++)
     for (int j = 0; j < h; j++) {
-      auto rgb = img->data[i + j * w];
+      const auto rgb = img->data[i + j * w];
       if (i == 0 || i % SMPL_WIDTH == 0)
         if (rgb.b > 0) {
           cps.push_back(vec3{j, rgb.b, i});
@@ -329,8 +329,6 @@ int main(int argc, char **argv) {
   if (is_ppm_file(fPath)) {
     cout << "valid ppm filename given" << endl;
     cps = get_cps_from_ppm(fPath);
-    for (const auto &v : cps) {
-    }
   } else if (is_level_file) {
     // if this is a valid level file, load campath and level
     // cps = get_cps_from_campath(fName);
