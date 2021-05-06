@@ -16,6 +16,7 @@ constexpr auto BLUE_SCALE_FACTOR = 3;
 using std::make_pair, std::make_unique, std::string;
 using std::unique_ptr, std::tie, std::to_string, std::max_element;
 using std::vector, std::pair, std::cout, std::setw, glm::vec3, std::endl;
+using gxb::CamPath;
 namespace fs = std::filesystem;
 
 /************************************************
@@ -47,32 +48,6 @@ constexpr auto comp_xmax = [](const glm::vec3 &a, const glm::vec3 &b) -> bool {
 // print out CamPath points in a table
 // ability to drag control points to change the campath
 // ability to save CamPath
-
-struct CamPath {
-  CamPath() = delete;
-  CamPath(vector<vec3> control_points) { cps = control_points; }
-  void createPathFromCps() {
-    // 0 1 2 3 4
-    // #cps.size() == equal 3 + 2n	 (cps.size() - 3) / 2 == n
-    for (size_t cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
-      const vec3 &p0 = cps[cpIdx];
-      const vec3 &p1 = cps[cpIdx + 1];
-      const vec3 &p2 = cps[cpIdx + 2];
-      float x, y, z, t;
-      x = y = z = t = 0.0f;
-      while (t <= 1.0) {
-        x = (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x;
-        y = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y;
-        z = (1 - t) * (1 - t) * p0.z + 2 * (1 - t) * t * p1.z + t * t * p2.z;
-        pts.push_back(vec3{x, y, z});
-        t += 0.05f;
-      }
-    }
-  }
-  vector<vec3> cam_dir;
-  vector<vec3> pts;
-  vector<vec3> cps;
-};
 
 enum class View {
   ZY = 0,

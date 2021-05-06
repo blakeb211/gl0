@@ -6,4 +6,6 @@ OpenGL Version: 3        . 3
  plane2           8        8        12       16713563760156879365 
  objects created: 42       
  meshes loaded from disk: 3        
+ 61       points loaded from test .cmp 
+ CamPath file for  test  loaded 
  

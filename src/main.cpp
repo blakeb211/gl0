@@ -31,6 +31,7 @@ gxb::Camera camera{};
 float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
 std::unique_ptr<gxb::level> level = nullptr;
+std::vector<glm::vec3> path{};
 
 int main() {
     gxb::initTypeToStrMap();  // creates str_to_type
@@ -53,8 +54,13 @@ int main() {
     // clear screen
     clearScreen();
 
-    auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
+	//@TODO: combine into one load later 
+    
+	auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
     level = futureLevelPtr.get();
+
+	auto futureCamPts = async(std::launch::async, gxb::load_campath, "test");
+	path = futureCamPts.get();
 
     auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
 			  *gxb::shaderPath("colorFromVertex.fs"));
