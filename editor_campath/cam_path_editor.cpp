@@ -10,7 +10,6 @@
 
 constexpr auto COORD_SCALE_FACTOR = 3;
 constexpr auto BLUE_SCALE_FACTOR = 3;
-constexpr auto CPS_FROM_PPM_SAMPLING_RATE = 10;
 
 // @NOTE: campath editor operates in world coordinators
 
@@ -52,13 +51,15 @@ struct CamPath {
   CamPath() = delete;
   CamPath(vector<vec3> control_points) { cps = control_points; }
   void createPathFromCps() {
+	 // 0 1 2 3 4
+	// #cps.size() == equal 3 + 2n	 (cps.size() - 3) / 2 == n
     for (size_t cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
       const vec3 &p0 = cps[cpIdx];
       const vec3 &p1 = cps[cpIdx + 1];
       const vec3 &p2 = cps[cpIdx + 2];
       float x, y, z, t;
       x = y = z = t = 0.0f;
-      while (t < 1.0) {
+      while (t <= 1.0) {
         x = (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x;
         y = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y;
         z = (1 - t) * (1 - t) * p0.z + 2 * (1 - t) * t * p1.z + t * t * p2.z;
@@ -129,8 +130,6 @@ public:
   }
 
   bool OnUserUpdate(float fElapsedTime) override {
-    // @TODO: As cps get moved, erase path and call createPathFromCps()
-
     frameCnt++;
     this->Clear(olc::Pixel(olc::DARK_GREY));
 
@@ -151,7 +150,7 @@ public:
     // Y = WorldYMax 			0
     //
 
-    if (frameCnt % 15 == 0) {
+    if (frameCnt % 30 == 0) {
       const auto z_data_max_it =
           max_element(path->cps.begin(), path->cps.end(), comp_zmax);
       const auto y_data_max_it =
@@ -164,6 +163,10 @@ public:
       x_data_max = (*x_data_max_it).x;
       WORLD_Y_MAX = y_data_max + 5;
       WORLD_X_MAX = x_data_max + 5;
+	  
+	  path->pts.clear();
+	  path->createPathFromCps();
+	  
     }
 
     // draw axes
@@ -192,10 +195,12 @@ public:
     case View::ZY:
 
       for (const auto &pt : path->pts) {
+        // draw circles around control pts
         auto [x, y] = world_to_screen(this, View::ZY, pt);
         Draw(x, y, olc::RED);
-        DrawCircle(x, y, 3, olc::RED);
+        DrawCircle(x, y, 2, olc::RED);
       }
+
 
       for (const auto &pt : path->cps) {
         // draw circles around control pts
@@ -208,12 +213,13 @@ public:
     case View::ZX:
 
       for (const auto &pt : path->pts) {
+        // draw circles around control pts
         auto [x, y] = world_to_screen(this, View::ZX, pt);
         Draw(x, y, olc::RED);
-        DrawCircle(x, y, 3, olc::RED);
+        DrawCircle(x, y, 2, olc::RED);
       }
 
-      for (const auto &pt : path->cps) {
+	  for (const auto &pt : path->cps) {
         // draw circles around control pts
         auto [x, y] = world_to_screen(this, View::ZX, pt);
         Draw(x, y, olc::GREEN);
@@ -269,14 +275,38 @@ vector<vec3> get_cps_from_ppm(fs::path path) {
   cout << "width:" << w << " height:" << h << endl;
   vector<vec3> cps{};
 
+  vector<int> ints(100);
+  std::iota(ints.begin(), ints.end(), 0);
+  
+  vector<int> valid_cps_sizes {};
+  for (const auto & i : ints) {
+	  valid_cps_sizes.push_back(3+2*i);
+  }
+  
+  int SMPL_WIDTH = 15;
+
+  while(1) {
   for (int i = 0; i < w; i++)
     for (int j = 0; j < h; j++) {
       auto rgb = img->data[i + j * w];
-      if (i == 0 || i % 10 == 0)
+      if (i == 0 || i % SMPL_WIDTH == 0)
         if (rgb.b > 0) {
           cps.push_back(vec3{j, rgb.b, i});
+		  j = h;
         }
     }
+
+  const auto end_it = valid_cps_sizes.end();
+  const auto count = cps.size();
+
+  if (end_it != std::find(valid_cps_sizes.begin(), valid_cps_sizes.end(), count)) {
+	break; // break out of while loop
+  }
+	cps.clear();
+	SMPL_WIDTH--;
+  }
+
+  cout << cps.size() << " control points created from SMP_WIDTH of " << SMPL_WIDTH << endl;
   return cps;
 };
 
