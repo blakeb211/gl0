@@ -15,7 +15,7 @@ constexpr auto BLUE_SCALE_FACTOR = 3;
 
 using std::make_pair, std::make_unique, std::string;
 using std::unique_ptr, std::tie, std::to_string, std::max_element;
-using std::vector, std::pair, std::cout, glm::vec3, std::endl;
+using std::vector, std::pair, std::cout, std::setw, glm::vec3, std::endl;
 namespace fs = std::filesystem;
 
 /************************************************
@@ -23,6 +23,7 @@ namespace fs = std::filesystem;
  *
  ************************************************/
 size_t frameCnt = 0;
+fs::path inFilePath{};
 auto WORLD_Y_MAX = 30.0f;
 auto WORLD_X_MAX = 50.0f;
 
@@ -44,15 +45,15 @@ constexpr auto comp_xmax = [](const glm::vec3 &a, const glm::vec3 &b) -> bool {
 //@TODO:
 // pop up pt coords
 // print out CamPath points in a table
-// ability to drag control points to change the path
+// ability to drag control points to change the campath
 // ability to save CamPath
 
 struct CamPath {
   CamPath() = delete;
   CamPath(vector<vec3> control_points) { cps = control_points; }
   void createPathFromCps() {
-	 // 0 1 2 3 4
-	// #cps.size() == equal 3 + 2n	 (cps.size() - 3) / 2 == n
+    // 0 1 2 3 4
+    // #cps.size() == equal 3 + 2n	 (cps.size() - 3) / 2 == n
     for (size_t cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
       const vec3 &p0 = cps[cpIdx];
       const vec3 &p1 = cps[cpIdx + 1];
@@ -64,7 +65,7 @@ struct CamPath {
         y = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y;
         z = (1 - t) * (1 - t) * p0.z + 2 * (1 - t) * t * p1.z + t * t * p2.z;
         pts.push_back(vec3{x, y, z});
-        t += 0.10f;
+        t += 0.05f;
       }
     }
   }
@@ -77,6 +78,15 @@ enum class View {
   ZY = 0,
   ZX = 1,
 };
+
+void save_campath_to_file(const CamPath *const campath, fs::path outPath) {
+  outPath.replace_extension("cmp");
+  std::ofstream out{outPath, std::ios::out};
+  for (const auto &p : campath->pts) {
+    out << setw(8) << p.x << " " << setw(8) << p.y;
+    out << " " << setw(8) << p.z << endl;
+  }
+}
 
 pair<float, float> world_to_screen(const olc::PixelGameEngine *gm,
                                    const View vw, const glm::vec3 in) {
@@ -133,8 +143,8 @@ public:
     frameCnt++;
     this->Clear(olc::Pixel(olc::DARK_GREY));
 
-    auto keyState = GetKey(olc::Key::V);
-    if (keyState.bReleased) {
+    auto viewKeyState = GetKey(olc::Key::V);
+    if (viewKeyState.bReleased) {
       if (currView == View::ZY) {
         currView = View::ZX;
       } else {
@@ -142,6 +152,10 @@ public:
       }
     }
 
+    auto saveKeyState = GetKey(olc::Key::S);
+    if (saveKeyState.bReleased) {
+      save_campath_to_file(path.get(), inFilePath);
+    }
     // draw axes
     // ZY
     // Z = 0 					X = ScreenHeight / 2
@@ -163,10 +177,9 @@ public:
       x_data_max = (*x_data_max_it).x;
       WORLD_Y_MAX = y_data_max + 5;
       WORLD_X_MAX = x_data_max + 5;
-	  
-	  path->pts.clear();
-	  path->createPathFromCps();
-	  
+
+      path->pts.clear();
+      path->createPathFromCps();
     }
 
     // draw axes
@@ -189,7 +202,7 @@ public:
       break;
     };
 
-    // draw path
+    // draw campath
     // draw control points
     switch (currView) {
     case View::ZY:
@@ -200,7 +213,6 @@ public:
         Draw(x, y, olc::RED);
         DrawCircle(x, y, 2, olc::RED);
       }
-
 
       for (const auto &pt : path->cps) {
         // draw circles around control pts
@@ -219,7 +231,7 @@ public:
         DrawCircle(x, y, 2, olc::RED);
       }
 
-	  for (const auto &pt : path->cps) {
+      for (const auto &pt : path->cps) {
         // draw circles around control pts
         auto [x, y] = world_to_screen(this, View::ZX, pt);
         Draw(x, y, olc::GREEN);
@@ -277,43 +289,45 @@ vector<vec3> get_cps_from_ppm(fs::path path) {
 
   vector<int> ints(100);
   std::iota(ints.begin(), ints.end(), 0);
-  
-  vector<int> valid_cps_sizes {};
-  for (const auto & i : ints) {
-	  valid_cps_sizes.push_back(3+2*i);
+
+  vector<int> valid_cps_sizes{};
+  for (const auto &i : ints) {
+    valid_cps_sizes.push_back(3 + 2 * i);
   }
-  
+
   int SMPL_WIDTH = 15;
 
-  while(1) {
-  for (int i = 0; i < w; i++)
-    for (int j = 0; j < h; j++) {
-      const auto rgb = img->data[i + j * w];
-      if (i == 0 || i % SMPL_WIDTH == 0)
-        if (rgb.b > 0) {
-          cps.push_back(vec3{j, rgb.b, i});
-		  j = h;
-        }
+  while (1) {
+    for (int i = 0; i < w; i++)
+      for (int j = 0; j < h; j++) {
+        const auto rgb = img->data[i + j * w];
+        if (i == 0 || i % SMPL_WIDTH == 0)
+          if (rgb.b > 0) {
+            cps.push_back(vec3{j, rgb.b, i});
+            j = h;
+          }
+      }
+
+    const auto end_it = valid_cps_sizes.end();
+    const auto count = cps.size();
+
+    if (end_it !=
+        std::find(valid_cps_sizes.begin(), valid_cps_sizes.end(), count)) {
+      break; // break out of while loop
     }
-
-  const auto end_it = valid_cps_sizes.end();
-  const auto count = cps.size();
-
-  if (end_it != std::find(valid_cps_sizes.begin(), valid_cps_sizes.end(), count)) {
-	break; // break out of while loop
-  }
-	cps.clear();
-	SMPL_WIDTH--;
+    cps.clear();
+    SMPL_WIDTH--;
   }
 
-  cout << cps.size() << " control points created from SMP_WIDTH of " << SMPL_WIDTH << endl;
+  cout << cps.size() << " control points created from SMP_WIDTH of "
+       << SMPL_WIDTH << endl;
   return cps;
 };
 
 int main(int argc, char **argv) {
   if (argc != 2) {
-    cout << endl;
-    cout << argv[0] << ": Must give an argument to run.\n";
+    cout << endl << argv[0];
+    cout << ": Must give an argument to run.\n";
     cout << "A) a ppm file OR\n";
     cout << "B) a campath file\n";
     return -1;
@@ -321,14 +335,14 @@ int main(int argc, char **argv) {
   setLogFile("log.txt");
 
   // read level name
-  fs::path fPath{argv[1]};
-  cout << "file name entered: " << fPath.filename() << endl;
+  inFilePath = fs::path{argv[1]};
+  cout << "file name entered: " << inFilePath.filename() << endl;
 
   vector<vec3> cps{};
   // if this is a ppm file, create a campath from the ppm
-  if (is_ppm_file(fPath)) {
+  if (is_ppm_file(inFilePath)) {
     cout << "valid ppm filename given" << endl;
-    cps = get_cps_from_ppm(fPath);
+    cps = get_cps_from_ppm(inFilePath);
   } else if (is_level_file) {
     // if this is a valid level file, load campath and level
     // cps = get_cps_from_campath(fName);
