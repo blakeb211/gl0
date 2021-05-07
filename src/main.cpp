@@ -198,21 +198,21 @@ void processInput_playerOnly(GLFWwindow *window, float deltaTime) {
   constexpr auto playerSpeed = 0.01f;
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
-
+  auto &pos = level->objects[0]->pos;
   if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    level->objects[0]->pos.x += playerSpeed * deltaTime;
+    pos.x += playerSpeed * deltaTime;
   }
 
   if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-    level->objects[0]->pos.x -= playerSpeed * deltaTime;
+    pos.x -= playerSpeed * deltaTime;
   }
 
   if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    level->objects[0]->pos.z -= playerSpeed * deltaTime;
+    pos.z -= playerSpeed * deltaTime;
   }
 
   if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-    level->objects[0]->pos.z += playerSpeed * deltaTime;
+    pos.z += playerSpeed * deltaTime;
   }
 
   if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
