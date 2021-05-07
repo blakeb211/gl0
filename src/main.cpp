@@ -35,7 +35,6 @@ std::vector<glm::vec3> path{};
 int main() {
   gxb::initTypeToStrMap(); // creates str_to_type
   FrameRater fr{};
-
   setLogFile("log.txt");
 
   // glfw: initialize and setup callbacks
