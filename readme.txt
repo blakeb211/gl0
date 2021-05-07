@@ -17,25 +17,34 @@ camera on a rail system
 
 make 4 ppm files - done
 
+game
+	read a level and its campath file - done
+	camera follows campath
+
 
 campath editor
-	get campath control pts from a ppm
-	read a level and its campath file
+	get campath control pts from a ppm - done
+	write cam path files - done
 	show coords on hover
 	move control points
 	delete control points
 	add control points
-	write cam path files
+	
+level generator
+	generate a level
+
 
 generate level using some method
+need collision detection
+need gravity
+
 
 camera should find closest path point to players new position
 and smoothly transition there, while looking at a certain direction
 
-need collision detection
-need gravity
 
-entity types need states
+
+entity states
 
 need lighting
 
