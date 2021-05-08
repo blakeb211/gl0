@@ -8,7 +8,7 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
-#define FREE_MOVE 0
+#define FREE_MOVE 1
 
 using VecPP = std::vector<gxb::PathPt>;
 
@@ -136,6 +136,7 @@ int main() {
       unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
                    numVertsCurrModel);
+      // @TODO: Put campath on its own VAO
       const auto tot_verts = level->raw_data.size() / 3;
       const auto cam_path_verts = path.size();
       progOne.setVec3("color", col::red);
