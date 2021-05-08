@@ -138,13 +138,6 @@ int main() {
       unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
                    numVertsCurrModel);
-      // @TODO: Put campath on its own VAO
-      const auto tot_verts = level->raw_data.size() / 3;
-      const auto cam_path_verts = path.size();
-      progOne.setVec3("color", col::red);
-      glEnable(GL_PROGRAM_POINT_SIZE);
-      glDrawArrays(GL_POINTS, tot_verts - cam_path_verts / 3,
-                   cam_path_verts / 3);
     }
 
     glBindVertexArray(0);
@@ -394,6 +387,14 @@ void addCamPathToRawData(const VecPP &const path, gxb::level *l) {
     }
   };
   std::for_each(path.begin(), path.end(), func);
+}
+unsigned int buildCamPathVAO(VecPP &path) {
+  // @TODO: Put campath on its own VAO
+  const auto tot_verts = level->raw_data.size() / 3;
+  const auto cam_path_verts = path.size();
+  progOne.setVec3("color", col::red);
+  glEnable(GL_PROGRAM_POINT_SIZE);
+  glDrawArrays(GL_POINTS, tot_verts - cam_path_verts / 3, cam_path_verts / 3);
 }
 
 unsigned int buildVAO(const gxb::level *l) {
