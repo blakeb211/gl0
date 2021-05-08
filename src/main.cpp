@@ -17,6 +17,7 @@ void processInput_playerOnly(GLFWwindow *window, float deltaTime);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
+void updateCamera(const gxb::level *const l, gxb::Camera &cam);
 void init_textures();
 void clearScreen();
 std::vector<unsigned int> buildVAO(const gxb::level *);
@@ -33,7 +34,7 @@ std::unique_ptr<gxb::level> level = nullptr;
 std::vector<glm::vec3> path{};
 
 int main() {
-  gxb::initTypeToStrMap(); // creates str_to_type
+  gxb::initTypeToStrMap();  // creates str_to_type
   FrameRater fr{};
   setLogFile("log.txt");
 
@@ -45,7 +46,7 @@ int main() {
   glfwSetScrollCallback(window, scroll_callback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glEnable(GL_DEPTH_TEST);
-  glfwSwapInterval(1); // vsync
+  glfwSwapInterval(1);  // vsync
   logOpenGLInfo();
 
   // clear screen
@@ -80,16 +81,7 @@ int main() {
     // processInput_camOnly(window, camera, deltaTime);
     // processInput(window, camera, deltaTime);
     processInput_playerOnly(window, deltaTime);
-
-    // make camera follow camera path
-    const auto heroPos = level->objects[0]->pos;
-    glm::vec3 heroFacingDir{};
-    glm::vec3 lookPos{};
-    glm::vec3 newCamPos{glm::vec3{0, 10.0f, +10.0f}};
-
-    camera.Front = heroPos - newCamPos;
-    camera.moveTo(newCamPos);
-    camera.lookAt(lookPos);
+    updateCamera(level.get(), camera);
     progOne.use();
 
     // set transformations
@@ -214,18 +206,16 @@ void processInput_playerOnly(GLFWwindow *window, float deltaTime) {
     pos.z += playerSpeed * deltaTime;
   }
 
-  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-    __noop;
+  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 
-  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    __noop;
+  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
 }
 
 // process all input: move camera only
 // ---------------------------------------------------------------------------------------------------------
 void processInput_camOnly(GLFWwindow *window, gxb::Camera &cam,
                           float deltaTime) {
-  const float cameraSpeed = 0.05f; // adjust accordingly
+  const float cameraSpeed = 0.05f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
@@ -241,17 +231,15 @@ void processInput_camOnly(GLFWwindow *window, gxb::Camera &cam,
   if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
 
-  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-    __noop;
+  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 
-  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    __noop;
+  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
 }
 
 // process all input: move player and camera
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow *window, gxb::Camera &cam, float deltaTime) {
-  const float cameraSpeed = 0.01f; // adjust accordingly
+  const float cameraSpeed = 0.01f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
@@ -278,11 +266,9 @@ void processInput(GLFWwindow *window, gxb::Camera &cam, float deltaTime) {
   cam.Position.x = level->objects[0]->pos.x;
   cam.Position.y = level->objects[0]->pos.y + 5;
   cam.Position.z = level->objects[0]->pos.z + 16;
-  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-    __noop;
+  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 
-  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    __noop;
+  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback
@@ -301,7 +287,8 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos) {
 
   float xoffset = (float)xpos - lastX;
   float yoffset =
-      lastY - (float)ypos; // reversed since y-coordinates go from bottom to top
+      lastY -
+      (float)ypos;  // reversed since y-coordinates go from bottom to top
 
   lastX = (float)xpos;
   lastY = (float)ypos;
@@ -344,6 +331,18 @@ GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
   camera.ProcessMouseScroll((float)yoffset);
+}
+
+void updateCamera(const gxb::level *const l, gxb::Camera &cam) {
+  // make camera follow camera path
+  const auto heroPos = l->objects[0]->pos;
+  glm::vec3 heroFacingDir{};
+  glm::vec3 lookPos{};
+  glm::vec3 newCamPos{glm::vec3{0, 10.0f, +10.0f}};
+
+  cam.Front = heroPos - newCamPos;
+  cam.moveTo(newCamPos);
+  cam.lookAt(lookPos);
 }
 
 std::vector<unsigned int> buildVAO(const gxb::level *l) {
