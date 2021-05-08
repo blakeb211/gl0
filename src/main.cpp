@@ -17,7 +17,11 @@ void processInput_playerOnly(GLFWwindow *window, float deltaTime);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void updateCamera(const gxb::level *const l, gxb::Camera &cam);
+void updateCamera(const gxb::level *const l, gxb::Camera &cam,
+                  glm::vec3 newCamPos);
+
+void calcPathPtPlayerDist(std::vector<gxb::PathPt> &path,
+                          const glm::vec3 heroPos);
 void init_textures();
 void clearScreen();
 std::vector<unsigned int> buildVAO(const gxb::level *);
@@ -31,7 +35,7 @@ gxb::Camera camera{};
 float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
 std::unique_ptr<gxb::level> level = nullptr;
-std::vector<glm::vec3> path{};
+std::vector<gxb::PathPt> path{};
 
 int main() {
   gxb::initTypeToStrMap();  // creates str_to_type
@@ -81,7 +85,10 @@ int main() {
     // processInput_camOnly(window, camera, deltaTime);
     // processInput(window, camera, deltaTime);
     processInput_playerOnly(window, deltaTime);
-    updateCamera(level.get(), camera);
+    updateCamera(level.get(), camera, path[0].pos);
+    if (fr.frame_count % 30 == 0) {
+      calcPathPtPlayerDist(path, level->objects[0]->pos);
+    };
     progOne.use();
 
     // set transformations
@@ -333,16 +340,28 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
   camera.ProcessMouseScroll((float)yoffset);
 }
 
-void updateCamera(const gxb::level *const l, gxb::Camera &cam) {
+// calc distance of each pathPt to the player and sort path by that value
+void calcPathPtPlayerDist(std::vector<gxb::PathPt> &path,
+                          const glm::vec3 heroPos) {
+  using PP = gxb::PathPt;
+  auto func = [heroPos](PP &pp) { pp.dist = glm::distance(pp.pos, heroPos); };
+  for_each(path.begin(), path.end(), func);
+  std::sort(path.begin(), path.end(),
+            [](const PP &pp0, const PP &pp1) { return pp0.dist < pp1.dist; });
+
+  logPrintLn(path[0].dist, path[1].dist, path[2].dist);
+}
+
+void updateCamera(const gxb::level *const l, gxb::Camera &cam,
+                  glm::vec3 newCamPos) {
   // make camera follow camera path
   const auto heroPos = l->objects[0]->pos;
   glm::vec3 heroFacingDir{};
   glm::vec3 lookPos{};
-  glm::vec3 newCamPos{glm::vec3{0, 10.0f, +10.0f}};
-
-  cam.Front = heroPos - newCamPos;
   cam.moveTo(newCamPos);
-  cam.lookAt(lookPos);
+  cam.Front = heroPos - newCamPos;
+
+  // cam.lookAt(lookPos);
 }
 
 std::vector<unsigned int> buildVAO(const gxb::level *l) {
