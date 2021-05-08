@@ -25,11 +25,9 @@ void updateCamera(const gxb::level *const l, gxb::Camera &cam,
 
 void calcPathPtPlayerDist(VecPP &path, const glm::vec3 heroPos);
 void addCamPathToRawData(const VecPP &const path, gxb::level *l);
-void init_textures();
-void clearScreen();
-unsigned int buildVAO(const gxb::level *);
-unsigned int buildCamPathVAO(const VecPP &path);
 
+void clearScreen();
+std::vector<unsigned int> buildVAO(const gxb::level *);
 void logOpenGLInfo();
 GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
                      GLFWframebuffersizefun);
@@ -81,6 +79,14 @@ int main() {
 
   // add camPath points to level raw_data before building VAO
   addCamPathToRawData(path, level.get());
+  const auto tot_floats = level->raw_data.size();
+  const auto cam_path_floats = path.size() * 3;
+  auto pt1x = level->raw_data[tot_floats - cam_path_floats];
+  auto pt1y = level->raw_data[tot_floats - cam_path_floats + 1];
+  auto pt1z = level->raw_data[tot_floats - cam_path_floats + 2];
+
+  logPrintLn("point 1:", pt1x, pt1y, pt1z);
+
   auto VAO = buildVAO(level.get());
 
   glm::mat4 model = glm::mat4(1.0f);
@@ -120,7 +126,7 @@ int main() {
     // render
     // ------
     clearScreen();
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO[0]);
     size_t colorId = 0;
     const size_t numColor = col::list.size();
     for (size_t i = 0; i < level->objects.size(); i++) {
@@ -139,6 +145,15 @@ int main() {
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
                    numVertsCurrModel);
     }
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3{0, 0, 0});
+    progOne.setMat4("model", model);
+    // @TODO: Put campath on its own VAO
+    progOne.setVec3("color", col::red);
+    const auto tot_verts = level->raw_data.size() / 3;
+    const auto cam_path_verts = path.size();
+    glEnable(GL_PROGRAM_POINT_SIZE);
+    glDrawArrays(GL_POINTS, tot_verts - cam_path_verts, cam_path_verts);
 
     glBindVertexArray(0);
     glfwSwapBuffers(window);
@@ -164,46 +179,6 @@ void logOpenGLInfo() {
 void clearScreen() {
   glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
-}
-void init_textures() {
-  unsigned int tex1;
-  glGenTextures(1, &tex1);
-  glBindTexture(GL_TEXTURE_2D, tex1);
-  int width, height, nrChannels;
-  std::string filePath{gxb::texturePath + std::string("wooden_container.jpg")};
-  unsigned char *data =
-      stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
-
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-    logPrintLn("texture loaded ( w:", width, "h:", height, "nchan:", nrChannels,
-               ")");
-  } else {
-    logErr(__FILE__, __LINE__, "failure to load texture data");
-  }
-
-  unsigned int tex2;
-  glGenTextures(1, &tex2);
-  glBindTexture(GL_TEXTURE_2D, tex2);
-
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, tex2);
-  filePath = gxb::texturePath + std::string("awesomeface.png");
-  data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
-
-  if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-                 GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-    logPrintLn("texture loaded ( w:", width, "h:", height, "nchan:", nrChannels,
-               ")");
-  } else {
-    logErr(__FILE__, __LINE__, "failure to load texture data");
-  }
 }
 
 // process all input: move player only
@@ -388,28 +363,20 @@ void addCamPathToRawData(const VecPP &const path, gxb::level *l) {
   };
   std::for_each(path.begin(), path.end(), func);
 }
-unsigned int buildCamPathVAO(VecPP &path) {
-  // @TODO: Put campath on its own VAO
-  const auto tot_verts = level->raw_data.size() / 3;
-  const auto cam_path_verts = path.size();
-  progOne.setVec3("color", col::red);
-  glEnable(GL_PROGRAM_POINT_SIZE);
-  glDrawArrays(GL_POINTS, tot_verts - cam_path_verts / 3, cam_path_verts / 3);
-}
 
-unsigned int buildVAO(const gxb::level *l) {
+std::vector<unsigned int> buildVAO(const gxb::level *l) {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   assert(level != nullptr);
-  unsigned int VAO{};
-  unsigned int VBO{};
+  std::vector<unsigned int> VBO(l->meshes.size(), 0);
+  std::vector<unsigned int> VAO(l->meshes.size(), 0);
 
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
+  glGenVertexArrays(1, &VAO[0]);
+  glGenBuffers(1, &VBO[0]);
   // bind the Vertex Array Object first, then bind and set vertex
   // buffer(s), and then configure vertex attributes(s)
-  glBindVertexArray(VAO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindVertexArray(VAO[0]);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),
                l->raw_data.data(), GL_STATIC_DRAW);
 
