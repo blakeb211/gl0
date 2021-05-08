@@ -8,6 +8,9 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
+#define FREE_MOVE 0
+
+using VecPP = std::vector<gxb::PathPt>;
 
 void framebuf_size_callback(GLFWwindow *window, int width, int height);
 void processInput_camOnly(GLFWwindow *window, gxb::Camera &cam,
@@ -20,8 +23,8 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void updateCamera(const gxb::level *const l, gxb::Camera &cam,
                   glm::vec3 newCamPos);
 
-void calcPathPtPlayerDist(std::vector<gxb::PathPt> &path,
-                          const glm::vec3 heroPos);
+void calcPathPtPlayerDist(VecPP &path, const glm::vec3 heroPos);
+void addCamPathToRawData(const VecPP &const path, gxb::level *l);
 void init_textures();
 void clearScreen();
 std::vector<unsigned int> buildVAO(const gxb::level *);
@@ -46,7 +49,13 @@ int main() {
   const auto &w = gxb::SCR_WIDTH;
   const auto &h = gxb::SCR_HEIGHT;
   GLFWwindow *window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
+
+#if FREE_MOVE
+  glfwSetCursorPosCallback(window, mouse_callback);
+#else
   glfwSetCursorPosCallback(window, mouse_callback_null);
+#endif
+
   glfwSetScrollCallback(window, scroll_callback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glEnable(GL_DEPTH_TEST);
@@ -68,6 +77,8 @@ int main() {
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
                         *gxb::shaderPath("colorFromVertex.fs"));
 
+  // add camPath points to level raw_data before building VAO
+  addCamPathToRawData(path, level.get());
   auto VAO = buildVAO(level.get());
 
   glm::mat4 model = glm::mat4(1.0f);
@@ -82,10 +93,13 @@ int main() {
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-    // processInput_camOnly(window, camera, deltaTime);
-    // processInput(window, camera, deltaTime);
+#if FREE_MOVE
+    processInput_camOnly(window, camera, deltaTime);
+#else
     processInput_playerOnly(window, deltaTime);
     updateCamera(level.get(), camera, path[0].pos);
+#endif
+
     if (fr.frame_count % 30 == 0) {
       calcPathPtPlayerDist(path, level->objects[0]->pos);
     };
@@ -122,6 +136,11 @@ int main() {
       unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
                    numVertsCurrModel);
+      const auto tot_verts = level->raw_data.size() / 3;
+      const auto cam_path_verts = path.size();
+      progOne.setVec3("color", col::red);
+      glEnable(GL_PROGRAM_POINT_SIZE);
+      glDrawArrays(GL_POINTS, tot_verts - cam_path_verts, cam_path_verts);
     }
 
     glBindVertexArray(0);
@@ -364,6 +383,15 @@ void updateCamera(const gxb::level *const l, gxb::Camera &cam,
   // cam.lookAt(lookPos);
 }
 
+void addCamPathToRawData(const VecPP &const path, gxb::level *l) {
+  auto func = [l](const gxb::PathPt pp) {
+    for (int i = 0; i < 3; i++) {
+      l->raw_data.push_back(pp.pos[i]);
+    }
+  };
+  std::for_each(path.begin(), path.end(), func);
+}
+
 std::vector<unsigned int> buildVAO(const gxb::level *l) {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
@@ -374,7 +402,7 @@ std::vector<unsigned int> buildVAO(const gxb::level *l) {
   glGenVertexArrays(1, &VAO[0]);
   glGenBuffers(1, &VBO[0]);
   // bind the Vertex Array Object first, then bind and set vertex
-  // buffer(s), and then configure vertex attributes(s).
+  // buffer(s), and then configure vertex attributes(s)
   glBindVertexArray(VAO[0]);
   glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
   glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),

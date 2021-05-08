@@ -13,6 +13,8 @@ uniform mat4 projection;
 
 void main()  
 {  
+  //next line for drawing camPath using big points
+	gl_PointSize = 10.0;
 	gl_Position = projection * view * model * vec4(aPos, 1.0);  
 	ourColor = color;
 	ourPosition = vec3(gl_Position.x, gl_Position.y, gl_Position.z);
