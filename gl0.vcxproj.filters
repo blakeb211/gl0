@@ -109,9 +109,7 @@
     <Text Include="readme.txt">
       <Filter>Resource Files\text</Filter>
     </Text>
-    <Text Include="levels\test.txt">
-      <Filter>Resource Files\levels</Filter>
-    </Text>
+    <Text Include="levels\log.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\colorFromVertex.fs">
@@ -134,5 +132,20 @@
     <Object Include="models\cube.obj">
       <Filter>Resource Files\models</Filter>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="levels\test.ppm" />
+    <Resource Include="levels\test4.xcf" />
+    <Resource Include="levels\test.cmp" />
+    <Resource Include="levels\test.txt">
+      <Filter>Resource Files\levels</Filter>
+    </Resource>
+    <Resource Include="levels\test.xcf" />
+    <Resource Include="levels\test2.cmp" />
+    <Resource Include="levels\test2.ppm" />
+    <Resource Include="levels\test2.xcf" />
+    <Resource Include="levels\test3.ppm" />
+    <Resource Include="levels\test3.xcf" />
+    <Resource Include="levels\test4.ppm" />
   </ItemGroup>
 </Project>
