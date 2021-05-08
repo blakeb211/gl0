@@ -8,7 +8,7 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
-#define FREE_MOVE 1
+#define FREE_MOVE 0
 
 using VecPP = std::vector<gxb::PathPt>;
 
