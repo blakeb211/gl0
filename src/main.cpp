@@ -27,7 +27,9 @@ void calcPathPtPlayerDist(VecPP &path, const glm::vec3 heroPos);
 void addCamPathToRawData(const VecPP &const path, gxb::level *l);
 void init_textures();
 void clearScreen();
-std::vector<unsigned int> buildVAO(const gxb::level *);
+unsigned int buildVAO(const gxb::level *);
+unsigned int buildCamPathVAO(const VecPP &path);
+
 void logOpenGLInfo();
 GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
                      GLFWframebuffersizefun);
@@ -118,7 +120,7 @@ int main() {
     // render
     // ------
     clearScreen();
-    glBindVertexArray(VAO[0]);
+    glBindVertexArray(VAO);
     size_t colorId = 0;
     const size_t numColor = col::list.size();
     for (size_t i = 0; i < level->objects.size(); i++) {
@@ -141,7 +143,8 @@ int main() {
       const auto cam_path_verts = path.size();
       progOne.setVec3("color", col::red);
       glEnable(GL_PROGRAM_POINT_SIZE);
-      glDrawArrays(GL_POINTS, tot_verts - cam_path_verts, cam_path_verts);
+      glDrawArrays(GL_POINTS, tot_verts - cam_path_verts / 3,
+                   cam_path_verts / 3);
     }
 
     glBindVertexArray(0);
@@ -393,19 +396,19 @@ void addCamPathToRawData(const VecPP &const path, gxb::level *l) {
   std::for_each(path.begin(), path.end(), func);
 }
 
-std::vector<unsigned int> buildVAO(const gxb::level *l) {
+unsigned int buildVAO(const gxb::level *l) {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   assert(level != nullptr);
-  std::vector<unsigned int> VBO(l->meshes.size(), 0);
-  std::vector<unsigned int> VAO(l->meshes.size(), 0);
+  unsigned int VAO{};
+  unsigned int VBO{};
 
-  glGenVertexArrays(1, &VAO[0]);
-  glGenBuffers(1, &VBO[0]);
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
   // bind the Vertex Array Object first, then bind and set vertex
   // buffer(s), and then configure vertex attributes(s)
-  glBindVertexArray(VAO[0]);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+  glBindVertexArray(VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),
                l->raw_data.data(), GL_STATIC_DRAW);
 
