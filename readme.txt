@@ -15,11 +15,10 @@ FILETYPES:
 
 camera on a rail system
 
-make 4 ppm files - done
-
 game
 	read a level and its campath file - done
 	camera follows campath
+	camera should follow campath smoothly
 
 
 campath editor
@@ -74,9 +73,7 @@ pick style guide and stick to it
 
 lay out a simple level
 
-make level editor
-
-wall creation
+make level generator
 
 octree for collisions
 
@@ -96,5 +93,3 @@ world
     objects hold a reference to world but world does not hold a reference to objects	
 
 game modes
-
-create a complete build.bat or cmake file to build this project

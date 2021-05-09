@@ -8,10 +8,16 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
-#define FREE_MOVE 0
+constexpr auto FREE_MOVE = 1;
 
+// -------------------------------------------
+// TYPEDEFS
+// -------------------------------------------
 using VecPP = std::vector<gxb::PathPt>;
 
+// -------------------------------------------
+// FORWARD DECLARATIONS
+// -------------------------------------------
 void framebuf_size_callback(GLFWwindow *window, int width, int height);
 void processInput_camOnly(GLFWwindow *window, gxb::Camera &cam,
                           float deltaTime);
@@ -24,16 +30,18 @@ void updateCamera(const gxb::level *const l, gxb::Camera &cam,
                   glm::vec3 newCamPos);
 
 void calcPathPtPlayerDist(VecPP &path, const glm::vec3 heroPos);
-void addCamPathToRawData(const VecPP &const path, gxb::level *l);
+void addCamPathToRawData(const VecPP &path, gxb::level *l);
 
 void clearScreen();
-std::vector<unsigned int> buildVAO(const gxb::level *);
+unsigned int buildVAO(const gxb::level *);
 void logOpenGLInfo();
 GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
                      GLFWframebuffersizefun);
 
+// -------------------------------------------
 // GLOBALS
 // -------------------------------------------
+// @TODO: wrap in game state object?
 gxb::Camera camera{};
 float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
@@ -48,19 +56,7 @@ int main() {
   // glfw: initialize and setup callbacks
   const auto &w = gxb::SCR_WIDTH;
   const auto &h = gxb::SCR_HEIGHT;
-  GLFWwindow *window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
-
-#if FREE_MOVE
-  glfwSetCursorPosCallback(window, mouse_callback);
-#else
-  glfwSetCursorPosCallback(window, mouse_callback_null);
-#endif
-
-  glfwSetScrollCallback(window, scroll_callback);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-  glEnable(GL_DEPTH_TEST);
-  glfwSwapInterval(1);  // vsync
-  logOpenGLInfo();
+  GLFWwindow *window = initGLFW(w, h, "Level Runner", framebuf_size_callback);
 
   // clear screen
   clearScreen();
@@ -79,13 +75,6 @@ int main() {
 
   // add camPath points to level raw_data before building VAO
   addCamPathToRawData(path, level.get());
-  const auto tot_floats = level->raw_data.size();
-  const auto cam_path_floats = path.size() * 3;
-  auto pt1x = level->raw_data[tot_floats - cam_path_floats];
-  auto pt1y = level->raw_data[tot_floats - cam_path_floats + 1];
-  auto pt1z = level->raw_data[tot_floats - cam_path_floats + 2];
-
-  logPrintLn("point 1:", pt1x, pt1y, pt1z);
 
   auto VAO = buildVAO(level.get());
 
@@ -98,7 +87,6 @@ int main() {
   while (!glfwWindowShouldClose(window)) {
     fr.UpdateTimes();
     float deltaTime = fr.lastTimeInMs();
-
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 #if FREE_MOVE
@@ -126,7 +114,7 @@ int main() {
     // render
     // ------
     clearScreen();
-    glBindVertexArray(VAO[0]);
+    glBindVertexArray(VAO);
     size_t colorId = 0;
     const size_t numColor = col::list.size();
     for (size_t i = 0; i < level->objects.size(); i++) {
@@ -145,40 +133,28 @@ int main() {
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
                    numVertsCurrModel);
     }
+
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3{0, 0, 0});
     progOne.setMat4("model", model);
-    // @TODO: Put campath on its own VAO
     progOne.setVec3("color", col::red);
+
     const auto tot_verts = level->raw_data.size() / 3;
     const auto cam_path_verts = path.size();
-    glEnable(GL_PROGRAM_POINT_SIZE);
-    glDrawArrays(GL_POINTS, tot_verts - cam_path_verts, cam_path_verts);
+    glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts),
+                 (GLint)cam_path_verts);
 
     glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();
     fr.printFrameRateIfFreqHasBeenReached();
-  }
+  }  // end main loop
 
   // glfw: terminate, clearing all previously allocated GLFW resources.
   // ------------------------------------------------------------------
   glfwTerminate();
   closeLog();
   return 0;
-}
-
-void logOpenGLInfo() {
-  // Query GL
-  int glMajVers, glMinVers;
-  glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
-  glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
-  logPrintLn("OpenGL Version:", glMajVers, ".", glMinVers);
-}
-
-void clearScreen() {
-  glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
 }
 
 // process all input: move player only
@@ -213,7 +189,7 @@ void processInput_playerOnly(GLFWwindow *window, float deltaTime) {
 // ---------------------------------------------------------------------------------------------------------
 void processInput_camOnly(GLFWwindow *window, gxb::Camera &cam,
                           float deltaTime) {
-  const float cameraSpeed = 0.05f;  // adjust accordingly
+  const float cameraSpeed = 0.09f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
@@ -298,6 +274,18 @@ void mouse_callback_null(GLFWwindow *window, double xpos, double ypos) {
   __noop;
 }
 
+void logOpenGLInfo() {
+  int glMajVers, glMinVers;
+  glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
+  glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
+  logPrintLn("OpenGL Version:", glMajVers, ".", glMinVers);
+}
+
+void clearScreen() {
+  glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+}
+
 GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
                      GLFWframebuffersizefun fun) {
   glfwInit();
@@ -322,6 +310,20 @@ GLFWwindow *initGLFW(unsigned int w, unsigned int h, const char *title,
     logPrintLn("Failed to initialize GLAD");
     return nullptr;
   }
+
+#if FREE_MOVE
+  glfwSetCursorPosCallback(window, mouse_callback);
+#else
+  glfwSetCursorPosCallback(window, mouse_callback_null);
+#endif
+
+  glfwSetScrollCallback(window, scroll_callback);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_PROGRAM_POINT_SIZE);
+  glfwSwapInterval(1);  // vsync
+  logOpenGLInfo();
+
   return window;
 }
 
@@ -351,11 +353,9 @@ void updateCamera(const gxb::level *const l, gxb::Camera &cam,
   glm::vec3 lookPos{};
   cam.moveTo(newCamPos);
   cam.Front = heroPos - newCamPos;
-
-  // cam.lookAt(lookPos);
 }
 
-void addCamPathToRawData(const VecPP &const path, gxb::level *l) {
+void addCamPathToRawData(const VecPP &path, gxb::level *l) {
   auto func = [l](const gxb::PathPt pp) {
     for (int i = 0; i < 3; i++) {
       l->raw_data.push_back(pp.pos[i]);
@@ -364,38 +364,26 @@ void addCamPathToRawData(const VecPP &const path, gxb::level *l) {
   std::for_each(path.begin(), path.end(), func);
 }
 
-std::vector<unsigned int> buildVAO(const gxb::level *l) {
+unsigned int buildVAO(const gxb::level *l) {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   assert(level != nullptr);
-  std::vector<unsigned int> VBO(l->meshes.size(), 0);
-  std::vector<unsigned int> VAO(l->meshes.size(), 0);
+  unsigned int VBO{};
+  unsigned int VAO{};
 
-  glGenVertexArrays(1, &VAO[0]);
-  glGenBuffers(1, &VBO[0]);
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
   // bind the Vertex Array Object first, then bind and set vertex
   // buffer(s), and then configure vertex attributes(s)
-  glBindVertexArray(VAO[0]);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+  glBindVertexArray(VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),
                l->raw_data.data(), GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
   glEnableVertexAttribArray(0);
 
-  // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-  //		      (void*)(3 * sizeof(float)));
-  // glEnableVertexAttribArray(1);
-  // note that this is allowed, the call to glVertexAttribPointer
-  // registered VBO as the vertex attribute's bound vertex buffer object
-  // so afterwards we can safely unbind
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  // You can unbind the VAO afterwards so other VAO calls won't
-  // accidentally modify this VAO, but this rarely happens. Modifying
-  // other VAOs requires a call to glBindVertexArray anyways so we
-  // generally don't unbind VAOs (nor VBOs) when it's not directly
-  // necessary.
   glBindVertexArray(0);
   return VAO;
 }
