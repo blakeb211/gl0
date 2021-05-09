@@ -353,19 +353,30 @@ void updateCamera(const gxb::level* const l, gxb::Camera& cam,
                   const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = glm::vec3{0.f, 0.f, -1.f};
-  size_t pathIdx = 0;
-  float angle = 0.0f;
-  for (auto& pp : path) {
-    auto cam2hero = glm::vec3{glm::normalize(heroPos - pp.pos)};
-    angle = glm::acos(glm::dot(negZvec, cam2hero));
-    if (glm::degrees(angle) <= 55.0f) break;
-    pathIdx++;
-  }
-  // set camera to new position
 
+  float angle = 0.0f;
+  const auto top10 = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  std::vector<std::pair<float, int>> top_10_angle_idx(10);
+  for (auto& i : top10) {
+    auto cam2hero = glm::vec3{glm::normalize(heroPos - path[i].pos)};
+    angle = glm::acos(glm::dot(negZvec, cam2hero));
+    top_10_angle_idx[i].first = angle;
+    top_10_angle_idx[i].second = i;
+  }
+
+  using pair = std::pair<float, int>;
+  // sort top 10 path pts to give lowest angle with negZ
+  std::sort(
+      top_10_angle_idx.begin(), top_10_angle_idx.end(),
+      [](const pair& pp0, const pair& pp1) { return pp0.first < pp1.first; });
+  // set camera to new position
+  size_t pathIdx = top_10_angle_idx[0].second;
   const auto newCamPos = path[pathIdx].pos;
   cam.moveTo(newCamPos);
   cam.Front = heroPos - newCamPos;  // look at hero
+
+  auto cam2hero = glm::vec3{glm::normalize(cam.Front)};
+  angle = glm::acos(glm::dot(negZvec, cam2hero));
 
   // print out angle between camera->hero and the negZ axis
 
