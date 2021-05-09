@@ -341,8 +341,6 @@ void calcPathPtPlayerDist(std::vector<gxb::PathPt> &path,
   for_each(path.begin(), path.end(), func);
   std::sort(path.begin(), path.end(),
             [](const PP &pp0, const PP &pp1) { return pp0.dist < pp1.dist; });
-
-  logPrintLn(path[0].dist, path[1].dist, path[2].dist);
 }
 
 void updateCamera(const gxb::level *const l, gxb::Camera &cam,
