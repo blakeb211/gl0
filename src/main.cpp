@@ -75,7 +75,7 @@ int main() {
   auto pt1y = level->raw_data[tot_floats - cam_path_floats + 1];
   auto pt1z = level->raw_data[tot_floats - cam_path_floats + 2];
 
-  logPrintLn("point 1:", pt1x, pt1y, pt1z);
+  logPrintLn("cam path point 0:", pt1x, pt1y, pt1z);
 
   auto VAO = buildVAO(level.get());
 
