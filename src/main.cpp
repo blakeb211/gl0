@@ -27,7 +27,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void updateCamera(const gxb::level* const l, gxb::Camera& cam,
-                  glm::vec3 newCamPos);
+                  const VecPP& newCamPos);
 
 void calcPathPtPlayerDist(VecPP& path, const glm::vec3 heroPos);
 void addCamPathToRawData(const VecPP& path, gxb::level* l);
@@ -95,7 +95,7 @@ int main() {
     processInput_camOnly(window, camera, deltaTime);
 #else
     processInput_playerOnly(window, deltaTime);
-    updateCamera(level.get(), camera, path[0].pos);
+    updateCamera(level.get(), camera, path);
 #endif
 
     if (fr.frame_count % 30 == 0) {
@@ -350,18 +350,25 @@ void calcPathPtPlayerDist(std::vector<gxb::PathPt>& path,
 }
 
 void updateCamera(const gxb::level* const l, gxb::Camera& cam,
-                  glm::vec3 newCamPos) {
-  // make camera follow camera path
+                  const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
-  glm::vec3 heroFacingDir{};
-  glm::vec3 lookPos{};
+  const auto negZvec = glm::vec3{0.f, 0.f, -1.f};
+  size_t pathIdx = 0;
+  float angle = 0.0f;
+  for (auto& pp : path) {
+    auto cam2hero = glm::vec3{glm::normalize(heroPos - pp.pos)};
+    angle = glm::acos(glm::dot(negZvec, cam2hero));
+    if (glm::degrees(angle) <= 55.0f) break;
+    pathIdx++;
+  }
+  // set camera to new position
+
+  const auto newCamPos = path[pathIdx].pos;
   cam.moveTo(newCamPos);
-  cam.Front = heroPos - newCamPos;
+  cam.Front = heroPos - newCamPos;  // look at hero
 
   // print out angle between camera->hero and the negZ axis
-  auto negZvec = glm::vec3{0.f, 0.f, -1.f};
-  auto cam2hero = glm::vec3{glm::normalize(cam.Front)};
-  auto angle = glm::acos(glm::dot(negZvec, cam2hero));
+
   logPrintLn("angle bw cam2hero and negZ", glm::degrees(angle));
 }
 
