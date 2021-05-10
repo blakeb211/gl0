@@ -21,7 +21,6 @@ using VecPP = std::vector<gxb::PathPt>;
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
                           float deltaTime);
-void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime);
 void processInput_playerOnly(GLFWwindow* window, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
@@ -47,7 +46,7 @@ bool firstMouse = true;
 std::unique_ptr<gxb::level> level = nullptr;
 std::vector<gxb::PathPt> path{};
 glm::vec3 newCamGoalPos{};
-constexpr auto CAM_MOVE_SPEED = 0.004f;
+constexpr auto CAM_MOVE_SPEED = 0.001f;
 
 int main() {
   gxb::initTypeToStrMap();  // creates str_to_type
@@ -230,41 +229,6 @@ void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
   if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
 }
 
-// process all input: move player and camera
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime) {
-  const float cameraSpeed = 0.01f;  // adjust accordingly
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-
-  if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    level->objects[0]->pos.x += cameraSpeed * deltaTime;
-    cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, deltaTime);
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-    level->objects[0]->pos.x -= cameraSpeed * deltaTime;
-    cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, deltaTime);
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    level->objects[0]->pos.z -= cameraSpeed * deltaTime;
-    cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, deltaTime);
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-    level->objects[0]->pos.z += cameraSpeed * deltaTime;
-    cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
-  }
-
-  cam.Position.x = level->objects[0]->pos.x;
-  cam.Position.y = level->objects[0]->pos.y + 5;
-  cam.Position.z = level->objects[0]->pos.z + 16;
-  if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
-
-  if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
-}
-
 // glfw: whenever the window size changed (by OS or user resize) this callback
 // function executes
 // ---------------------------------------------------------------------------------------------
@@ -292,6 +256,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 void mouse_callback_null(GLFWwindow* window, double xpos, double ypos) {
   __noop;
+  return;
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
@@ -345,8 +310,7 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
 }
 
 // calc distance of each pathPt to the player and sort path by that value
-void calcPathPtPlayerDist(std::vector<gxb::PathPt>& path,
-                          const glm::vec3 heroPos) {
+void calcPathPtPlayerDist(VecPP& path, const glm::vec3 heroPos) {
   using PP = gxb::PathPt;
   auto func = [heroPos](PP& pp) { pp.dist = glm::distance(pp.pos, heroPos); };
   for_each(path.begin(), path.end(), func);
