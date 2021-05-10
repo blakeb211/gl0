@@ -26,8 +26,8 @@ void processInput_playerOnly(GLFWwindow* window, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void updateCamera(const gxb::level* const l, gxb::Camera& cam,
-                  const VecPP& newCamPos);
+glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
+                             const VecPP& newCamPos);
 
 void calcPathPtPlayerDist(VecPP& path, const glm::vec3 heroPos);
 void addCamPathToRawData(const VecPP& path, gxb::level* l);
@@ -83,6 +83,8 @@ int main() {
   glm::mat4 view = glm::mat4(1.0f);
   glm::mat4 projection = glm::mat4(1.0f);
 
+  glm::vec3 newCamGoalPos{};
+  constexpr auto CAM_MOVE_SPEED = 0.004f;
   // Game loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
@@ -95,7 +97,13 @@ int main() {
     processInput_camOnly(window, camera, deltaTime);
 #else
     processInput_playerOnly(window, deltaTime);
-    updateCamera(level.get(), camera, path);
+    newCamGoalPos = selectNextCamPoint(level.get(), camera, path);
+    // smoothly move cam towards goal pos
+    if (camera.Position != newCamGoalPos) {
+      const auto camDp = newCamGoalPos - camera.Position;
+      camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
+      camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
+    }
 #endif
 
     if (fr.frame_count % 30 == 0) {
@@ -331,7 +339,6 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   glfwSwapInterval(1);  // vsync
   logOpenGLInfo();
 
-  // clear screen
   clearScreen();
 
   return window;
@@ -349,8 +356,8 @@ void calcPathPtPlayerDist(std::vector<gxb::PathPt>& path,
   // logPrintLn(path[0].dist, path[1].dist, path[2].dist);
 }
 
-void updateCamera(const gxb::level* const l, gxb::Camera& cam,
-                  const VecPP& path) {
+glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
+                             const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = glm::vec3{0.f, 0.f, -1.f};
 
@@ -372,15 +379,7 @@ void updateCamera(const gxb::level* const l, gxb::Camera& cam,
   // set camera to new position
   size_t pathIdx = top_10_angle_idx[0].second;
   const auto newCamPos = path[pathIdx].pos;
-  cam.moveTo(newCamPos);
-  cam.Front = heroPos - newCamPos;  // look at hero
-
-  auto cam2hero = glm::vec3{glm::normalize(cam.Front)};
-  angle = glm::acos(glm::dot(negZvec, cam2hero));
-
-  // print out angle between camera->hero and the negZ axis
-
-  logPrintLn("angle bw cam2hero and negZ", glm::degrees(angle));
+  return newCamPos;
 }
 
 void addCamPathToRawData(const VecPP& path, gxb::level* l) {
