@@ -46,6 +46,8 @@ float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
 std::unique_ptr<gxb::level> level = nullptr;
 std::vector<gxb::PathPt> path{};
+glm::vec3 newCamGoalPos{};
+constexpr auto CAM_MOVE_SPEED = 0.004f;
 
 int main() {
   gxb::initTypeToStrMap();  // creates str_to_type
@@ -83,8 +85,6 @@ int main() {
   glm::mat4 view = glm::mat4(1.0f);
   glm::mat4 projection = glm::mat4(1.0f);
 
-  glm::vec3 newCamGoalPos{};
-  constexpr auto CAM_MOVE_SPEED = 0.004f;
   // Game loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
