@@ -6,11 +6,9 @@ OpenGL Version: 3        . 3
  plane2           8        8        12       16713563760156879365 
  objects created: 36       
  meshes loaded from disk: 3        
- 10       points loaded from test .cmp 
+ 15       points loaded from test .cmp 
  CamPath file for  test  loaded 
- point 1: 9.000    9.000    -1.000   
- 11.539   12.172   12.968   
- 10.157   10.321   10.898   
- 10.146   10.496   10.605   
- 10.250   10.378   11.594   
+ cam path point 0: 0.000    6.000    10.000   
+ avg framerate: 59.259   
+ avg framerate: 61.881   
  

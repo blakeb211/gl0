@@ -239,6 +239,7 @@ std::vector<PathPt> load_campath(std::string levelName) {
   while (pathData.good()) {
     float x{}, y{}, z{};
     pathData >> x >> y >> z;
+	if (pathData.good())
     pts.push_back(PathPt{vec3{x, y, -z}, 0.0f});
   }
   logPrintLn(pts.size(), "points loaded from", levelName, ".cmp");

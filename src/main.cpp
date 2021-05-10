@@ -44,7 +44,7 @@ gxb::Camera camera{};
 float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
 std::unique_ptr<gxb::level> level = nullptr;
-std::vector<gxb::PathPt> path{};
+std::vector<gxb::PathPt> path;
 glm::vec3 newCamGoalPos{};
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
@@ -61,7 +61,7 @@ int main() {
 
   auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
   level = futureLevelPtr.get();
-
+  
   auto futureCamPts = async(std::launch::async, gxb::load_campath, "test");
   path = futureCamPts.get();
 
@@ -69,6 +69,9 @@ int main() {
                         *gxb::shaderPath("colorFromVertex.fs"));
 
   // add camPath points to level raw_data before building VAO
+  for (auto &i : path) {
+	std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
+  }
   addCamPathToRawData(path, level.get());
   const auto tot_floats = level->raw_data.size();
   const auto cam_path_floats = path.size() * 3;
@@ -325,12 +328,11 @@ glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = glm::vec3{0.f, 0.f, -1.f};
 
-  float angle = 0.0f;
   const auto top10 = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   std::vector<std::pair<float, int>> top_10_angle_idx(10);
   for (auto& i : top10) {
     auto cam2hero = glm::vec3{glm::normalize(heroPos - path[i].pos)};
-    angle = glm::acos(glm::dot(negZvec, cam2hero));
+    auto angle = glm::acos(glm::dot(negZvec, cam2hero));
     top_10_angle_idx[i].first = angle;
     top_10_angle_idx[i].second = i;
   }
