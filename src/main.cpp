@@ -342,7 +342,7 @@ glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
 		return path[i].pos;	
 	}
   }
-  return glm::vec3{};
+  return glm::vec3{}; // if no valid campath found, cam goes to 0,0,0
 }
 
 void addCamPathToRawData(const VecPP& path, gxb::level* l) {
