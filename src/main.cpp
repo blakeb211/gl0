@@ -28,7 +28,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
                              const VecPP& newCamPos);
 
-void calcPathPtPlayerDist(VecPP& path, const glm::vec3 heroPos);
 void addCamPathToRawData(const VecPP& path, gxb::level* l);
 
 void clearScreen();
@@ -108,9 +107,6 @@ int main() {
     }
 #endif
 
-    if (fr.frame_count % 30 == 0) {
-      calcPathPtPlayerDist(path, level->objects[0]->pos);
-    };
     progOne.use();
 
     // set transformations
@@ -312,40 +308,41 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   return window;
 }
 
-// calc distance of each pathPt to the player and sort path by that value
-void calcPathPtPlayerDist(VecPP& path, const glm::vec3 heroPos) {
-  using PP = gxb::PathPt;
-  auto func = [heroPos](PP& pp) { pp.dist = glm::distance(pp.pos, heroPos); };
-  for_each(path.begin(), path.end(), func);
-  std::sort(path.begin(), path.end(),
-            [](const PP& pp0, const PP& pp1) { return pp0.dist < pp1.dist; });
-
-  // logPrintLn(path[0].dist, path[1].dist, path[2].dist);
-}
-
 glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
                              const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = glm::vec3{0.f, 0.f, -1.f};
 
-  const auto top10 = std::vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  std::vector<std::pair<float, int>> top_10_angle_idx(10);
-  for (auto& i : top10) {
-    auto cam2hero = glm::vec3{glm::normalize(heroPos - path[i].pos)};
-    auto angle = glm::acos(glm::dot(negZvec, cam2hero));
-    top_10_angle_idx[i].first = angle;
-    top_10_angle_idx[i].second = i;
+  size_t path_sz = path.size();
+  std::vector<std::pair<float,float>> dist_ang(path_sz);
+
+  glm::vec3 pathPos{}, cam2hero{};
+  float dist{}, angle{};
+  
+  for (int i = 0; i < path_sz; i++ ) {
+	pathPos = path[i].pos;
+    cam2hero = glm::vec3{glm::normalize(heroPos - pathPos)};
+	dist = glm::distance(heroPos, path[i].pos);
+    angle = glm::acos(glm::dot(negZvec, cam2hero));
+	dist_ang[i].first = dist;
+	dist_ang[i].second = angle;
   }
 
-  using pair = std::pair<float, int>;
-  // sort top 10 path pts to give lowest angle with negZ
-  std::sort(
-      top_10_angle_idx.begin(), top_10_angle_idx.end(),
-      [](const pair& pp0, const pair& pp1) { return pp0.first < pp1.first; });
+  // find first pathPt that has distance < 20 && angle < 40
+  using pair = std::pair<float, float>;
   // set camera to new position
-  size_t pathIdx = top_10_angle_idx[0].second;
-  const auto newCamPos = path[pathIdx].pos;
-  return newCamPos;
+  constexpr auto distCutoff = 30;
+  constexpr auto angCutoff = 20;
+
+  auto check = [distCutoff, angCutoff](const pair & dap) { 
+	  return (dap.first < distCutoff && dap.second < angCutoff); };
+
+  for (int i = 0; i < path_sz; i++) {
+	if (check(dist_ang[i])) {
+		return path[i].pos;	
+	}
+  }
+  return glm::vec3{};
 }
 
 void addCamPathToRawData(const VecPP& path, gxb::level* l) {

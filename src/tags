@@ -4,11 +4,15 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.7	//
+CAM_MOVE_SPEED	.\main.cpp	/^constexpr auto CAM_MOVE_SPEED = 0.001f;$/;"	v
+FREE_MOVE	.\main.cpp	11;"	d	file:
 STB_IMAGE_IMPLEMENTATION	.\stb_image.cpp	1;"	d	file:
 _CRT_SECURE_NO_WARNINGS	.\log.cpp	1;"	d	file:
 _CRT_SECURE_NO_WARNINGS	.\slurp.cpp	1;"	d	file:
+addCamPathToRawData	.\main.cpp	/^void addCamPathToRawData(const VecPP& path, gxb::level* l) {$/;"	f
 buf	.\log.cpp	/^array<char, BUFFER_LEN> buf;$/;"	v
-buildVAO	.\main.cpp	/^std::vector<unsigned int> buildVAO(const gxb::level* l) {$/;"	f
+buildVAO	.\main.cpp	/^unsigned int buildVAO(const gxb::level* l) {$/;"	f
+calcPathPtPlayerDist	.\main.cpp	/^void calcPathPtPlayerDist(VecPP& path, const glm::vec3 heroPos) {$/;"	f
 checkFileExist	.\slurp.cpp	/^bool checkFileExist(const string path, const string fname, const string ext)$/;"	f	namespace:slurp
 clearScreen	.\main.cpp	/^void clearScreen() {$/;"	f
 closeLog	.\log.cpp	/^bool closeLog() {$/;"	f
@@ -17,8 +21,7 @@ fptr	.\log.cpp	/^static FILE *fptr;$/;"	v	file:
 framebuf_size_callback	.\main.cpp	/^void framebuf_size_callback(GLFWwindow* window, int width, int height) {$/;"	f
 get_file_contents	.\slurp.cpp	/^stringstream get_file_contents(const char* filename)$/;"	f	namespace:slurp
 get_file_contents	.\slurp.cpp	/^stringstream get_file_contents(std::string filename)$/;"	f	namespace:slurp
-initGLFW	.\main.cpp	/^GLFWwindow* initGLFW(unsigned int w,$/;"	f
-init_textures	.\main.cpp	/^void init_textures() {$/;"	f
+initGLFW	.\main.cpp	/^GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,$/;"	f
 lastX	.\main.cpp	/^float lastX = gxb::SCR_WIDTH \/ 2, lastY = gxb::SCR_HEIGHT \/ 2;$/;"	v
 lastY	.\main.cpp	/^float lastX = gxb::SCR_WIDTH \/ 2, lastY = gxb::SCR_HEIGHT \/ 2;$/;"	v
 level	.\main.cpp	/^std::unique_ptr<gxb::level> level = nullptr;$/;"	v
@@ -27,9 +30,12 @@ logOpenGLInfo	.\main.cpp	/^void logOpenGLInfo() {$/;"	f
 logPrintLn	.\log.cpp	/^void logPrintLn(const initializer_list<any> &il) {$/;"	f
 main	.\main.cpp	/^int main() {$/;"	f
 mouse_callback	.\main.cpp	/^void mouse_callback(GLFWwindow* window, double xpos, double ypos) {$/;"	f
-processInput	.\main.cpp	/^void processInput(GLFWwindow* window, gxb::Camera& cam, float deltaTime) {$/;"	f
-processInput_camOnly	.\main.cpp	/^void processInput_camOnly(GLFWwindow* window,$/;"	f
+mouse_callback_null	.\main.cpp	/^void mouse_callback_null(GLFWwindow* window, double xpos, double ypos) {$/;"	f
+path	.\main.cpp	/^std::vector<gxb::PathPt> path;$/;"	v
+processInput_camOnly	.\main.cpp	/^void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,$/;"	f
+processInput_playerOnly	.\main.cpp	/^void processInput_playerOnly(GLFWwindow* window, float deltaTime) {$/;"	f
 scroll_callback	.\main.cpp	/^void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {$/;"	f
+selectNextCamPoint	.\main.cpp	/^glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,$/;"	f
 setLogFile	.\log.cpp	/^bool setLogFile(std::string fname) {$/;"	f
 slurp	.\slurp.cpp	/^namespace slurp {$/;"	n	file:
 write_to_screen_and_disk	.\log.cpp	/^template <class T> void write_to_screen_and_disk(const string fmt, any val) {$/;"	f
