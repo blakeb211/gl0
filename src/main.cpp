@@ -8,7 +8,12 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
+
+// -------------------------------------------
+// DEFINES 
+// -------------------------------------------
 #define FREE_MOVE 0
+#define DRAW_CAM_PATH 0
 
 // -------------------------------------------
 // TYPEDEFS
@@ -35,7 +40,7 @@ unsigned int buildVAO(const gxb::level*);
 void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
                      GLFWframebuffersizefun);
-
+void camGoalSeek(float deltaTime);
 // -------------------------------------------
 // GLOBALS
 // -------------------------------------------
@@ -44,7 +49,6 @@ float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
 std::unique_ptr<gxb::level> level = nullptr;
 std::vector<gxb::PathPt> path;
-glm::vec3 newCamGoalPos{};
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
 int main() {
@@ -98,13 +102,7 @@ int main() {
     processInput_camOnly(window, camera, deltaTime);
 #else
     processInput_playerOnly(window, deltaTime);
-    newCamGoalPos = selectNextCamPoint(level.get(), camera, path);
-    // smoothly move cam towards goal pos
-    if (camera.Position != newCamGoalPos) {
-      const auto camDp = newCamGoalPos - camera.Position;
-      camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
-      camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
-    }
+	camGoalSeek(deltaTime);
 #endif
 
     progOne.use();
@@ -141,6 +139,8 @@ int main() {
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
                    numVertsCurrModel);
     }
+
+	#if DRAW_CAM_PATH 
     // Draw CamPath
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3{0, 0, 0});
@@ -150,7 +150,7 @@ int main() {
     const auto cam_path_verts = path.size();
     glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts),
                  (GLint)cam_path_verts);
-
+	#endif
     glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -373,19 +373,19 @@ unsigned int buildVAO(const gxb::level* l) {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
 
-  // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-  //		      (void*)(3 * sizeof(float)));
-  // glEnableVertexAttribArray(1);
-  // note that this is allowed, the call to glVertexAttribPointer
-  // registered VBO as the vertex attribute's bound vertex buffer object
-  // so afterwards we can safely unbind
+  // an unbind the VBO
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // You can unbind the VAO afterwards so other VAO calls won't
-  // accidentally modify this VAO, but this rarely happens. Modifying
-  // other VAOs requires a call to glBindVertexArray anyways so we
-  // generally don't unbind VAOs (nor VBOs) when it's not directly
-  // necessary.
   glBindVertexArray(0);
   return VAO;
+}
+
+void camGoalSeek(float deltaTime) {
+    auto newCamGoalPos = selectNextCamPoint(level.get(), camera, path);
+    // smoothly move cam towards goal pos
+    if (camera.Position != newCamGoalPos) {
+      const auto camDp = newCamGoalPos - camera.Position;
+      camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
+      camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
+    }
 }
