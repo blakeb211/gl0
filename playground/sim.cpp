@@ -33,23 +33,45 @@ class Example : public olc::PixelGameEngine {
 	// create projection
 	auto points_sz = points.size();
 	for (int i = 0; i < points_sz; i++) {
-		const auto & pt = glm::vec3(0,0,0);
+		auto pt = points[i];
+		pt.z += 10.0f;
 		model = glm::mat4(1.0f);
-		model = glm::translate(model, points[i]);
+		model = glm::rotate(model, fElapsedTime * 0.4f, glm::vec3(1.0,1.0,1.0));
 	    auto tmp_v4 = projection * view * model * v4(pt.x, pt.y, pt.z, 1.0);
 		projected_points[i].x = tmp_v4.x;
 		projected_points[i].y = tmp_v4.y;
+		// shift and scale
+		projected_points[i].x *= 25.0f;
+		projected_points[i].y *= 25.0f;
+		projected_points[i].x += g_WIDTH / 3.0f;
+		projected_points[i].y += g_HEIGHT / 3.0f;
 	}
+
 	// Called once per frame, draws random coloured pixels
 	for (int i = 0; i < points_sz; i++) {
 	const auto & pt = projected_points[i];
 	Draw(pt.x, pt.y,
-		     olc::RED);
+		     olc::BLUE);
 	}
 	return true;
     }
     /* GAME VARS */
-    vector<v3> points{{0, 1, -1}, {0, 2, -3}, {0, 3, -5}, {0,4, 7}};
+    vector<v3> points{
+
+{-1,-1,1}, {1,-1,1}, {1,1,1},
+ {-1,-1,1}, {1,1,1}, {-1,1,1},
+ {1,-1,1}, {1,-1,-1}, {1,1,-1},
+ {1,-1,1}, {1,1,-1}, {1,1,1},
+ {1,-1,-1}, {-1,-1,-1}, {-1,1,-1},
+ {1,-1,-1}, {-1,1,-1}, {1,1,-1},
+ {-1,-1,-1}, {-1,-1,1}, {-1,1,1},
+ {-1,-1,-1}, {-1,1,1}, {-1,1,-1},
+ {-1,1,1}, {1,1,1}, {1,1,-1},
+ {-1,1,1}, {1,1,-1}, {-1,1,-1},
+ {1,-1,1}, {-1,-1,-1}, {1,-1,-1},
+ {1,-1,1}, {-1,-1, 1}, {-1,-1,-1},
+ };
+
     vector<v2> projected_points;
     m44 projection;
     m44 view;
