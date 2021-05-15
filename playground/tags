@@ -10,19 +10,15 @@ ALPHA	.\olcPixelGameEngine.h	/^		enum Mode { NORMAL, MASK, ALPHA, CUSTOM };$/;"	
 AddFile	.\olcPixelGameEngine.h	/^	bool ResourcePack::AddFile(const std::string& sFile)$/;"	f	class:olc::ResourcePack
 B	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 BACK	.\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,$/;"	e	enum:olc::Key
-BLUE_SCALE_FACTOR	.\cam_path_editor.cpp	/^constexpr auto BLUE_SCALE_FACTOR = 3;$/;"	v
 C	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 CALLSTYLE	.\olcPixelGameEngine.h	3449;"	d
 CALLSTYLE	.\olcPixelGameEngine.h	3465;"	d
 CALLSTYLE	.\olcPixelGameEngine.h	3482;"	d
 CAPS_LOCK	.\olcPixelGameEngine.h	/^		CAPS_LOCK, ENUM_END$/;"	e	enum:olc::Key
 COMMA	.\olcPixelGameEngine.h	/^		EQUALS, COMMA, MINUS,$/;"	e	enum:olc::Key
-COORD_SCALE_FACTOR	.\cam_path_editor.cpp	/^constexpr auto COORD_SCALE_FACTOR = 3;$/;"	v
-CPS_FROM_PPM_SAMPLING_RATE	.\cam_path_editor.cpp	/^constexpr auto CPS_FROM_PPM_SAMPLING_RATE = 10;$/;"	v
 CTRL	.\olcPixelGameEngine.h	/^		SPACE, TAB, SHIFT, CTRL, INS, DEL, HOME, END, PGUP, PGDN,$/;"	e	enum:olc::Key
 CUSTOM	.\olcPixelGameEngine.h	/^		enum Mode { NORMAL, MASK, ALPHA, CUSTOM };$/;"	e	enum:olc::Pixel::Mode
-CamPath	.\cam_path_editor.cpp	/^  CamPath(vector<vec3> control_points) { cps = control_points; }$/;"	f	struct:CamPath
-CamPath	.\cam_path_editor.cpp	/^struct CamPath {$/;"	s	file:
+CallbackTraverse	.\octree_sample.cpp	/^class CallbackTraverse: public Octree<Node>::Callback$/;"	c	file:
 Clear	.\olcPixelGameEngine.h	/^	void PixelGameEngine::Clear(Pixel p)$/;"	f	class:olc::PixelGameEngine
 ClearBuffer	.\olcPixelGameEngine.h	/^	void PixelGameEngine::ClearBuffer(Pixel p, bool bDepth)$/;"	f	class:olc::PixelGameEngine
 Construct	.\olcPixelGameEngine.h	/^	olc::rcode PixelGameEngine::Construct(int32_t screen_w, int32_t screen_h, int32_t pixel_w, int32_t pixel_h, bool full_screen, bool vsync, bool cohesion)$/;"	f	class:olc::PixelGameEngine
@@ -30,6 +26,7 @@ ConvertS2W	.\olcPixelGameEngine.h	/^		std::wstring ConvertS2W(std::string s)$/;"
 ConvertS2W	.\olcPixelGameEngine.h	/^		std::wstring ConvertS2W(std::string s)$/;"	f	class:olc::Platform_Windows
 Create	.\olcPixelGameEngine.h	/^	void Renderable::Create(uint32_t width, uint32_t height, bool filter, bool clamp)$/;"	f	class:olc::Renderable
 CreateLayer	.\olcPixelGameEngine.h	/^	uint32_t PixelGameEngine::CreateLayer()$/;"	f	class:olc::PixelGameEngine
+D	.\Vec3.h	/^		float D[3];$/;"	m	union:Vec3::__anon3
 D	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 DEL	.\olcPixelGameEngine.h	/^		SPACE, TAB, SHIFT, CTRL, INS, DEL, HOME, END, PGUP, PGDN,$/;"	e	enum:olc::Key
 DOWN	.\olcPixelGameEngine.h	/^		UP, DOWN, LEFT, RIGHT,$/;"	e	enum:olc::Key
@@ -79,12 +76,13 @@ E	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, 
 END	.\olcPixelGameEngine.h	/^		SPACE, TAB, SHIFT, CTRL, INS, DEL, HOME, END, PGUP, PGDN,$/;"	e	enum:olc::Key
 ENTER	.\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,$/;"	e	enum:olc::Key
 ENUM_END	.\olcPixelGameEngine.h	/^		CAPS_LOCK, ENUM_END$/;"	e	enum:olc::Key
+EPSILON	.\octree_sample.cpp	79;"	d	file:
 EQUALS	.\olcPixelGameEngine.h	/^		EQUALS, COMMA, MINUS,$/;"	e	enum:olc::Key
 ESCAPE	.\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,$/;"	e	enum:olc::Key
 EnableLayer	.\olcPixelGameEngine.h	/^	void PixelGameEngine::EnableLayer(uint8_t layer, bool b)$/;"	f	class:olc::PixelGameEngine
 EngineThread	.\olcPixelGameEngine.h	/^	void PixelGameEngine::EngineThread()$/;"	f	class:olc::PixelGameEngine
-Example	.\cam_path_editor.cpp	/^  Example(vector<vec3> cps) {$/;"	f	class:Example
-Example	.\cam_path_editor.cpp	/^class Example : public olc::PixelGameEngine {$/;"	c	file:
+Example	.\sim.cpp	/^    Example() {$/;"	f	class:Example
+Example	.\sim.cpp	/^class Example : public olc::PixelGameEngine {$/;"	c	file:
 ExitMainLoop	.\olcPixelGameEngine.h	/^		static void ExitMainLoop() {$/;"	f	class:olc::Platform_GLUT
 F	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 F1	.\olcPixelGameEngine.h	/^		F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12,$/;"	e	enum:olc::Key
@@ -157,7 +155,6 @@ ImageLoader_LibPNG	.\olcPixelGameEngine.h	/^		ImageLoader_LibPNG() : ImageLoader
 ImageLoader_LibPNG	.\olcPixelGameEngine.h	/^	class ImageLoader_LibPNG : public olc::ImageLoader$/;"	c	namespace:olc
 ImageLoader_STB	.\olcPixelGameEngine.h	/^		ImageLoader_STB() : ImageLoader()$/;"	f	class:olc::ImageLoader_STB
 ImageLoader_STB	.\olcPixelGameEngine.h	/^	class ImageLoader_STB : public olc::ImageLoader$/;"	c	namespace:olc
-ImageRGB	.\ppm_reader.h	/^struct ImageRGB {$/;"	s
 IsFocused	.\olcPixelGameEngine.h	/^	bool PixelGameEngine::IsFocused() const$/;"	f	class:olc::PixelGameEngine
 J	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 K	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
@@ -186,6 +183,10 @@ MULTIPLICATIVE	.\olcPixelGameEngine.h	/^		MULTIPLICATIVE,$/;"	m	class:olc::Decal
 MainLoop	.\olcPixelGameEngine.h	/^		static void MainLoop()$/;"	f	class:olc::Platform_Emscripten
 Mode	.\olcPixelGameEngine.h	/^		enum Mode { NORMAL, MASK, ALPHA, CUSTOM };$/;"	g	struct:olc::Pixel
 Mode	.\olcPixelGameEngine.h	/^		enum Mode { NORMAL, PERIODIC };$/;"	g	class:olc::Sprite
+MyPoint	.\octree_sample.cpp	/^    MyPoint(const MyPoint& p2): x(p2.x), y(p2.y), z(p2.z) {}$/;"	f	struct:MyPoint
+MyPoint	.\octree_sample.cpp	/^    MyPoint(const float p2[3]): x(p2[0]), y(p2[1]), z(p2[2]) {}$/;"	f	struct:MyPoint
+MyPoint	.\octree_sample.cpp	/^    MyPoint(float in_x, float in_y, float in_z): x(in_x), y(in_y), z(in_z) {}$/;"	f	struct:MyPoint
+MyPoint	.\octree_sample.cpp	/^struct MyPoint$/;"	s	file:
 N	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 NOMINMAX	.\olcPixelGameEngine.h	449;"	d
 NONE	.\olcPixelGameEngine.h	/^		NONE,$/;"	e	enum:olc::Key
@@ -209,6 +210,8 @@ NP_DECIMAL	.\olcPixelGameEngine.h	/^		NP_MUL, NP_DIV, NP_ADD, NP_SUB, NP_DECIMAL
 NP_DIV	.\olcPixelGameEngine.h	/^		NP_MUL, NP_DIV, NP_ADD, NP_SUB, NP_DECIMAL, PERIOD,$/;"	e	enum:olc::Key
 NP_MUL	.\olcPixelGameEngine.h	/^		NP_MUL, NP_DIV, NP_ADD, NP_SUB, NP_DECIMAL, PERIOD,$/;"	e	enum:olc::Key
 NP_SUB	.\olcPixelGameEngine.h	/^		NP_MUL, NP_DIV, NP_ADD, NP_SUB, NP_DECIMAL, PERIOD,$/;"	e	enum:olc::Key
+NUM_PARTICLES	.\octree_sample.cpp	77;"	d	file:
+Node	.\octree_sample.cpp	/^struct Node$/;"	s	file:
 O	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 OEM_1	.\olcPixelGameEngine.h	/^		OEM_1, OEM_2, OEM_3, OEM_4, OEM_5, OEM_6, OEM_7, OEM_8,$/;"	e	enum:olc::Key
 OEM_2	.\olcPixelGameEngine.h	/^		OEM_1, OEM_2, OEM_3, OEM_4, OEM_5, OEM_6, OEM_7, OEM_8,$/;"	e	enum:olc::Key
@@ -227,13 +230,19 @@ OLC_GFX_OPENGL33	.\olcPixelGameEngine.h	420;"	d
 OLC_IMAGE_GDI	.\olcPixelGameEngine.h	431;"	d
 OLC_IMAGE_LIBPNG	.\olcPixelGameEngine.h	434;"	d
 OLC_MAX_VERTS	.\olcPixelGameEngine.h	/^	constexpr size_t OLC_MAX_VERTS = 128;$/;"	v
-OLC_PGE_APPLICATION	.\cam_path_editor.cpp	4;"	d	file:
 OLC_PGE_APPLICATION	.\olcPixelGameEngine.h	1144;"	d
+OLC_PGE_APPLICATION	.\sim.cpp	1;"	d	file:
 OLC_PGE_DEF	.\olcPixelGameEngine.h	325;"	d
 OLC_PLATFORM_EMSCRIPTEN	.\olcPixelGameEngine.h	406;"	d
 OLC_PLATFORM_GLUT	.\olcPixelGameEngine.h	403;"	d
 OLC_PLATFORM_WINAPI	.\olcPixelGameEngine.h	396;"	d
 OLC_PLATFORM_X11	.\olcPixelGameEngine.h	399;"	d
+Octree	.\octree.h	/^		Octree(const Octree& copy)$/;"	f	class:Octree
+Octree	.\octree.h	/^		Octree(const Vec3& origin, const Vec3& halfDimension) $/;"	f	class:Octree
+Octree	.\octree.h	/^	class Octree {$/;"	c
+OctreePoint	.\OctreePoint.h	/^	OctreePoint() { }$/;"	f	class:OctreePoint
+OctreePoint	.\OctreePoint.h	/^	OctreePoint(const Vec3& position) : position(position) { }$/;"	f	class:OctreePoint
+OctreePoint	.\OctreePoint.h	/^class OctreePoint {$/;"	c
 OnAfterUserCreate	.\olcPixelGameEngine.h	/^	void PGEX::OnAfterUserCreate()	{}$/;"	f	class:olc::PGEX
 OnAfterUserUpdate	.\olcPixelGameEngine.h	/^	void PGEX::OnAfterUserUpdate(float fElapsedTime) {}$/;"	f	class:olc::PGEX
 OnBeforeUserCreate	.\olcPixelGameEngine.h	/^	void PGEX::OnBeforeUserCreate() {}$/;"	f	class:olc::PGEX
@@ -251,6 +260,9 @@ PGEX	.\olcPixelGameEngine.h	/^	class PGEX$/;"	c	namespace:olc
 PGE_USE_CUSTOM_START	.\olcPixelGameEngine.h	413;"	d
 PGE_VER	.\olcPixelGameEngine.h	350;"	d
 PGUP	.\olcPixelGameEngine.h	/^		SPACE, TAB, SHIFT, CTRL, INS, DEL, HOME, END, PGUP, PGDN,$/;"	e	enum:olc::Key
+PI	.\sim.cpp	6;"	d	file:
+Particle	.\octree_sample.cpp	/^    Particle(float x, float y, float z): pos(x, y, z) {}$/;"	f	struct:Particle
+Particle	.\octree_sample.cpp	/^struct Particle$/;"	s	file:
 Pixel	.\olcPixelGameEngine.h	/^	Pixel::Pixel()$/;"	f	class:olc::Pixel
 Pixel	.\olcPixelGameEngine.h	/^	Pixel::Pixel(uint32_t p)$/;"	f	class:olc::Pixel
 Pixel	.\olcPixelGameEngine.h	/^	Pixel::Pixel(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)$/;"	f	class:olc::Pixel
@@ -265,9 +277,9 @@ Platform_GLUT	.\olcPixelGameEngine.h	/^	class Platform_GLUT : public olc::Platfo
 Platform_Linux	.\olcPixelGameEngine.h	/^	class Platform_Linux : public olc::Platform$/;"	c	namespace:olc
 Platform_Windows	.\olcPixelGameEngine.h	/^	class Platform_Windows : public olc::Platform$/;"	c	namespace:olc
 Q	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
+R	.\octree_sample.cpp	78;"	d	file:
 R	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 RETURN	.\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,$/;"	e	enum:olc::Key
-RGB	.\ppm_reader.h	/^struct RGB {$/;"	s
 RIGHT	.\olcPixelGameEngine.h	/^		UP, DOWN, LEFT, RIGHT,$/;"	e	enum:olc::Key
 Renderable	.\olcPixelGameEngine.h	/^	class Renderable$/;"	c	namespace:olc
 Renderer	.\olcPixelGameEngine.h	/^	class Renderer$/;"	c	namespace:olc
@@ -326,17 +338,15 @@ UpdateWindowSize	.\olcPixelGameEngine.h	/^		void UpdateWindowSize(int width, int
 V	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 VC_EXTRALEAN	.\olcPixelGameEngine.h	446;"	d
 VERT	.\olcPixelGameEngine.h	/^		enum Flip { NONE = 0, HORIZ = 1, VERT = 2 };$/;"	e	enum:olc::Sprite::Flip
-View	.\cam_path_editor.cpp	/^enum class View {$/;"	c	file:
+Vec3	.\Vec3.h	/^	Vec3() { }$/;"	f	struct:Vec3
+Vec3	.\Vec3.h	/^	Vec3(float _x, float _y, float _z)$/;"	f	struct:Vec3
+Vec3	.\Vec3.h	/^struct Vec3 {$/;"	s
 W	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 WIREFRAME	.\olcPixelGameEngine.h	/^		WIREFRAME,$/;"	m	class:olc::DecalMode
-WORLD_X_MAX	.\cam_path_editor.cpp	/^auto WORLD_X_MAX = 50.0f;$/;"	v
-WORLD_Y_MAX	.\cam_path_editor.cpp	/^auto WORLD_Y_MAX = 30.0f;$/;"	v
 X	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 X11	.\olcPixelGameEngine.h	/^	namespace X11$/;"	n
 Y	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 Z	.\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
-ZX	.\cam_path_editor.cpp	/^  ZX = 1,$/;"	m	class:View	file:
-ZY	.\cam_path_editor.cpp	/^  ZY = 0,$/;"	m	class:View	file:
 _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING	.\olcPixelGameEngine.h	371;"	d
 _WIN32_WINNT	.\olcPixelGameEngine.h	455;"	d
 _WIN32_WINNT	.\olcPixelGameEngine.h	457;"	d
@@ -344,7 +354,6 @@ _WINSOCKAPI_	.\olcPixelGameEngine.h	444;"	d
 _WINSOCKAPI_	.\olcPixelGameEngine.h	462;"	d
 a	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
 b	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
-b	.\ppm_reader.h	/^    unsigned char r, g, b;$/;"	m	struct:RGB
 bActiveRef	.\olcPixelGameEngine.h	/^		static std::atomic<bool>* bActiveRef;$/;"	m	class:olc::Platform_GLUT
 bAtomActive	.\olcPixelGameEngine.h	/^		static std::atomic<bool> bAtomActive;$/;"	m	class:olc::PixelGameEngine
 bEnableVSYNC	.\olcPixelGameEngine.h	/^		bool		bEnableVSYNC = false;$/;"	m	class:olc::PixelGameEngine
@@ -360,17 +369,14 @@ bSync	.\olcPixelGameEngine.h	/^		bool bSync = false;$/;"	m	class:olc::Renderer_O
 bSync	.\olcPixelGameEngine.h	/^		bool bSync = false;$/;"	m	class:olc::Renderer_OGL33
 bUpdate	.\olcPixelGameEngine.h	/^		bool bUpdate = false;$/;"	m	struct:olc::LayerDesc
 baseFile	.\olcPixelGameEngine.h	/^		std::ifstream baseFile;$/;"	m	class:olc::ResourcePack
-cam_dir	.\cam_path_editor.cpp	/^  vector<vec3> cam_dir;$/;"	m	struct:CamPath	file:
+cdiv	.\Vec3.h	/^	Vec3 cdiv(const Vec3& r) const {$/;"	f	struct:Vec3
 ceil	.\olcPixelGameEngine.h	/^		v2d_generic  ceil() const { return v2d_generic(std::ceil(x), std::ceil(y)); }$/;"	f	struct:olc::v2d_generic
+children	.\octree.h	/^		Octree *children[8]; \/\/! Pointers to child octants$/;"	m	class:Octree
+cmul	.\Vec3.h	/^	Vec3 cmul(const Vec3& r) const {$/;"	f	struct:Vec3
 col	.\olcPixelGameEngine.h	/^			olc::Pixel col;$/;"	m	struct:olc::Renderer_OGL33::locVertex
-comp_xmax	.\cam_path_editor.cpp	/^constexpr auto comp_xmax = [](const glm::vec3 &a, const glm::vec3 &b) -> bool {$/;"	v
-comp_ymax	.\cam_path_editor.cpp	/^constexpr auto comp_ymax = [](const glm::vec3 &a, const glm::vec3 &b) -> bool {$/;"	v
-comp_zmax	.\cam_path_editor.cpp	/^constexpr auto comp_zmax = [](const glm::vec3 &a, const glm::vec3 &b) -> bool {$/;"	v
-cps	.\cam_path_editor.cpp	/^  vector<vec3> cps;$/;"	m	class:Example	file:
-cps	.\cam_path_editor.cpp	/^  vector<vec3> cps;$/;"	m	struct:CamPath	file:
-createPathFromCps	.\cam_path_editor.cpp	/^  void createPathFromCps() {$/;"	f	struct:CamPath
+count	.\octree_sample.cpp	/^    int count;$/;"	m	class:CallbackTraverse	file:
 cross	.\olcPixelGameEngine.h	/^		T cross(const v2d_generic& rhs) const { return this->x * rhs.y - this->y * rhs.x; }$/;"	f	struct:olc::v2d_generic
-data	.\ppm_reader.h	/^    std::vector<RGB> data;$/;"	m	struct:ImageRGB
+data	.\octree.h	/^		OctreePoint *data;   \/\/! Data point to be stored at a node$/;"	m	class:Octree
 decal	.\olcPixelGameEngine.h	/^		olc::Decal* decal = nullptr;$/;"	m	struct:olc::DecalInstance
 dot	.\olcPixelGameEngine.h	/^		T dot(const v2d_generic& rhs) const { return this->x * rhs.x + this->y * rhs.y; }$/;"	f	struct:olc::v2d_generic
 fBlendFactor	.\olcPixelGameEngine.h	/^		float		fBlendFactor = 1.0f;$/;"	m	class:olc::PixelGameEngine
@@ -380,13 +386,14 @@ floor	.\olcPixelGameEngine.h	/^		v2d_generic  floor() const { return v2d_generic
 focus_callback	.\olcPixelGameEngine.h	/^		static EM_BOOL focus_callback(int eventType, const EmscriptenFocusEvent* focusEvent, void* userData) $/;"	f	class:olc::Platform_Emscripten
 fontDecal	.\olcPixelGameEngine.h	/^		Decal*      fontDecal = nullptr;$/;"	m	class:olc::PixelGameEngine
 fontSprite	.\olcPixelGameEngine.h	/^		Sprite*     fontSprite = nullptr;$/;"	m	class:olc::PixelGameEngine
-frameCnt	.\cam_path_editor.cpp	/^size_t frameCnt = 0;$/;"	v
 funcHook	.\olcPixelGameEngine.h	/^		std::function<void()> funcHook = nullptr;$/;"	m	struct:olc::LayerDesc
 funcPixelMode	.\olcPixelGameEngine.h	/^		std::function<olc::Pixel(const int x, const int y, const olc::Pixel&, const olc::Pixel&)> funcPixelMode;$/;"	m	class:olc::PixelGameEngine
 g	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
-g	.\ppm_reader.h	/^    unsigned char r, g, b;$/;"	m	struct:RGB
+g_HEIGHT	.\sim.cpp	/^constexpr auto g_HEIGHT = 100;$/;"	v
 gdistartup	.\olcPixelGameEngine.h	/^	} gdistartup;$/;"	v	typeref:class:olc::GDIPlusStartup
-get_cps_from_ppm	.\cam_path_editor.cpp	/^vector<vec3> get_cps_from_ppm(fs::path path) {$/;"	f
+getOctantContainingPoint	.\octree.h	/^		int getOctantContainingPoint(const Vec3& point) const {$/;"	f	class:Octree
+getPointsInsideBox	.\octree.h	/^		void getPointsInsideBox(const Vec3& bmin, const Vec3& bmax, std::vector<OctreePoint*>& results) {$/;"	f	class:Octree
+getPosition	.\OctreePoint.h	/^	inline const Vec3& getPosition() const { return position; }$/;"	f	class:OctreePoint
 glDeviceContext	.\olcPixelGameEngine.h	/^		glDeviceContext_t glDeviceContext = 0;$/;"	m	class:olc::Renderer_OGL33
 glDeviceContext_t	.\olcPixelGameEngine.h	/^	typedef HDC glDeviceContext_t;$/;"	t
 glDeviceContext_t	.\olcPixelGameEngine.h	/^	typedef X11::GLXContext glDeviceContext_t;$/;"	t
@@ -395,13 +402,15 @@ glRenderContext_t	.\olcPixelGameEngine.h	/^	typedef HGLRC glRenderContext_t;$/;"
 glRenderContext_t	.\olcPixelGameEngine.h	/^	typedef X11::GLXContext glRenderContext_t;$/;"	t
 glSwapIntervalEXT	.\olcPixelGameEngine.h	/^	static glSwapInterval_t* glSwapIntervalEXT;$/;"	v
 glSwapInterval_t	.\olcPixelGameEngine.h	/^	typedef int(glSwapInterval_t)(X11::Display* dpy, X11::GLXDrawable drawable, int interval);$/;"	t
-h	.\ppm_reader.h	/^    int w, h;$/;"	m	struct:ImageRGB
+halfDimension	.\octree.h	/^		Vec3 halfDimension;  \/\/! Half the width\/height\/depth of this node$/;"	m	class:Octree
 height	.\olcPixelGameEngine.h	/^		int32_t height = 0;$/;"	m	class:olc::Sprite
 id	.\olcPixelGameEngine.h	/^		int32_t id = -1;$/;"	m	class:olc::Decal
+init	.\main.cpp	/^void init() {$/;"	f
+insert	.\octree.h	/^		void insert(OctreePoint* point) {$/;"	f	class:Octree
 inv	.\olcPixelGameEngine.h	/^	Pixel Pixel::inv() const$/;"	f	class:olc::Pixel
-is_level_file	.\cam_path_editor.cpp	/^bool is_level_file(string fName) { return true; }$/;"	f
-is_ppm_file	.\cam_path_editor.cpp	/^bool is_ppm_file(fs::path path) {$/;"	f
+isLeafNode	.\octree.h	/^		bool isLeafNode() const {$/;"	f	class:Octree
 keyboard_callback	.\olcPixelGameEngine.h	/^		static EM_BOOL keyboard_callback(int eventType, const EmscriptenKeyboardEvent* e, void* userData)$/;"	f	class:olc::Platform_Emscripten
+lengthsq	.\octree_sample.cpp	/^    float lengthsq() { return x*x + y*y + z*z; }$/;"	f	struct:MyPoint
 loader	.\olcPixelGameEngine.h	/^		static std::unique_ptr<olc::ImageLoader> loader;$/;"	m	class:olc::Sprite
 loader	.\olcPixelGameEngine.h	/^	std::unique_ptr<ImageLoader> olc::Sprite::loader = nullptr;$/;"	m	class:olc::olc::Sprite
 locAttachShader	.\olcPixelGameEngine.h	/^		locAttachShader_t* locAttachShader = nullptr;$/;"	m	class:olc::Renderer_OGL33
@@ -455,18 +464,23 @@ m_vaQuad	.\olcPixelGameEngine.h	/^		uint32_t m_vaQuad = 0;$/;"	m	class:olc::Rend
 m_vbQuad	.\olcPixelGameEngine.h	/^		uint32_t m_vbQuad = 0;$/;"	m	class:olc::Renderer_OGL33
 mag	.\olcPixelGameEngine.h	/^		T mag() const { return T(std::sqrt(x * x + y * y)); }$/;"	f	struct:olc::v2d_generic
 mag2	.\olcPixelGameEngine.h	/^		T mag2() const { return x * x + y * y; }$/;"	f	struct:olc::v2d_generic
-main	.\cam_path_editor.cpp	/^int main(int argc, char **argv) {$/;"	f
+main	.\main.cpp	/^int main(int argc, char **argv) {$/;"	f
+main	.\octree_sample.cpp	/^int main()$/;"	f
+main	.\sim.cpp	/^int main() {$/;"	f
 makeposix	.\olcPixelGameEngine.h	/^	std::string ResourcePack::makeposix(const std::string& path)$/;"	f	class:olc::ResourcePack
 mapFiles	.\olcPixelGameEngine.h	/^		std::map<std::string, sResourceFile> mapFiles;$/;"	m	class:olc::ResourcePack
 mapKeys	.\olcPixelGameEngine.h	/^	static std::map<size_t, uint8_t> mapKeys;$/;"	v
 max	.\olcPixelGameEngine.h	/^		v2d_generic  max(const v2d_generic& v) const { return v2d_generic(std::max(x, v.x), std::max(y, v.y)); }$/;"	f	struct:olc::v2d_generic
 max	.\olcPixelGameEngine.h	3970;"	d
 max	.\olcPixelGameEngine.h	3980;"	d
+maxComponent	.\Vec3.h	/^	float maxComponent() const {$/;"	f	struct:Vec3
 min	.\olcPixelGameEngine.h	/^		v2d_generic  min(const v2d_generic& v) const { return v2d_generic(std::min(x, v.x), std::min(y, v.y)); }$/;"	f	struct:olc::v2d_generic
 min	.\olcPixelGameEngine.h	3969;"	d
 min	.\olcPixelGameEngine.h	3979;"	d
+minComponent	.\Vec3.h	/^	float minComponent() const {$/;"	f	struct:Vec3
 mode	.\olcPixelGameEngine.h	/^		olc::DecalMode mode = olc::DecalMode::NORMAL;$/;"	m	struct:olc::DecalInstance
 modeSample	.\olcPixelGameEngine.h	/^		Mode modeSample = Mode::NORMAL;$/;"	m	class:olc::Sprite
+model	.\sim.cpp	/^    m44 model;$/;"	m	class:Example	file:
 mouse_callback	.\olcPixelGameEngine.h	/^		static EM_BOOL mouse_callback(int eventType, const EmscriptenMouseEvent* e, void* userData)$/;"	f	class:olc::Platform_Emscripten
 n	.\olcPixelGameEngine.h	/^			uint32_t n = nDefaultPixel;$/;"	m	union:olc::Pixel::__anon1
 nDecalMode	.\olcPixelGameEngine.h	/^		DecalMode   nDecalMode = DecalMode::NORMAL;$/;"	m	class:olc::PixelGameEngine
@@ -484,7 +498,13 @@ nPixelMode	.\olcPixelGameEngine.h	/^		Pixel::Mode	nPixelMode = Pixel::NORMAL;$/;
 nResID	.\olcPixelGameEngine.h	/^		uint32_t nResID = 0;$/;"	m	struct:olc::LayerDesc
 nSize	.\olcPixelGameEngine.h	/^		struct sResourceFile { uint32_t nSize; uint32_t nOffset; };$/;"	m	struct:olc::ResourcePack::sResourceFile
 nTargetLayer	.\olcPixelGameEngine.h	/^		uint8_t		nTargetLayer = 0;$/;"	m	class:olc::PixelGameEngine
+naivePointInBox	.\main.cpp	/^bool naivePointInBox(const Vec3& point, const Vec3& bmin, const Vec3& bmax) {$/;"	f
+norm	.\Vec3.h	/^	float norm() const {$/;"	f	struct:Vec3
 norm	.\olcPixelGameEngine.h	/^		v2d_generic  norm() const { T r = 1 \/ mag(); return v2d_generic(x * r, y * r); }$/;"	f	struct:olc::v2d_generic
+normSquared	.\Vec3.h	/^	float normSquared() const {$/;"	f	struct:Vec3
+normalized	.\Vec3.h	/^	Vec3 normalized() const {$/;"	f	struct:Vec3
+octree	.\main.cpp	/^Octree *octree;$/;"	v
+octreePoints	.\main.cpp	/^OctreePoint *octreePoints;$/;"	v
 olc	.\olcPixelGameEngine.h	/^namespace olc {$/;"	n
 olc	.\olcPixelGameEngine.h	/^namespace olc$/;"	n
 olcT	.\olcPixelGameEngine.h	381;"	d
@@ -526,25 +546,38 @@ olc_WindowRoot	.\olcPixelGameEngine.h	/^		X11::Window					 olc_WindowRoot;$/;"	m
 olc_hWnd	.\olcPixelGameEngine.h	/^		HWND olc_hWnd = nullptr;$/;"	m	class:olc::Platform_Windows
 operator !=	.\olcPixelGameEngine.h	/^		bool operator != (const v2d_generic& rhs) const { return (this->x != rhs.x || this->y != rhs.y); }$/;"	f	struct:olc::v2d_generic
 operator !=	.\olcPixelGameEngine.h	/^	bool Pixel::operator!=(const Pixel& p) const$/;"	f	class:olc::Pixel
+operator ()	.\octree_sample.cpp	/^    virtual bool operator()(const float min[3], const float max[3], Node& n)$/;"	f	class:CallbackTraverse
+operator *	.\Vec3.h	/^	Vec3 operator*(float r) const {$/;"	f	struct:Vec3
+operator *	.\Vec3.h	/^	float operator*(const Vec3& r) const {$/;"	f	struct:Vec3
+operator *	.\Vec3.h	/^inline Vec3 operator*(float r, const Vec3& v) {$/;"	f
+operator *	.\octree_sample.cpp	/^    MyPoint operator*(float f) const { return MyPoint(x*f, y*f, z*f); }$/;"	f	struct:MyPoint
 operator *	.\olcPixelGameEngine.h	/^		v2d_generic  operator *  (const T& rhs)           const { return v2d_generic(this->x * rhs, this->y * rhs); }$/;"	f	struct:olc::v2d_generic
 operator *	.\olcPixelGameEngine.h	/^		v2d_generic  operator *  (const v2d_generic& rhs) const { return v2d_generic(this->x * rhs.x, this->y * rhs.y); }$/;"	f	struct:olc::v2d_generic
 operator *	.\olcPixelGameEngine.h	/^	Pixel  Pixel::operator * (const float i) const$/;"	f	class:olc::Pixel
 operator *	.\olcPixelGameEngine.h	/^	template<class T> inline v2d_generic<T> operator * (const double& lhs, const v2d_generic<T>& rhs)$/;"	f	namespace:olc
 operator *	.\olcPixelGameEngine.h	/^	template<class T> inline v2d_generic<T> operator * (const float& lhs, const v2d_generic<T>& rhs)$/;"	f	namespace:olc
 operator *	.\olcPixelGameEngine.h	/^	template<class T> inline v2d_generic<T> operator * (const int& lhs, const v2d_generic<T>& rhs)$/;"	f	namespace:olc
+operator *=	.\Vec3.h	/^	Vec3& operator*=(float r) {$/;"	f	struct:Vec3
 operator *=	.\olcPixelGameEngine.h	/^		v2d_generic& operator *= (const T& rhs) { this->x *= rhs; this->y *= rhs; return *this; }$/;"	f	struct:olc::v2d_generic
 operator *=	.\olcPixelGameEngine.h	/^		v2d_generic& operator *= (const v2d_generic& rhs) { this->x *= rhs.x; this->y *= rhs.y; return *this; }$/;"	f	struct:olc::v2d_generic
 operator *=	.\olcPixelGameEngine.h	/^	Pixel& Pixel::operator *=(const float i)$/;"	f	class:olc::Pixel
+operator +	.\Vec3.h	/^	Vec3 operator+(const Vec3& r) const {$/;"	f	struct:Vec3
+operator +	.\octree_sample.cpp	/^    MyPoint operator+(const MyPoint& p2) const { return MyPoint(x+p2.x, y+p2.y, z+p2.z); }$/;"	f	struct:MyPoint
 operator +	.\olcPixelGameEngine.h	/^		v2d_generic  operator +  () const { return { +x, +y }; }$/;"	f	struct:olc::v2d_generic
 operator +	.\olcPixelGameEngine.h	/^		v2d_generic  operator +  (const v2d_generic& rhs) const { return v2d_generic(this->x + rhs.x, this->y + rhs.y); }$/;"	f	struct:olc::v2d_generic
 operator +	.\olcPixelGameEngine.h	/^	Pixel  Pixel::operator + (const Pixel& p) const$/;"	f	class:olc::Pixel
+operator +=	.\Vec3.h	/^	Vec3& operator+=(const Vec3& r) {$/;"	f	struct:Vec3
 operator +=	.\olcPixelGameEngine.h	/^		v2d_generic& operator += (const v2d_generic& rhs) { this->x += rhs.x; this->y += rhs.y; return *this; }$/;"	f	struct:olc::v2d_generic
 operator +=	.\olcPixelGameEngine.h	/^	Pixel& Pixel::operator += (const Pixel& p)$/;"	f	class:olc::Pixel
+operator -	.\Vec3.h	/^	Vec3 operator-(const Vec3& r) const {$/;"	f	struct:Vec3
+operator -	.\octree_sample.cpp	/^    MyPoint operator-(const MyPoint& p2) const { return MyPoint(x-p2.x, y-p2.y, z-p2.z); }$/;"	f	struct:MyPoint
 operator -	.\olcPixelGameEngine.h	/^		v2d_generic  operator -  () const { return { -x, -y }; }$/;"	f	struct:olc::v2d_generic
 operator -	.\olcPixelGameEngine.h	/^		v2d_generic  operator -  (const v2d_generic& rhs) const { return v2d_generic(this->x - rhs.x, this->y - rhs.y); }$/;"	f	struct:olc::v2d_generic
 operator -	.\olcPixelGameEngine.h	/^	Pixel  Pixel::operator - (const Pixel& p) const$/;"	f	class:olc::Pixel
+operator -=	.\Vec3.h	/^	Vec3& operator-=(const Vec3& r) {$/;"	f	struct:Vec3
 operator -=	.\olcPixelGameEngine.h	/^		v2d_generic& operator -= (const v2d_generic& rhs) { this->x -= rhs.x; this->y -= rhs.y; return *this; }$/;"	f	struct:olc::v2d_generic
 operator -=	.\olcPixelGameEngine.h	/^	Pixel& Pixel::operator -= (const Pixel& p) \/\/ Thanks Au Lit$/;"	f	class:olc::Pixel
+operator /	.\Vec3.h	/^	Vec3 operator\/(float r) const {$/;"	f	struct:Vec3
 operator /	.\olcPixelGameEngine.h	/^		v2d_generic  operator \/  (const T& rhs)           const { return v2d_generic(this->x \/ rhs, this->y \/ rhs); }$/;"	f	struct:olc::v2d_generic
 operator /	.\olcPixelGameEngine.h	/^		v2d_generic  operator \/  (const v2d_generic& rhs) const { return v2d_generic(this->x \/ rhs.x, this->y \/ rhs.y); }$/;"	f	struct:olc::v2d_generic
 operator /	.\olcPixelGameEngine.h	/^	Pixel  Pixel::operator \/ (const float i) const$/;"	f	class:olc::Pixel
@@ -556,12 +589,20 @@ operator /=	.\olcPixelGameEngine.h	/^		v2d_generic& operator \/= (const v2d_gene
 operator /=	.\olcPixelGameEngine.h	/^	Pixel& Pixel::operator \/=(const float i)$/;"	f	class:olc::Pixel
 operator <	.\olcPixelGameEngine.h	/^	template<class T, class U> inline bool operator < (const v2d_generic<T>& lhs, const v2d_generic<U>& rhs)$/;"	f	namespace:olc
 operator <<	.\olcPixelGameEngine.h	/^		friend std::ostream& operator << (std::ostream& os, const v2d_generic& rhs) { os << rhs.str(); return os; }$/;"	f	struct:olc::v2d_generic
+operator =	.\octree_sample.cpp	/^    MyPoint& operator=(const MyPoint& p2) { x = p2.x; y = p2.y; z = p2.z; return *this;}$/;"	f	struct:MyPoint
 operator ==	.\olcPixelGameEngine.h	/^		bool operator == (const v2d_generic& rhs) const { return (this->x == rhs.x && this->y == rhs.y); }$/;"	f	struct:olc::v2d_generic
 operator ==	.\olcPixelGameEngine.h	/^	bool Pixel::operator==(const Pixel& p) const$/;"	f	class:olc::Pixel
 operator >	.\olcPixelGameEngine.h	/^	template<class T, class U> inline bool operator > (const v2d_generic<T>& lhs, const v2d_generic<U>& rhs)$/;"	f	namespace:olc
+operator []	.\Vec3.h	/^	const float& operator[](unsigned int i) const {$/;"	f	struct:Vec3
+operator []	.\Vec3.h	/^	float& operator[](unsigned int i) {$/;"	f	struct:Vec3
+operator ^	.\Vec3.h	/^	Vec3 operator^(const Vec3& r) const {$/;"	f	struct:Vec3
+operator const float*	.\octree_sample.cpp	/^    operator const float*() const { return &x; }$/;"	f	struct:MyPoint
+operator float*	.\octree_sample.cpp	/^    operator float*() { return &x; }$/;"	f	struct:MyPoint
 operator v2d_generic<double>	.\olcPixelGameEngine.h	/^		operator v2d_generic<double>() const { return { static_cast<double>(this->x), static_cast<double>(this->y) }; }$/;"	f	struct:olc::v2d_generic
 operator v2d_generic<float>	.\olcPixelGameEngine.h	/^		operator v2d_generic<float>() const { return { static_cast<float>(this->x), static_cast<float>(this->y) }; }$/;"	f	struct:olc::v2d_generic
 operator v2d_generic<int32_t>	.\olcPixelGameEngine.h	/^		operator v2d_generic<int32_t>() const { return { static_cast<int32_t>(this->x), static_cast<int32_t>(this->y) }; }$/;"	f	struct:olc::v2d_generic
+origin	.\octree.h	/^		Vec3 origin;         \/\/! The physical center of this node$/;"	m	class:Octree
+p0	.\octree_sample.cpp	/^    Particle* p0;$/;"	m	class:CallbackTraverse	file:
 pColData	.\olcPixelGameEngine.h	/^		std::vector<olc::Pixel> pColData;$/;"	m	class:olc::Sprite
 pDecal	.\olcPixelGameEngine.h	/^		std::unique_ptr<olc::Decal> pDecal = nullptr;$/;"	m	class:olc::Renderable
 pDefaultDrawTarget	.\olcPixelGameEngine.h	/^		Sprite*     pDefaultDrawTarget = nullptr;$/;"	m	class:olc::PixelGameEngine
@@ -575,37 +616,48 @@ pMouseOldState	.\olcPixelGameEngine.h	/^		bool		pMouseOldState[nMouseButtons] = 
 pMouseState	.\olcPixelGameEngine.h	/^		HWButton	pMouseState[nMouseButtons] = { 0 };$/;"	m	class:olc::PixelGameEngine
 pSprite	.\olcPixelGameEngine.h	/^		std::unique_ptr<olc::Sprite> pSprite = nullptr;$/;"	m	class:olc::Renderable
 pVertexMem	.\olcPixelGameEngine.h	/^		locVertex pVertexMem[OLC_MAX_VERTS];$/;"	m	class:olc::Renderer_OGL33
-path	.\cam_path_editor.cpp	/^  unique_ptr<CamPath> path;$/;"	m	class:Example	file:
+particles	.\octree_sample.cpp	/^    vector<Particle*> particles;$/;"	m	struct:Node	file:
 perp	.\olcPixelGameEngine.h	/^		v2d_generic  perp() const { return v2d_generic(-y, x); }$/;"	f	struct:olc::v2d_generic
 pge	.\olcPixelGameEngine.h	/^		static PixelGameEngine* pge;$/;"	m	class:olc::PGEX
 pge	.\olcPixelGameEngine.h	/^	olc::PixelGameEngine* olc::PGEX::pge = nullptr;$/;"	m	class:olc::olc::PGEX
 pgex_Register	.\olcPixelGameEngine.h	/^	void PixelGameEngine::pgex_Register(olc::PGEX* pgex)$/;"	f	class:olc::PixelGameEngine
 platform	.\olcPixelGameEngine.h	/^	static std::unique_ptr<Platform> platform;$/;"	v
 pngReadStream	.\olcPixelGameEngine.h	/^	void pngReadStream(png_structp pngPtr, png_bytep data, png_size_t length)$/;"	f	namespace:olc
+points	.\main.cpp	/^std::vector<Vec3> points;$/;"	v
 points	.\olcPixelGameEngine.h	/^		uint32_t points = 0;$/;"	m	struct:olc::DecalInstance
+pos	.\octree_sample.cpp	/^    MyPoint pos;$/;"	m	struct:Particle	file:
 pos	.\olcPixelGameEngine.h	/^			float pos[3];$/;"	m	struct:olc::Renderer_OGL33::locVertex
 pos	.\olcPixelGameEngine.h	/^		std::vector<olc::vf2d> pos;$/;"	m	struct:olc::DecalInstance
+position	.\OctreePoint.h	/^	Vec3 position; $/;"	m	class:OctreePoint
+projected_points	.\sim.cpp	/^    vector<v2> projected_points;$/;"	m	class:Example	file:
+projection	.\sim.cpp	/^    m44 projection;$/;"	m	class:Example	file:
 ptrPGE	.\olcPixelGameEngine.h	/^		static olc::PixelGameEngine* ptrPGE;$/;"	m	class:olc::Platform
 ptrPGE	.\olcPixelGameEngine.h	/^		static olc::PixelGameEngine* ptrPGE;$/;"	m	class:olc::Renderer
 ptrPGE	.\olcPixelGameEngine.h	/^	olc::PixelGameEngine* olc::Platform::ptrPGE = nullptr;$/;"	m	class:olc::olc::Platform
 ptrPGE	.\olcPixelGameEngine.h	/^	olc::PixelGameEngine* olc::Renderer::ptrPGE = nullptr;$/;"	m	class:olc::olc::Renderer
-pts	.\cam_path_editor.cpp	/^  vector<vec3> pts;$/;"	m	struct:CamPath	file:
+qmax	.\main.cpp	/^Vec3 qmin, qmax;$/;"	v
+qmin	.\main.cpp	/^Vec3 qmin, qmax;$/;"	v
 r	.\olcPixelGameEngine.h	/^			struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a; };$/;"	m	struct:olc::Pixel::__anon1::__anon2
-r	.\ppm_reader.h	/^    unsigned char r, g, b;$/;"	m	struct:RGB
+rand11	.\main.cpp	/^float rand11() \/\/ Random number between [-1,1]$/;"	f
+randVec3	.\main.cpp	/^Vec3 randVec3() \/\/ Random vector with components in the range [-1,1]$/;"	f
 rcode	.\olcPixelGameEngine.h	/^	enum rcode { FAIL = 0, OK = 1, NO_FILE = -1 };$/;"	g	namespace:olc
-read_img_from_ppm	.\ppm_reader.h	/^std::unique_ptr<ImageRGB> read_img_from_ppm(std::string inName) {$/;"	f
-read_ppm_header	.\ppm_reader.h	/^std::pair<int, int> read_ppm_header(std::ifstream& in) {$/;"	f
 rendBlankQuad	.\olcPixelGameEngine.h	/^		olc::Renderable rendBlankQuad;$/;"	m	class:olc::Renderer_OGL33
 renderer	.\olcPixelGameEngine.h	/^	static std::unique_ptr<Renderer> renderer;$/;"	v
 sAppName	.\olcPixelGameEngine.h	/^		std::string sAppName;$/;"	m	class:olc::PixelGameEngine
 sResourceFile	.\olcPixelGameEngine.h	/^		struct sResourceFile { uint32_t nSize; uint32_t nOffset; };$/;"	s	class:olc::ResourcePack
 scramble	.\olcPixelGameEngine.h	/^	std::vector<char> ResourcePack::scramble(const std::vector<char>& data, const std::string& key)$/;"	f	class:olc::ResourcePack
+setPosition	.\OctreePoint.h	/^	inline void setPosition(const Vec3& p) { position = p; }$/;"	f	class:OctreePoint
 sprite	.\olcPixelGameEngine.h	/^		olc::Sprite* sprite = nullptr;$/;"	m	class:olc::Decal
+stopwatch	.\stopwatch.h	/^double stopwatch() $/;"	f
+stopwatch	.\stopwatch.h	/^double stopwatch()$/;"	f
 str	.\olcPixelGameEngine.h	/^		const std::string str() const { return std::string("(") + std::to_string(this->x) + "," + std::to_string(this->y) + ")"; }$/;"	f	struct:olc::v2d_generic
+testNaive	.\main.cpp	/^void testNaive() {$/;"	f
+testOctree	.\main.cpp	/^void testOctree() {$/;"	f
 tex	.\olcPixelGameEngine.h	/^			olc::vf2d tex;$/;"	m	struct:olc::Renderer_OGL33::locVertex
 tint	.\olcPixelGameEngine.h	/^		olc::Pixel tint = olc::WHITE;$/;"	m	struct:olc::LayerDesc
 tint	.\olcPixelGameEngine.h	/^		std::vector<olc::Pixel> tint;$/;"	m	struct:olc::DecalInstance
 token	.\olcPixelGameEngine.h	/^		ULONG_PTR	token;$/;"	m	class:olc::GDIPlusStartup
+totElapsedTime	.\sim.cpp	/^    float totElapsedTime;$/;"	m	class:Example	file:
 touch_callback	.\olcPixelGameEngine.h	/^		static EM_BOOL touch_callback(int eventType, const EmscriptenTouchEvent* e, void* userData)$/;"	f	class:olc::Platform_Emscripten
 uv	.\olcPixelGameEngine.h	/^		std::vector<olc::vf2d> uv;$/;"	m	struct:olc::DecalInstance
 v	.\olcPixelGameEngine.h	/^		Pixel& operator = (const Pixel& v) = default;$/;"	m	struct:olc::Pixel
@@ -636,19 +688,25 @@ vd2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<double> vd2d;$/;"	t	namespace
 vecDecalInstance	.\olcPixelGameEngine.h	/^		std::vector<DecalInstance> vecDecalInstance;$/;"	m	struct:olc::LayerDesc
 vf2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<float> vf2d;$/;"	t	namespace:olc
 vi2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<int32_t> vi2d;$/;"	t	namespace:olc
+view	.\sim.cpp	/^    m44 view;$/;"	m	class:Example	file:
 vu2d	.\olcPixelGameEngine.h	/^	typedef v2d_generic<uint32_t> vu2d;$/;"	t	namespace:olc
 w	.\olcPixelGameEngine.h	/^		std::vector<float> w;$/;"	m	struct:olc::DecalInstance
-w	.\ppm_reader.h	/^    int w, h;$/;"	m	struct:ImageRGB
 wglSwapInterval	.\olcPixelGameEngine.h	/^	static wglSwapInterval_t* wglSwapInterval = nullptr;$/;"	v
 wglSwapInterval_t	.\olcPixelGameEngine.h	/^	typedef BOOL(WINAPI wglSwapInterval_t) (int interval);$/;"	t
 wheel_callback	.\olcPixelGameEngine.h	/^		static EM_BOOL wheel_callback(int eventType, const EmscriptenWheelEvent* e, void* userData)$/;"	f	class:olc::Platform_Emscripten
 width	.\olcPixelGameEngine.h	/^		int32_t width = 0;$/;"	m	class:olc::Sprite
-world_to_screen	.\cam_path_editor.cpp	/^pair<float, float> world_to_screen(const olc::PixelGameEngine *gm,$/;"	f
 wsAppName	.\olcPixelGameEngine.h	/^		std::wstring wsAppName;$/;"	m	class:olc::Platform_Windows
+x	.\Vec3.h	/^			float x,y,z;$/;"	m	struct:Vec3::__anon3::__anon4
+x	.\octree_sample.cpp	/^    float x; $/;"	m	struct:MyPoint	file:
 x	.\olcPixelGameEngine.h	/^		T x = 0;$/;"	m	struct:olc::v2d_generic
+y	.\Vec3.h	/^			float x,y,z;$/;"	m	struct:Vec3::__anon3::__anon4
+y	.\octree_sample.cpp	/^    float y; $/;"	m	struct:MyPoint	file:
 y	.\olcPixelGameEngine.h	/^		T y = 0;$/;"	m	struct:olc::v2d_generic
+z	.\Vec3.h	/^			float x,y,z;$/;"	m	struct:Vec3::__anon3::__anon4
+z	.\octree_sample.cpp	/^    float z;$/;"	m	struct:MyPoint	file:
 ~Decal	.\olcPixelGameEngine.h	/^	Decal::~Decal()$/;"	f	class:olc::Decal
 ~GDIPlusStartup	.\olcPixelGameEngine.h	/^		~GDIPlusStartup()$/;"	f	class:olc::GDIPlusStartup
+~Octree	.\octree.h	/^		~Octree() {$/;"	f	class:Octree
 ~PixelGameEngine	.\olcPixelGameEngine.h	/^	PixelGameEngine::~PixelGameEngine()$/;"	f	class:olc::PixelGameEngine
 ~ResourcePack	.\olcPixelGameEngine.h	/^	ResourcePack::~ResourcePack() { baseFile.close(); }$/;"	f	class:olc::ResourcePack
 ~Sprite	.\olcPixelGameEngine.h	/^	Sprite::~Sprite()$/;"	f	class:olc::Sprite
