@@ -53,8 +53,8 @@ void init() {
 	// the less work the octree will need to do. This may seem
 	// like it is exagerating the benefits, but often, we only
 	// need to know very nearby objects.
-	qmin = Vec3(-.05,-.05,-.05);
-	qmax = Vec3(.05,.05,.05);
+	qmin = Vec3(-.15,-.15,-.15);
+	qmax = Vec3(.15,.15,.15);
 
 	// Remember: In the case where the query is relatively close
 	// to the size of the whole octree space, the octree will

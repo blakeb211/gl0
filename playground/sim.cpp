@@ -1,3 +1,5 @@
+/* Goal: draw an octree */
+
 #define OLC_PGE_APPLICATION
 #include <cmath>
 #include <vector>
@@ -11,8 +13,8 @@ using v2 = glm::vec2;
 using m44 = glm::mat4;
 using v4 = glm::vec4;
 
-constexpr auto g_WIDTH = 160;
-constexpr auto g_HEIGHT = 100;
+constexpr auto g_WIDTH = 450;
+constexpr auto g_HEIGHT = 300;
 
 // Override base class with your custom functionality
 class Example : public olc::PixelGameEngine {
@@ -50,7 +52,7 @@ class Example : public olc::PixelGameEngine {
 	}
 
 	// Called once per frame, draws random coloured pixels
-	for (int i = 0; i < points_sz - 2; i+=2) {
+	for (int i = 0; i < points_sz - 2; i += 2) {
 	    const auto& pt = projected_points[i];
 	    const auto& pt2 = projected_points[i + 1];
 	    const auto& pt3 = projected_points[i + 2];
@@ -78,6 +80,14 @@ class Example : public olc::PixelGameEngine {
     m44 model;
 };
 
+//		  -1
+
+// -1  x     x	  1
+//
+//
+//
+//		   1
+
 int main() {
     Example demo;
     demo.model = glm::mat4(1.0f);
@@ -86,7 +96,15 @@ int main() {
     demo.projection = glm::perspective(
 	(float)PI / 2.0f, (float)g_WIDTH / (float)g_HEIGHT, 0.1f, 100.0f);
 
-    if (demo.Construct(g_WIDTH, g_HEIGHT, 4, 4, false, true))
+    // build a grid
+    for (float i = -1.f; i <= 1.f; i += 0.3333333f) 
+	for (float j = -1.f; j <= 1.f; j += 0.3333333f) 
+	for (float k = -1.f; k <= 1.f; k += 0.3333333f) {
+	demo.points.push_back(glm::vec3{
+
+	}
+
+    if (demo.Construct(g_WIDTH, g_HEIGHT, 2, 2, false, true))
 	demo.Start();
     return 0;
 }
