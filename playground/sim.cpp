@@ -48,8 +48,6 @@ void handle_user_input(olc::PixelGameEngine* engine) {
 }
 
 
-
-
 // Override base class with your custom functionality
 class Example : public olc::PixelGameEngine {
    public:
@@ -120,9 +118,7 @@ int main() {
     // 					y +1
     //					y
     //					y
-    //					y
-    //					y
-    //					y
+    //					y //					y //					y
     // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //-1			    y +1
     //					y
@@ -134,20 +130,20 @@ int main() {
 
     // build a grid
     // draw lines parallel to y axis
-    for (float k = -1.f; k <= 1.f; k += 0.3333333f)
-	for (float i = -1.f; i <= 1.f; i += 0.3333333f) {
+    for (float k = -1.f; k <= 1.f; k += 0.50f)
+	for (float i = -1.f; i <= 1.f; i += 0.50f) {
 	    demo.points.push_back(glm::vec3{i, -1, k});
 	    demo.points.push_back(glm::vec3{i, 1, k});
 	}
     // draw lines parallel to x axis
-    for (float k = -1.f; k <= 1.f; k += 0.3333333f)
-	for (float j = -1.f; j <= 1.f; j += 0.3333333f) {
+    for (float k = -1.f; k <= 1.f; k += 0.50f)
+	for (float j = -1.f; j <= 1.f; j += 0.50f) {
 	    demo.points.push_back(glm::vec3{-1, j, k});
 	    demo.points.push_back(glm::vec3{1, j, k});
 	}
     // draw lines parallel to z axis
-    for (float i = -1.f; i <= 1.f; i += 0.3333333f)
-	for (float j = -1.f; j <= 1.f; j += 0.3333333f) {
+    for (float i = -1.f; i <= 1.f; i += 0.50f)
+	for (float j = -1.f; j <= 1.f; j += 0.50f) {
 	    demo.points.push_back(glm::vec3{i, j, -1});
 	    demo.points.push_back(glm::vec3{i, j, 1});
 	}
