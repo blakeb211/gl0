@@ -71,18 +71,23 @@ int main() {
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
                         *gxb::shaderPath("colorFromVertex.fs"));
 
-  // add camPath points to level raw_data before building VAO
+  /*********************************************************/
+  /***************  Print Campath **************************/
+  /*********************************************************/
+  std::cout << "camPath:\n";
   for (auto &i : path) {
 	std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
   }
+  /*********************************************************/
+
+  // add camPath points to level raw_data before building VAO 
+  // so I can draw them if I need to debug.
   addCamPathToRawData(path, level.get());
   const auto tot_floats = level->raw_data.size();
   const auto cam_path_floats = path.size() * 3;
   auto pt1x = level->raw_data[tot_floats - cam_path_floats];
   auto pt1y = level->raw_data[tot_floats - cam_path_floats + 1];
   auto pt1z = level->raw_data[tot_floats - cam_path_floats + 2];
-
-  logPrintLn("cam path point 0:", pt1x, pt1y, pt1z);
 
   auto VAO = buildVAO(level.get());
 
