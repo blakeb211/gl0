@@ -41,6 +41,7 @@ void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
                      GLFWframebuffersizefun);
 void camGoalSeek(float deltaTime);
+void load_level(std::string name);
 // -------------------------------------------
 // GLOBALS
 // -------------------------------------------
@@ -51,6 +52,9 @@ std::unique_ptr<gxb::level> level = nullptr;
 std::vector<gxb::PathPt> path;
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
+
+
+
 int main() {
   gxb::initTypeToStrMap();  // creates str_to_type
   FrameRater fr{};
@@ -60,34 +64,21 @@ int main() {
   const auto& h = gxb::SCR_HEIGHT;
   GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
 
-  //@TODO: combine into one load later
-
-  auto futureLevelPtr = async(std::launch::async, gxb::load_level, "test");
-  level = futureLevelPtr.get();
+  load_level("test");
   
-  auto futureCamPts = async(std::launch::async, gxb::load_campath, "test");
-  path = futureCamPts.get();
-
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
                         *gxb::shaderPath("colorFromVertex.fs"));
 
-  /*********************************************************/
-  /***************  Print Campath **************************/
-  /*********************************************************/
+  // print campath 
+  // ------
   std::cout << "camPath:\n";
   for (auto &i : path) {
 	std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
   }
-  /*********************************************************/
 
   // add camPath points to level raw_data before building VAO 
   // so I can draw them if I need to debug.
   addCamPathToRawData(path, level.get());
-  const auto tot_floats = level->raw_data.size();
-  const auto cam_path_floats = path.size() * 3;
-  auto pt1x = level->raw_data[tot_floats - cam_path_floats];
-  auto pt1y = level->raw_data[tot_floats - cam_path_floats + 1];
-  auto pt1z = level->raw_data[tot_floats - cam_path_floats + 2];
 
   auto VAO = buildVAO(level.get());
 
@@ -393,4 +384,13 @@ void camGoalSeek(float deltaTime) {
       camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
       camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
     }
+}
+
+// load global level and path structs with data from files
+void load_level(std::string name) {
+  auto futureLevelPtr = async(std::launch::async, gxb::load_level, name);
+  level = futureLevelPtr.get();
+  
+  auto futureCamPts = async(std::launch::async, gxb::load_campath, name);
+  path = futureCamPts.get();
 }

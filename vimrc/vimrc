@@ -5,7 +5,7 @@
 set enc=utf-8
 set fenc=utf-8
 set termencoding=utf-8
-" disable vi compatibility (emulation of old bugs)
+" disable vi compatibilit (emulation of old bugs)
 set nocompatible
 " use indentation of previous line
 set autoindent
@@ -66,6 +66,7 @@ nnoremap <leader>t  :vert term<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>d  <Plug>(go-diagnostics)
 nnoremap <leader>i  :GoImports<CR>
+nnoremap - :e %:h<CR>
 " https://vim.fandom.com/wiki/Map_semicolon_to_colon
 map ; :
 filetype plugin indent on
@@ -74,7 +75,7 @@ set textwidth=120
 " turn syntax highlighting on
 set t_Co=256
 syntax on
-colorscheme paintbox
+colorscheme darkzen
 "colorscheme nofrils-dark
 " turn relative line numbers on
 " set number
@@ -107,11 +108,11 @@ nnoremap <F12> :buffers<CR>:buffer<Space>
 " switch between header/source with F4
 map <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 " recreate tags file with F5
-map <F5> :!ctags -R –c++-kinds=+p –fields=+iaS –extra=+q ..<CR>
+map <F5> :!ctags -R –c++-kinds=+p –fields=+iaS –extra=+q .<CR>
 " source compile script in current directory
 " map <F8> :source %:p:h\compile.vim<CR> 
 " build project using build.bat 
-map <F9> :!msbuild c:\cprojects\gl0<CR> 
+map <F9> :!msbuild /m c:\cprojects\gl0<CR> 
 " run with F10
 map <F10> :!c:\cprojects\gl0\x64\Debug\gl0.exe<CR>
 " goto definition with F12
