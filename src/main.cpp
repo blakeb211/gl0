@@ -23,6 +23,7 @@ using VecPP = std::vector<gxb::PathPt>;
 // -------------------------------------------
 // FORWARD DECLARATIONS
 // -------------------------------------------
+void test_naive_collision();
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
                           float deltaTime);
@@ -65,7 +66,9 @@ int main() {
   GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
 
   load_level("test");
-  
+
+  test_naive_collision(); 
+
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
                         *gxb::shaderPath("colorFromVertex.fs"));
 
@@ -393,4 +396,15 @@ void load_level(std::string name) {
   
   auto futureCamPts = async(std::launch::async, gxb::load_campath, name);
   path = futureCamPts.get();
+}
+
+void test_naive_collision() {
+	const auto ocnt = level->objects.size();
+	int num_checks {0};
+	for (int i = 0; i < ocnt - 1; i++) {
+		for (int j = i+1; j < ocnt; j++) {
+			num_checks++;
+		}
+	}
+	logPrintLn("NAIVE: num of collision checks:", num_checks);
 }

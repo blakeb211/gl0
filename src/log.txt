@@ -8,4 +8,6 @@ OpenGL Version: 3        . 3
  meshes loaded from disk: 3        
  19       points loaded from test .cmp 
  CamPath file for  test  loaded 
+ NAIVE: num of collision checks: 630      
+ avg framerate: 59.737   
  

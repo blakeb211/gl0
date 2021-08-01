@@ -13,12 +13,12 @@ FILETYPES:
 	.ppm	ppm file with initial cps points
 *****************************************/
 
-camera on a rail system
+camera on a rail system - done
 
 game
 	read a level and its campath file - done
-	camera follows campath
-	camera should follow campath smoothly
+	camera follows campath - done
+	camera should follow campath smoothly - done
 
 
 campath editor
@@ -32,9 +32,8 @@ campath editor
 level generator
 	generate a level
 
-
-generate level using some method
 need collision detection
+
 need gravity
 
 
