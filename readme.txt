@@ -1,3 +1,5 @@
+VISIT THE SCREENSHOTS FOLDER TO SEE THE ENGINE IN ACTION
+
 /****************************************
 *		GOALS
 	4 levels
