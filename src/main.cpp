@@ -90,6 +90,23 @@ int main() {
   glm::mat4 view = glm::mat4(1.0f);
   glm::mat4 projection = glm::mat4(1.0f);
 
+
+
+
+  auto move_moving_ground = [&](std::unique_ptr<gxb::entity>& o, const glm::vec3& pos_dir, const float& frameTime, float speedup = 1.0)
+  {
+    glm::vec3 facing = o->pos - o->pos_last;
+    facing = glm::normalize(facing);
+    o->pos_last = o->pos;
+    if (magic_enum::enum_name(o->state_machine.current) == "pos") {
+      o->pos += pos_dir * 0.001f * frameTime * speedup;
+    }
+    else {
+      o->pos += -1.0f * pos_dir * 0.001f * frameTime * speedup;
+    }
+    o->state_machine.check_transition(glm::distance(o->pos, o->pos_start), facing, 4, pos_dir);
+  };
+
   // Game loop
   // -----------
   while (!glfwWindowShouldClose(window)) {
@@ -112,20 +129,18 @@ int main() {
     for (auto& o : level->objects) {
       auto const elapsed = fr.lastTimeInMs();
       switch (o->type) {
+        glm::vec3 pos_dir;
       case gxb::ENTITY_TYPE::moving_ground_x:
-        if (magic_enum::enum_name(o->state_machine.current) == "pos") {
-          o->pos += glm::vec3(0.001f * elapsed, 0.0f, 0.0f);
-        }
-        else {
-          o->pos += glm::vec3(-0.001f * elapsed, 0.0f, 0.0f);
-        }
-        state_machine.check_transition(o->pos - o->pos_start,4);
+        pos_dir = glm::vec3(1.f, 0.f, 0.f);
+        move_moving_ground(o, pos_dir, elapsed, 1.3);
         break;
       case gxb::ENTITY_TYPE::moving_ground_y:
-        o->pos += glm::vec3(0.0f, 0.001f * elapsed, 0.0f);
+        pos_dir = glm::vec3(0.f, 1.f, 0.f);
+        move_moving_ground(o, pos_dir, elapsed, 2.0);
         break;
       case gxb::ENTITY_TYPE::moving_ground_z:
-        o->pos += glm::vec3(0.0f, 0.0f, 0.001f * elapsed);
+        pos_dir = glm::vec3(0.f, 0.f, 1.f);
+        move_moving_ground(o, pos_dir, elapsed, 5.0);
         break;
       }
     }
@@ -183,6 +198,7 @@ int main() {
   closeLog();
   return 0;
 }
+
 
 void logOpenGLInfo() {
   // Query GL
