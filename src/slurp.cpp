@@ -20,8 +20,8 @@ stringstream get_file_contents(const char* filename)
         return stringstream { contents };
     }
     // error string if fopen failed
-    logPrintLn({ __FILE__,
-        "Method: get_file_contents(const char* filename) errno:", errno });
+    logPrintLn( __FILE__,
+        "Method: get_file_contents(const char* filename) errno:", errno );
     return stringstream { "" };
 }
 
