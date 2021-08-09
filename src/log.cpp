@@ -52,6 +52,8 @@ template <class T> void write_to_screen_and_disk(const string fmt, any val) {
 // This method has the logPrintLn({ calling syntax and is only used internally 
 // by log.h and log.cpp via the logPrintLn template.
 // It should not be used by any other files in case I want to remove it.
+// 
+// Instead should probably be customizing types with fmt::print
 void logPrintLn(const initializer_list<any> &il) {
   assert(fptr != nullptr);
   for (auto &i : il) {
