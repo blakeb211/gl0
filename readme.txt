@@ -38,35 +38,26 @@ need collision detection
 
 need gravity
 
-
-camera should find closest path point to players new position
-and smoothly transition there, while looking at a certain direction
-
-
-
 entity states
-
-need lighting
+add object properties, like state timings to level text
+terrain creation : generate levels and campaths
 
 need level editor
 
-finish opengl lighting section 
 
 entities inherit from entity 
 
 camera on a rail --> camera follows a bezier through the level
 
-add object properties, like state timings to level text
-
-add lighting
-
 main loop should run based on level text data
   object state machine based properties
   checking win state of level
 
+
+finish opengl lighting section 
+need lighting
 animation
 
-terrain creation
 
 add menu screen
 

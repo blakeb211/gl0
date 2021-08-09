@@ -197,6 +197,7 @@
     <ClCompile Include="src\log.cpp" />
     <ClCompile Include="src\slurp.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
+    <ClCompile Include="src\update.cpp" />
     <ClCompile Include="thirdparty\src\fmt\format.cc" />
     <ClCompile Include="thirdparty\src\fmt\os.cc" />
     <ClCompile Include="thirdparty\src\glad\glad.c" />
@@ -235,9 +236,11 @@
     <ClInclude Include="include\gamelib.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\slurp.h" />
+    <ClInclude Include="include\update.h" />
     <ClInclude Include="thirdparty\include\fmt\format.h" />
     <ClInclude Include="thirdparty\include\fmt\os.h" />
     <ClInclude Include="thirdparty\include\glad\glad.h" />
+    <ClInclude Include="thirdparty\include\magic_enum.h" />
     <ClInclude Include="thirdparty\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

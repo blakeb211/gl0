@@ -57,6 +57,9 @@
     <ClCompile Include="thirdparty\src\fmt\os.cc">
       <Filter>ThirdParty\Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\update.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\log.h">
@@ -99,6 +102,12 @@
       <Filter>ThirdParty\Include</Filter>
     </ClInclude>
     <ClInclude Include="thirdparty\include\fmt\os.h">
+      <Filter>ThirdParty\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\update.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\include\magic_enum.h">
       <Filter>ThirdParty\Include</Filter>
     </ClInclude>
   </ItemGroup>

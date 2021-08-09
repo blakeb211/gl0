@@ -34,3 +34,6 @@ ground plane2 -3.0 -2.0 -26.0  0.0 0.0 0.0
 ground plane2 -3.0 -2.0 -30.0  0.0 0.0 0.0
 ground plane2 -3.0 -2.0 -34.0  0.0 0.0 0.0
 ground plane2 -3.0 -2.0 -38.0  0.0 0.0 0.0
+ground plane2 -3.0 -2.0 -38.0  0.0 0.0 0.0
+moving_ground_x plane2 +3.0 1.0 -38.0  0.0 0.0 0.0
+moving_ground_z plane2 -3.0 1.0 -41.0  0.0 0.0 0.0

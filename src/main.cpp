@@ -8,6 +8,7 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
+#include <magic_enum.h>
 
 // -------------------------------------------
 // DEFINES 
@@ -26,13 +27,13 @@ using VecPP = std::vector<gxb::PathPt>;
 void test_naive_collision();
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
-                          float deltaTime);
+  float deltaTime);
 void processInput_playerOnly(GLFWwindow* window, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
-                             const VecPP& newCamPos);
+  const VecPP& newCamPos);
 
 void addCamPathToRawData(const VecPP& path, gxb::level* l);
 
@@ -40,7 +41,7 @@ void clearScreen();
 unsigned int buildVAO(const gxb::level*);
 void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
-                     GLFWframebuffersizefun);
+  GLFWframebuffersizefun);
 void camGoalSeek(float deltaTime);
 void load_level(std::string name);
 // -------------------------------------------
@@ -67,16 +68,16 @@ int main() {
 
   load_level("test");
 
-  test_naive_collision(); 
+  test_naive_collision();
 
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
-                        *gxb::shaderPath("colorFromVertex.fs"));
+    *gxb::shaderPath("colorFromVertex.fs"));
 
   // print campath 
   // ------
   std::cout << "camPath:\n";
-  for (auto &i : path) {
-	std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
+  for (auto& i : path) {
+    std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
   }
 
   // add camPath points to level raw_data before building VAO 
@@ -101,19 +102,41 @@ int main() {
     processInput_camOnly(window, camera, deltaTime);
 #else
     processInput_playerOnly(window, deltaTime);
-	camGoalSeek(deltaTime);
+    camGoalSeek(deltaTime);
 #endif
 
     progOne.use();
 
+    // update objects 
+    // movement is moderated by the elapsed time in case we change the framerate later
+    for (auto& o : level->objects) {
+      auto const elapsed = fr.lastTimeInMs();
+      switch (o->type) {
+      case gxb::ENTITY_TYPE::moving_ground_x:
+        if (magic_enum::enum_name(o->state_machine.current) == "pos") {
+          o->pos += glm::vec3(0.001f * elapsed, 0.0f, 0.0f);
+        }
+        else {
+          o->pos += glm::vec3(-0.001f * elapsed, 0.0f, 0.0f);
+        }
+        state_machine.check_transition(o->pos - o->pos_start,4);
+        break;
+      case gxb::ENTITY_TYPE::moving_ground_y:
+        o->pos += glm::vec3(0.0f, 0.001f * elapsed, 0.0f);
+        break;
+      case gxb::ENTITY_TYPE::moving_ground_z:
+        o->pos += glm::vec3(0.0f, 0.0f, 0.001f * elapsed);
+        break;
+      }
+    }
+
     // set transformations
     model = glm::mat4(1.0f);
-
     view = camera.GetViewMatrix();
     progOne.setMat4("view", view);
 
     projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f,
-                                  0.1f, 100.0f);
+      0.1f, 100.0f);
     progOne.setMat4("projection", projection);
 
     // render
@@ -127,7 +150,7 @@ int main() {
       model = glm::translate(model, level->objects[i]->pos);
 
       colorId =
-          (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
+        (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
       progOne.setVec3("color", col::list[colorId]);
       progOne.setMat4("model", model);
 
@@ -136,20 +159,20 @@ int main() {
 
       unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
       glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
-                   numVertsCurrModel);
+        numVertsCurrModel);
     }
 
-	#if DRAW_CAM_PATH 
+#if DRAW_CAM_PATH 
     // Draw CamPath
     model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3{0, 0, 0});
+    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     progOne.setMat4("model", model);
     progOne.setVec3("color", col::red);
     const auto tot_verts = level->raw_data.size() / 3;
     const auto cam_path_verts = path.size();
     glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts),
-                 (GLint)cam_path_verts);
-	#endif
+      (GLint)cam_path_verts);
+#endif
     glBindVertexArray(0);
     glfwSwapBuffers(window);
     glfwPollEvents();
@@ -205,7 +228,7 @@ void processInput_playerOnly(GLFWwindow* window, float deltaTime) {
 // process all input: move camera only
 // ---------------------------------------------------------------------------------------------------------
 void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
-                          float deltaTime) {
+  float deltaTime) {
   const float cameraSpeed = 0.05f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
@@ -243,8 +266,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
   float xoffset = (float)xpos - lastX;
   float yoffset =
-      lastY -
-      (float)ypos;  // reversed since y-coordinates go from bottom to top
+    lastY -
+    (float)ypos;  // reversed since y-coordinates go from bottom to top
 
   lastX = (float)xpos;
   lastY = (float)ypos;
@@ -264,7 +287,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 }
 
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
-                     GLFWframebuffersizefun fun) {
+  GLFWframebuffersizefun fun) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -308,23 +331,23 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
 }
 
 glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
-                             const VecPP& path) {
+  const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
-  const auto negZvec = glm::vec3{0.f, 0.f, -1.f};
+  const auto negZvec = glm::vec3{ 0.f, 0.f, -1.f };
 
   size_t path_sz = path.size();
-  std::vector<std::pair<float,float>> dist_ang(path_sz);
+  std::vector<std::pair<float, float>> dist_ang(path_sz);
 
   glm::vec3 pathPos{}, cam2hero{};
   float dist{}, angle{};
-  
-  for (int i = 0; i < path_sz; i++ ) {
-	pathPos = path[i].pos;
-    cam2hero = glm::vec3{glm::normalize(heroPos - pathPos)};
-	dist = glm::distance(heroPos, path[i].pos);
+
+  for (int i = 0; i < path_sz; i++) {
+    pathPos = path[i].pos;
+    cam2hero = glm::vec3{ glm::normalize(heroPos - pathPos) };
+    dist = glm::distance(heroPos, path[i].pos);
     angle = glm::acos(glm::dot(negZvec, cam2hero));
-	dist_ang[i].first = dist;
-	dist_ang[i].second = angle;
+    dist_ang[i].first = dist;
+    dist_ang[i].second = angle;
   }
 
   // find first pathPt that has distance < 20 && angle < 40
@@ -333,13 +356,13 @@ glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
   constexpr auto distCutoff = 30;
   constexpr auto angCutoff = 20;
 
-  auto check = [distCutoff, angCutoff](const pair & dap) { 
-	  return (dap.first < distCutoff && dap.second < angCutoff); };
+  auto check = [distCutoff, angCutoff](const pair& dap) {
+    return (dap.first < distCutoff&& dap.second < angCutoff); };
 
   for (int i = 0; i < path_sz; i++) {
-	if (check(dist_ang[i])) {
-		return path[i].pos;	
-	}
+    if (check(dist_ang[i])) {
+      return path[i].pos;
+    }
   }
   return glm::vec3{}; // if no valid campath found, cam goes to 0,0,0
 }
@@ -367,7 +390,7 @@ unsigned int buildVAO(const gxb::level* l) {
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),
-               l->raw_data.data(), GL_STATIC_DRAW);
+    l->raw_data.data(), GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
@@ -380,31 +403,31 @@ unsigned int buildVAO(const gxb::level* l) {
 }
 
 void camGoalSeek(float deltaTime) {
-    auto newCamGoalPos = selectNextCamPoint(level.get(), camera, path);
-    // smoothly move cam towards goal pos
-    if (camera.Position != newCamGoalPos) {
-      const auto camDp = newCamGoalPos - camera.Position;
-      camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
-      camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
-    }
+  auto newCamGoalPos = selectNextCamPoint(level.get(), camera, path);
+  // smoothly move cam towards goal pos
+  if (camera.Position != newCamGoalPos) {
+    const auto camDp = newCamGoalPos - camera.Position;
+    camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
+    camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
+  }
 }
 
 // load global level and path structs with data from files
 void load_level(std::string name) {
   auto futureLevelPtr = async(std::launch::async, gxb::load_level, name);
   level = futureLevelPtr.get();
-  
+
   auto futureCamPts = async(std::launch::async, gxb::load_campath, name);
   path = futureCamPts.get();
 }
 
 void test_naive_collision() {
-	const auto ocnt = level->objects.size();
-	int num_checks {0};
-	for (int i = 0; i < ocnt - 1; i++) {
-		for (int j = i+1; j < ocnt; j++) {
-			num_checks++;
-		}
-	}
-	logPrintLn("NAIVE: num of collision checks:", num_checks);
+  const auto ocnt = level->objects.size();
+  int num_checks{ 0 };
+  for (int i = 0; i < ocnt - 1; i++) {
+    for (int j = i + 1; j < ocnt; j++) {
+      num_checks++;
+    }
+  }
+  logPrintLn("NAIVE: num of collision checks:", num_checks);
 }

@@ -19,12 +19,15 @@ inline const unsigned int SCR_HEIGHT = 600;
 
 inline std::hash<std::string> strHasher;
 
-enum class ENTITY_TYPE { unknown, hero, box, ground, fruit, baddie };
+enum class ENTITY_TYPE { unknown, hero, box, ground, 
+	moving_ground_x, moving_ground_z, moving_ground_y, fruit, baddie };
 
 inline std::map<std::string, ENTITY_TYPE> str_to_type{
     {"hero", ENTITY_TYPE::hero},     {"box", ENTITY_TYPE::box},
     {"ground", ENTITY_TYPE::ground}, {"fruit", ENTITY_TYPE::fruit},
-    {"baddie", ENTITY_TYPE::baddie},
+    {"baddie", ENTITY_TYPE::baddie}, {"moving_ground_x", ENTITY_TYPE::moving_ground_x},
+	{"moving_ground_z", ENTITY_TYPE::moving_ground_z},
+	{"moving_ground_y", ENTITY_TYPE::moving_ground_y},
 };
 
 inline std::map<ENTITY_TYPE, std::string> type_to_str{};
@@ -59,15 +62,26 @@ struct PathPt {
   float dist;
 };
 
+struct FSM_bin {
+  enum class States { pos = 1, neg = -1 };
+  States current{ States::pos };
+  void check_transition(glm::vec3 dist, float target) {
+    //if (magic_enum::enum_name(current) == "pos" && dist >= glm::vec3(target,
+  }
+};
+
 struct entity {
   entity()
-      : pos{0, 0, 0}, rot{0, 0, 0}, mesh_id{0}, id{IdFactory::getNewId()} {}
+    : pos{ 0, 0, 0 }, rot{ 0, 0, 0 }, mesh_id{ 0 }, id{ IdFactory::getNewId() }, state_machine{ FSM_bin::States::pos } {}
   const unsigned id;
   std::size_t mesh_id;
   ENTITY_TYPE type;
   glm::vec3 pos;
   glm::vec3 rot;
+  glm::vec3 pos_start; // could be in derived type instead
+  FSM_bin state_machine; // could be in derived type instead
 };
+
 
 struct mesh {
   mesh() : hash_code{0}, pos_first_vert{0} {}
@@ -307,6 +321,7 @@ inline std::unique_ptr<level> load_level(std::string levelName) {
 
       entityPtr->type = str_to_type[entityName];
       entityPtr->pos = Pos;
+      entityPtr->pos_start = Pos;
       entityPtr->rot = Rot;
       entityPtr->mesh_id = meshHashCode;
 
