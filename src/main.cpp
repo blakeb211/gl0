@@ -341,6 +341,7 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   glEnable(GL_DEPTH_TEST);
+  //glEnable(GL_LIGHTING);
   glEnable(GL_PROGRAM_POINT_SIZE);
   glfwSwapInterval(1);  // vsync
   logOpenGLInfo();

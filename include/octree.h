@@ -1,9 +1,11 @@
 #pragma once
 #include <gamelib.h>
+#include <vector>
 
 namespace octree {
 
   gxb::Level* level;
+  unsigned int vboOctree{}, vaoOctree{};
 
   void setup(gxb::Level* level) {
     octree::level = level;
@@ -24,7 +26,6 @@ namespace octree {
     max *= 1.1;
 
     // build vao
-    unsigned int vboOctree{}, vaoOctree{};
     glGenVertexArrays(1, &vaoOctree);
     glGenBuffers(1, &vboOctree);
 
@@ -34,19 +35,29 @@ namespace octree {
     glBindVertexArray(vaoOctree);
     glBindBuffer(GL_ARRAY_BUFFER, vboOctree);
     //using the vertices_octree vertex array
-    const unsigned int num_cubes = 100;
-    int vertices_octree[12 * num_cubes];
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_octree), vertices_octree, GL_STATIC_DRAW);
+    const unsigned int num_lines = 1;
+    std::vector<float> vertices_octree{};
+    glBufferData(GL_ARRAY_BUFFER, vertices_octree.size() * sizeof(float), vertices_octree.data(), GL_STATIC_DRAW);
+
+    // this will need modified
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    // an unbind the VBO and VAO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
   };
 
-  void draw_cube(unsigned int vaoOctree) {
+  void draw_octree() {
 
     glBindVertexArray(vaoOctree); //bind the octree vao
     //glDrawArrays(...); //will use vboOctree
 
   };
 
-  void draw() {};
+  void draw() {
+    draw_octree();
+  };
 
 
 
