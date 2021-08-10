@@ -119,7 +119,7 @@ int main() {
         else {
           o->pos += glm::vec3(-0.001f * elapsed, 0.0f, 0.0f);
         }
-        state_machine.check_transition(o->pos - o->pos_start,4);
+        o->state_machine.check_transition(o->pos - o->pos_start,4);
         break;
       case gxb::ENTITY_TYPE::moving_ground_y:
         o->pos += glm::vec3(0.0f, 0.001f * elapsed, 0.0f);
