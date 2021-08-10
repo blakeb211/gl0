@@ -15,8 +15,8 @@ namespace gxb {
   inline std::string rootLevelPath = appRoot + R"(levels\)";
   inline std::string rootShaderPath = appRoot + R"(shaders\)";
 
-  inline const unsigned int SCR_WIDTH = 800;
-  inline const unsigned int SCR_HEIGHT = 600;
+  inline const unsigned int SCR_WIDTH = 1024;
+  inline const unsigned int SCR_HEIGHT = 768;
 
   inline std::hash<std::string> strHasher;
 

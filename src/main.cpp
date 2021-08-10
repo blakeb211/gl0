@@ -132,15 +132,15 @@ int main() {
         glm::vec3 pos_dir;
       case gxb::ENTITY_TYPE::moving_ground_x:
         pos_dir = glm::vec3(1.f, 0.f, 0.f);
-        move_moving_ground(o, pos_dir, elapsed, 1.3);
+        move_moving_ground(o, pos_dir, elapsed, 1.3f);
         break;
       case gxb::ENTITY_TYPE::moving_ground_y:
         pos_dir = glm::vec3(0.f, 1.f, 0.f);
-        move_moving_ground(o, pos_dir, elapsed, 2.0);
+        move_moving_ground(o, pos_dir, elapsed, 2.0f);
         break;
       case gxb::ENTITY_TYPE::moving_ground_z:
         pos_dir = glm::vec3(0.f, 0.f, 1.f);
-        move_moving_ground(o, pos_dir, elapsed, 5.0);
+        move_moving_ground(o, pos_dir, elapsed, 5.0f);
         break;
       }
     }
