@@ -8,6 +8,7 @@ namespace octree {
   unsigned int vboOctree{}, vaoOctree{};
 
   void setup(gxb::Level* level) {
+    assert(level != NULL);
     octree::level = level;
     glm::vec3 min{ 0 }, max{ 0 };
     for (auto& i : level->objects) {
@@ -49,7 +50,6 @@ namespace octree {
   };
 
   void draw_octree() {
-
     glBindVertexArray(vaoOctree); //bind the octree vao
     //glDrawArrays(...); //will use vboOctree
 
