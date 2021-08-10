@@ -56,8 +56,6 @@ std::vector<gxb::PathPt> path;
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
 
-
-
 int main() {
   gxb::initTypeToStrMap();  // creates str_to_type
   FrameRater fr{};
