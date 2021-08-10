@@ -34,7 +34,6 @@ void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
   const VecPP& newCamPos);
-
 void addCamPathToRawData(const VecPP& path, gxb::level* l);
 
 void clearScreen();
