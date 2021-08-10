@@ -36,9 +36,8 @@ namespace gxb {
   inline std::map<ENTITY_TYPE, std::string> type_to_str{};
 
   void initTypeToStrMap() {
-    for (const auto& mapItem : str_to_type) {
-      type_to_str[mapItem.second] = mapItem.first;
-    }
+      auto create_entry = [](decltype(*str_to_type.begin()) thing) { type_to_str[thing.second] = thing.first; };
+      std::for_each(str_to_type.begin(), str_to_type.end(), create_entry);
   }
 
   //********************************************************
@@ -65,6 +64,8 @@ namespace gxb {
     float dist;
   };
 
+
+  // A simple binary state machine for moving platforms
   struct FSM_bin {
     enum class States { pos = 1, neg = -1 };
     States current{ States::pos };
