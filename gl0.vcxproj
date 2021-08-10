@@ -238,6 +238,7 @@
     <ClInclude Include="include\headers.h" />
     <ClInclude Include="include\log.h" />
     <ClInclude Include="include\gamelib.h" />
+    <ClInclude Include="include\octree.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\slurp.h" />
     <ClInclude Include="include\update.h" />

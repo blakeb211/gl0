@@ -110,6 +110,9 @@
     <ClInclude Include="thirdparty\include\magic_enum.h">
       <Filter>ThirdParty\Include</Filter>
     </ClInclude>
+    <ClInclude Include="include\octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt">

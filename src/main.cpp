@@ -9,12 +9,14 @@
 #include "glm.h"
 #include "headers.h"
 #include <magic_enum.h>
+#include <octree.h>
 
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
 #define FREE_MOVE 0
 #define DRAW_CAM_PATH 0
+#define DRAW_OCTREE 1
 
 // -------------------------------------------
 // TYPEDEFS
@@ -32,12 +34,12 @@ void processInput_playerOnly(GLFWwindow* window, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
+glm::vec3 selectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& newCamPos);
-void addCamPathToRawData(const VecPP& path, gxb::level* l);
+void addCamPathToRawData(const VecPP& path, gxb::Level* l);
 
 void clearScreen();
-unsigned int buildVAO(const gxb::level*);
+unsigned int buildVAO(const gxb::Level*);
 void logOpenGLInfo();
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   GLFWframebuffersizefun);
@@ -49,7 +51,7 @@ void load_level(std::string name);
 gxb::Camera camera{};
 float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool firstMouse = true;
-std::unique_ptr<gxb::level> level = nullptr;
+std::unique_ptr<gxb::Level> level = nullptr;
 std::vector<gxb::PathPt> path;
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
@@ -67,6 +69,7 @@ int main() {
 
   load_level("test");
 
+  octree::setup(level.get());
   test_naive_collision();
 
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
@@ -74,11 +77,12 @@ int main() {
 
   // print campath 
   // ------
+#if DRAW_CAM_PATH
   std::cout << "camPath:\n";
   for (auto& i : path) {
     std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
   }
-
+#endif
   // add camPath points to level raw_data before building VAO 
   // so I can draw them if I need to debug.
   addCamPathToRawData(path, level.get());
@@ -186,6 +190,9 @@ int main() {
     const auto cam_path_verts = path.size();
     glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts),
       (GLint)cam_path_verts);
+#endif
+#if DRAW_OCTREE
+    octree::draw();
 #endif
     glBindVertexArray(0);
     glfwSwapBuffers(window);
@@ -345,7 +352,7 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   return window;
 }
 
-glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
+glm::vec3 selectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = glm::vec3{ 0.f, 0.f, -1.f };
@@ -382,7 +389,7 @@ glm::vec3 selectNextCamPoint(const gxb::level* const l, gxb::Camera& cam,
   return glm::vec3{}; // if no valid campath found, cam goes to 0,0,0
 }
 
-void addCamPathToRawData(const VecPP& path, gxb::level* l) {
+void addCamPathToRawData(const VecPP& path, gxb::Level* l) {
   auto func = [l](const gxb::PathPt pp) {
     for (int i = 0; i < 3; i++) {
       l->raw_data.push_back(pp.pos[i]);
@@ -391,7 +398,7 @@ void addCamPathToRawData(const VecPP& path, gxb::level* l) {
   std::for_each(path.begin(), path.end(), func);
 }
 
-unsigned int buildVAO(const gxb::level* l) {
+unsigned int buildVAO(const gxb::Level* l) {
   // set up vertex data (and buffer(s)) and configure vertex attributes
   // ------------------------------------------------------------------
   assert(level != nullptr);

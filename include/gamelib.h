@@ -36,8 +36,8 @@ namespace gxb {
   inline std::map<ENTITY_TYPE, std::string> type_to_str{};
 
   void initTypeToStrMap() {
-      auto create_entry = [](decltype(*str_to_type.begin()) thing) { type_to_str[thing.second] = thing.first; };
-      std::for_each(str_to_type.begin(), str_to_type.end(), create_entry);
+    auto create_entry = [](decltype(*str_to_type.begin()) thing) { type_to_str[thing.second] = thing.first; };
+    std::for_each(str_to_type.begin(), str_to_type.end(), create_entry);
   }
 
   //********************************************************
@@ -130,7 +130,7 @@ namespace gxb {
     std::vector<glm::vec3> cps;
   };
 
-  struct level {
+  struct Level {
     std::vector<std::unique_ptr<mesh>> meshes;
     std::vector<int> mesh_first_vertex;
     std::vector<std::unique_ptr<entity>> objects;
@@ -275,8 +275,8 @@ namespace gxb {
   // format of level
   // 							 pos   rot
   // entity_type  model_name  x y z x y z
-  inline std::unique_ptr<level> load_level(std::string levelName) {
-    auto l = std::make_unique<level>();
+  inline std::unique_ptr<Level> load_level(std::string levelName) {
+    auto l = std::make_unique<Level>();
     std::string line, entityName = "";
 
     bool levelExist = slurp::checkFileExist(rootLevelPath, levelName, "txt");
