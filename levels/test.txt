@@ -6,14 +6,14 @@ fruit sphere2 -10.0 6.0 -40.0  0.0 0.0 0.0
 fruit sphere2 +10.0 7.0 -40.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -2.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -6.0  0.0 0.0 0.0
-ground plane2 0.0 -0.0 -10.0  0.0 0.0 0.0
+moving_ground_y plane2 0.0 1.0 -10.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -14.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -18.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -22.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -26.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -30.0  0.0 0.0 0.0
 ground plane2 0.0 -0.0 -34.0  0.0 0.0 0.0
-ground plane2 0.0 -0.0 -38.0  0.0 0.0 0.0
+moving_ground_y plane2 0.0 2.0 -38.0  0.0 0.0 0.0
 ground plane2 3.0 -0.0 -2.0  0.0 0.0 0.0
 ground plane2 3.0 -0.0 -6.0  0.0 0.0 0.0
 ground plane2 3.0 -0.0 -10.0  0.0 0.0 0.0
