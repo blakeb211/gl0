@@ -24,6 +24,8 @@ game
 
 refactoring
 	need a tool to enforce style guide
+	pull rendering system outside of main.cpp
+	pull update outside of main.cpp
 
 campath editor
 	get campath control pts from a ppm - done
