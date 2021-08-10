@@ -22,6 +22,8 @@ game
 	camera follows campath - done
 	camera should follow campath smoothly - done
 
+refactoring
+	need a tool to enforce style guide
 
 campath editor
 	get campath control pts from a ppm - done
@@ -32,22 +34,13 @@ campath editor
 	add control points
 	
 level generator
-	generate a level
-
+	terrain creation : generate levels and campaths
+	
 need collision detection
-
 need gravity
-
 entity states
-add object properties, like state timings to level text
-terrain creation : generate levels and campaths
 
 need level editor
-
-
-entities inherit from entity 
-
-camera on a rail --> camera follows a bezier through the level
 
 main loop should run based on level text data
   object state machine based properties
@@ -58,14 +51,9 @@ finish opengl lighting section
 need lighting
 animation
 
-
 add menu screen
 
-pick style guide and stick to it
 
-lay out a simple level
-
-make level generator
 
 octree for collisions
 
@@ -78,10 +66,5 @@ RESOURCED NEEDED
   sounds
 
 object
-
-world
-	holds object locations
-	informs objects about collisions
-    objects hold a reference to world but world does not hold a reference to objects	
 
 game modes
