@@ -73,6 +73,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\cprojects\gl0\include;C:\cprojects\gl0\thirdparty\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
@@ -82,6 +84,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>.\include;.\thirdparty\include;$(IncludePath)</IncludePath>
     <LibraryPath>.\thirdparty\libs;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
