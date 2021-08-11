@@ -199,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\log.cpp" />
+    <ClCompile Include="src\render.cpp" />
     <ClCompile Include="src\slurp.cpp" />
     <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\update.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="include\log.h" />
     <ClInclude Include="include\gamelib.h" />
     <ClInclude Include="include\octree.h" />
+    <ClInclude Include="include\render.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\slurp.h" />
     <ClInclude Include="include\update.h" />

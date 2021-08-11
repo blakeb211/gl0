@@ -60,6 +60,9 @@
     <ClCompile Include="src\update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\log.h">
@@ -111,6 +114,9 @@
       <Filter>ThirdParty\Include</Filter>
     </ClInclude>
     <ClInclude Include="include\octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
