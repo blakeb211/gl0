@@ -15,7 +15,7 @@
 // DEFINES 
 // -------------------------------------------
 #define FREE_MOVE 1
-#define DRAW_CAM_PATH 0
+#define DRAW_CAM_PATH 1
 #define DRAW_OCTREE 1
 #define VSYNC 1
 
@@ -42,6 +42,8 @@ void addCamPathToRawData(const VecPP& path, gxb::Level* l);
 void clearScreen();
 unsigned int buildVAO(const gxb::Level*);
 void logOpenGLInfo();
+void setGLflags();
+
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   GLFWframebuffersizefun);
 void camGoalSeek(float deltaTime);
@@ -86,7 +88,9 @@ int main() {
   // so I can draw them if I need to debug.
   addCamPathToRawData(path, level.get());
 
+  setGLflags();
   auto VAO = buildVAO(level.get());
+
 
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 view = glm::mat4(1.0f);
@@ -94,7 +98,7 @@ int main() {
 
 
 
-
+  // lambda for moving platform behavior
   auto move_moving_ground = [&](std::unique_ptr<gxb::entity>& o, const glm::vec3& pos_dir, const float& frameTime, float speedup = 1.0)
   {
     glm::vec3 facing = o->pos - o->pos_last;
@@ -165,9 +169,9 @@ int main() {
     for (size_t i = 0; i < level->objects.size(); i++) {
       model = glm::mat4(1.0f);
       model = glm::translate(model, level->objects[i]->pos);
-
       colorId =
         (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
+
       progOne.setVec3("color", col::list[colorId]);
       progOne.setMat4("model", model);
 
@@ -194,7 +198,7 @@ int main() {
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     progOne.setMat4("model", model);
-    progOne.setVec3("color", col::red);
+    progOne.setVec3("color", col::green);
     octree::draw();
 #endif
     glBindVertexArray(0);
@@ -345,9 +349,6 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   glfwSetScrollCallback(window, scroll_callback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-  glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_LIGHTING);
-  glEnable(GL_PROGRAM_POINT_SIZE);
 #if VSYNC
   glfwSwapInterval(1);  // vsync on
 #else
@@ -404,6 +405,12 @@ void addCamPathToRawData(const VecPP& path, gxb::Level* l) {
     }
   };
   std::for_each(path.begin(), path.end(), func);
+}
+
+void setGLflags() {
+  glEnable(GL_DEPTH_TEST);
+  //glEnable(GL_LIGHTING);
+  glEnable(GL_PROGRAM_POINT_SIZE);
 }
 
 unsigned int buildVAO(const gxb::Level* l) {
