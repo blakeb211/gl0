@@ -68,7 +68,7 @@ int main() {
 
   load_level("test");
 
-  octree::setup(level.get());
+  auto vaoOctree = octree::setup(level.get());
   test_naive_collision();
 
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
@@ -197,7 +197,7 @@ int main() {
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     progOne.setMat4("model", model);
     progOne.setVec3("color", col::green);
-    octree::draw();
+    octree::draw(vaoOctree);
 #endif
     glBindVertexArray(0);
     glfwSwapBuffers(window);

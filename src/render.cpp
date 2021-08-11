@@ -47,10 +47,28 @@ unsigned int render::buildVAO(const gxb::Level* l) {
   return VAO;
 }
 
+unsigned int render::buildOctreeVAO(const std::vector<float>& vertices_octree) {
 
+  // build vao
+  unsigned int vboOctree{}, vaoOctree{};
+  glGenVertexArrays(1, &vaoOctree);
+  glGenBuffers(1, &vboOctree);
 
+  // here we set things up for the octree vao
+  // the vao will store the vbo with it and every time you bind it and call
+  // glDrawArrays, it will use the vbo associated with the bound vao.
+  glBindVertexArray(vaoOctree);
+  glBindBuffer(GL_ARRAY_BUFFER, vboOctree);
+  // vboOctree buffer data is from vertices_octree
+  glBufferData(GL_ARRAY_BUFFER, vertices_octree.size() * sizeof(float),
+    vertices_octree.data(), GL_STATIC_DRAW);
 
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+    (void*)0);
+  glEnableVertexAttribArray(0);
 
-
-
-
+  // unbind the VBO and VAO
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+  return vaoOctree;
+}
