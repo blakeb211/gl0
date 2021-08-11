@@ -17,6 +17,7 @@
 #define FREE_MOVE 1
 #define DRAW_CAM_PATH 0
 #define DRAW_OCTREE 1
+#define VSYNC 1
 
 // -------------------------------------------
 // TYPEDEFS
@@ -347,7 +348,11 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   glEnable(GL_DEPTH_TEST);
   //glEnable(GL_LIGHTING);
   glEnable(GL_PROGRAM_POINT_SIZE);
-  glfwSwapInterval(1);  // vsync
+#if VSYNC
+  glfwSwapInterval(1);  // vsync on
+#else
+  glfwSwapInterval(0);  // vsync off
+#endif
   logOpenGLInfo();
 
   clearScreen();
