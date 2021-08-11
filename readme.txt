@@ -23,9 +23,9 @@ game
 	camera should follow campath smoothly - done
 
 refactoring
-	need a tool to enforce style guide
-	pull rendering system outside of main.cpp
+	pull rendering system outside of main.cpp - done
 	pull update outside of main.cpp
+	need a tool to enforce style guide
 
 campath editor
 	get campath control pts from a ppm - done
@@ -35,10 +35,17 @@ campath editor
 	delete control points
 	add control points
 	
+collision detection
+	+keep separate list of stationary and moving objects
+	+use distance squared instead of actual distance
+	+do a coarse check before doing a granular check
+	+does collision checking need to be done every frame?
+	OCTREE NOTES
+	need bounding box on each object
+
 level generator
 	terrain creation : generate levels and campaths
-	
-need collision detection
+
 need gravity
 entity states
 
@@ -48,18 +55,11 @@ main loop should run based on level text data
   object state machine based properties
   checking win state of level
 
-
 finish opengl lighting section 
 need lighting
 animation
 
 add menu screen
-
-
-
-octree for collisions
-
-multithreaded?
 
 RESOURCED NEEDED
   meshes
