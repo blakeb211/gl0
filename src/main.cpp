@@ -4,8 +4,8 @@
 #include <stb\stb_image.h>
 //
 #include "gamelib.h"
-#include "FrameRater.h"
-#include "Shader.h"
+#include "frameRater.h"
+#include "shader.h"
 #include "glm.h"
 #include "headers.h"
 #include <magic_enum.h>
