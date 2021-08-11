@@ -80,8 +80,9 @@ void setup(gxb::Level* level) {
     logPrintLn("octree extent:", glm::to_string(max - min));
 
     // add a buffer around octree
-    min *= 1.1;
-    max *= 1.1;
+	auto orig_dim = max-min; 
+    min -= 0.1f*(orig_dim);
+    max += 0.1f*(orig_dim);
 
     build_lines_vert_buf(min, max);
     logPrintLn("vertices_Octree.size = ", vertices_octree.size());
