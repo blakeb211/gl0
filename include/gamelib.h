@@ -8,6 +8,8 @@
 // thread issues.
 
 //@TODO: Add an entity factory that takes an EntityType
+
+
 namespace gxb {
   inline std::string appRoot = std::string{ R"(c:\cprojects\gl0\)" };
   inline std::string texturePath = appRoot + R"(textures\)";
@@ -35,7 +37,7 @@ namespace gxb {
 
   inline std::map<ENTITY_TYPE, std::string> type_to_str{};
 
-  void initTypeToStrMap() {
+  inline void initTypeToStrMap() {
     auto create_entry = [](decltype(*str_to_type.begin()) thing) { type_to_str[thing.second] = thing.first; };
     std::for_each(str_to_type.begin(), str_to_type.end(), create_entry);
   }
@@ -53,10 +55,9 @@ namespace gxb {
 
   private:
     IdFactory() {}
-    static unsigned count_;
+    inline static unsigned count_{ 0 };
   };
 
-  unsigned IdFactory::count_ = 0;
   //********************************************************
 
   struct PathPt {
@@ -247,7 +248,7 @@ namespace gxb {
     return m;
   }
 
-  std::vector<PathPt> load_campath(std::string levelName) {
+  inline std::vector<PathPt> load_campath(std::string levelName) {
     using std::vector, std::ifstream, glm::vec3, std::make_unique;
     bool fileExist = slurp::checkFileExist(rootLevelPath, levelName, "cmp");
     if (!fileExist) {
@@ -410,3 +411,5 @@ namespace gxb {
   }
 
 }  // namespace gxb
+
+

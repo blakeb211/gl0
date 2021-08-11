@@ -3,14 +3,14 @@
 #include <GLFW\glfw3.h>
 #include <stb\stb_image.h>
 //
+#include "gamelib.h"
 #include "FrameRater.h"
 #include "Shader.h"
-#include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
 #include <magic_enum.h>
-#include <octree.h>
-#include <render.h>
+#include "octree.h"
+#include "render.h"
 
 
 // -------------------------------------------
@@ -41,10 +41,6 @@ glm::vec3 selectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& newCamPos);
 void addCamPathToRawData(const VecPP& path, gxb::Level* l);
 
-void clearScreen();
-unsigned int buildVAO(const gxb::Level*);
-void logOpenGLInfo();
-void setGLflags();
 
 GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   GLFWframebuffersizefun);
@@ -90,8 +86,8 @@ int main() {
   // so I can draw them if I need to debug.
   addCamPathToRawData(path, level.get());
 
-  setGLflags();
-  auto VAO = buildVAO(level.get());
+  render::setGLflags();
+  auto VAO = render::buildVAO(level.get());
 
 
   glm::mat4 model = glm::mat4(1.0f);
@@ -164,7 +160,7 @@ int main() {
 
     // render
     // ------
-    clearScreen();
+    render::clearScreen();
     glBindVertexArray(VAO);
     size_t colorId = 0;
     const size_t numColor = col::list.size();
@@ -215,18 +211,7 @@ int main() {
 }
 
 
-void logOpenGLInfo() {
-  // Query GL
-  int glMajVers, glMinVers;
-  glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
-  glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
-  logPrintLn("OpenGL Version:", glMajVers, ".", glMinVers);
-}
 
-void clearScreen() {
-  glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-}
 
 // process all input: move player only
 // ---------------------------------------------------------------------------------------------------------
@@ -356,9 +341,9 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
 #else
   glfwSwapInterval(0);  // vsync off
 #endif
-  logOpenGLInfo();
+  render::logOpenGLInfo();
 
-  clearScreen();
+  render::clearScreen();
 
   return window;
 }
@@ -409,37 +394,7 @@ void addCamPathToRawData(const VecPP& path, gxb::Level* l) {
   std::for_each(path.begin(), path.end(), func);
 }
 
-void setGLflags() {
-  glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_LIGHTING);
-  glEnable(GL_PROGRAM_POINT_SIZE);
-}
 
-unsigned int buildVAO(const gxb::Level* l) {
-  // set up vertex data (and buffer(s)) and configure vertex attributes
-  // ------------------------------------------------------------------
-  assert(level != nullptr);
-  unsigned int VBO{};
-  unsigned int VAO{};
-
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-  // bind the Vertex Array Object first, then bind and set vertex
-  // buffer(s), and then configure vertex attributes(s)
-  glBindVertexArray(VAO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, l->raw_data.size() * sizeof(float),
-    l->raw_data.data(), GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-  glEnableVertexAttribArray(0);
-
-  // an unbind the VBO
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-  glBindVertexArray(0);
-  return VAO;
-}
 
 void camGoalSeek(float deltaTime) {
   auto newCamGoalPos = selectNextCamPoint(level.get(), camera, path);

@@ -1,5 +1,4 @@
 #pragma once
-#include "gamelib.h"
 #include "glm.h"
 namespace gxb {
 
