@@ -1,6 +1,65 @@
 #include <glad\glad.h>
 #include <gamelib.h>
 #include <render.h>
+#include <glm.h>
+
+// Forward Declares
+namespace octree {
+  void draw_octree(unsigned int vaoOctree);
+  void draw(unsigned int vaoOctree);
+};
+
+void render::draw_level(unsigned int vaoEntities, glm::mat4& model, Shader& progOne, unsigned int vaoOctree, gxb::Level* level, std::vector<gxb::PathPt>& path)
+{
+  glBindVertexArray(vaoEntities);
+  size_t colorId = 0;
+  const size_t numColor = col::list.size();
+  for (size_t i = 0; i < level->objects.size(); i++) {
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, level->objects[i]->pos);
+    colorId =
+      (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
+
+    progOne.setVec3("color", col::list[colorId]);
+    progOne.setMat4("model", model);
+
+    auto meshPtr = level->getMesh(level->objects[i]->mesh_id);
+    assert(meshPtr != nullptr);
+
+    unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
+    glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
+      numVertsCurrModel);
+  }
+
+  if (render::DRAW_CAM_PATH) {
+    // Draw CamPath
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
+    progOne.setMat4("model", model);
+    progOne.setVec3("color", col::red);
+    const auto tot_verts = level->raw_data.size() / 3;
+    const auto cam_path_verts = path.size();
+    glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts),
+      (GLint)cam_path_verts);
+  }
+
+  if (render::DRAW_OCTREE) {
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
+    progOne.setMat4("model", model);
+    progOne.setVec3("color", col::green);
+    octree::draw(vaoOctree);
+  }
+  glBindVertexArray(0);
+}
+
+
+
+
+
+
+
+
 
 void render::clearScreen() {
   glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
@@ -19,6 +78,7 @@ void render::setGLflags() {
   glEnable(GL_DEPTH_TEST);
   //glEnable(GL_LIGHTING);
   glEnable(GL_PROGRAM_POINT_SIZE);
+
 }
 
 unsigned int render::buildVAO(const gxb::Level* l) {

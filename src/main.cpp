@@ -16,10 +16,8 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-#define FREE_MOVE 1
-#define DRAW_CAM_PATH 1
-#define DRAW_OCTREE 1
-#define VSYNC 1
+inline static const auto FREE_MOVE = 0;
+inline static const auto VSYNC = 1;
 
 // -------------------------------------------
 // TYPEDEFS
@@ -74,14 +72,6 @@ int main() {
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
     *gxb::shaderPath("colorFromVertex.fs"));
 
-  // print campath 
-  // ------
-#if DRAW_CAM_PATH
-  std::cout << "camPath:\n";
-  for (auto& i : path) {
-    std::cout << i.pos.x << " " << i.pos.y << " " << i.pos.z << " " << std::endl;
-  }
-#endif
   // add camPath points to level raw_data before building VAO 
   // so I can draw them if I need to debug.
   addCamPathToRawData(path, level.get());
@@ -119,12 +109,12 @@ int main() {
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-#if FREE_MOVE
-    processInput_camOnly(window, camera, deltaTime);
-#else
-    processInput_playerOnly(window, deltaTime);
-    camGoalSeek(deltaTime);
-#endif
+    if (FREE_MOVE)
+      processInput_camOnly(window, camera, deltaTime);
+    else {
+      processInput_playerOnly(window, deltaTime);
+      camGoalSeek(deltaTime);
+    }
 
     progOne.use();
 
@@ -161,45 +151,7 @@ int main() {
     // render
     // ------
     render::clearScreen();
-    glBindVertexArray(VAO);
-    size_t colorId = 0;
-    const size_t numColor = col::list.size();
-    for (size_t i = 0; i < level->objects.size(); i++) {
-      model = glm::mat4(1.0f);
-      model = glm::translate(model, level->objects[i]->pos);
-      colorId =
-        (colorId == numColor - 1) ? colorId -= numColor - 1 : colorId += 1;
-
-      progOne.setVec3("color", col::list[colorId]);
-      progOne.setMat4("model", model);
-
-      auto meshPtr = level->getMesh(level->objects[i]->mesh_id);
-      assert(meshPtr != nullptr);
-
-      unsigned numVertsCurrModel = (unsigned)(meshPtr->faces.size() * 3);
-      glDrawArrays(GL_TRIANGLES, (GLint)meshPtr->pos_first_vert,
-        numVertsCurrModel);
-    }
-
-#if DRAW_CAM_PATH 
-    // Draw CamPath
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
-    progOne.setMat4("model", model);
-    progOne.setVec3("color", col::red);
-    const auto tot_verts = level->raw_data.size() / 3;
-    const auto cam_path_verts = path.size();
-    glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts),
-      (GLint)cam_path_verts);
-#endif
-#if DRAW_OCTREE
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
-    progOne.setMat4("model", model);
-    progOne.setVec3("color", col::green);
-    octree::draw(vaoOctree);
-#endif
-    glBindVertexArray(0);
+    render::draw_level(VAO, model, progOne, vaoOctree, level.get(), path);
     glfwSwapBuffers(window);
     glfwPollEvents();
     fr.printFrameRateIfFreqHasBeenReached();
@@ -327,20 +279,20 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
     return nullptr;
   }
 
-#if FREE_MOVE
-  glfwSetCursorPosCallback(window, mouse_callback);
-#else
-  glfwSetCursorPosCallback(window, mouse_callback_null);
-#endif
+  if (FREE_MOVE)
+    glfwSetCursorPosCallback(window, mouse_callback);
+  else
+    glfwSetCursorPosCallback(window, mouse_callback_null);
 
   glfwSetScrollCallback(window, scroll_callback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-#if VSYNC
-  glfwSwapInterval(1);  // vsync on
-#else
-  glfwSwapInterval(0);  // vsync off
-#endif
+  if (VSYNC)
+    glfwSwapInterval(1);  // vsync on
+  else
+    glfwSwapInterval(0);  // vsync off
+
+
   render::logOpenGLInfo();
 
   render::clearScreen();
