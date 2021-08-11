@@ -14,7 +14,7 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-#define FREE_MOVE 0
+#define FREE_MOVE 1
 #define DRAW_CAM_PATH 0
 #define DRAW_OCTREE 1
 
@@ -190,6 +190,10 @@ int main() {
       (GLint)cam_path_verts);
 #endif
 #if DRAW_OCTREE
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
+    progOne.setMat4("model", model);
+    progOne.setVec3("color", col::red);
     octree::draw();
 #endif
     glBindVertexArray(0);

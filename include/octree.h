@@ -1,11 +1,23 @@
 #pragma once
 #include <gamelib.h>
 #include <vector>
+using v3 = glm::vec3;
 
 namespace octree {
 
   gxb::Level* level;
   unsigned int vboOctree{}, vaoOctree{};
+  std::vector<float> vertices_octree{};
+
+  void build_Octree(v3 min, v3 max) {
+	  assert(glm::distance(min,max) > 3);
+	  vertices_octree.push_back(min.x);
+	  vertices_octree.push_back(min.y);
+	  vertices_octree.push_back(min.z);
+	  vertices_octree.push_back(max.x);
+	  vertices_octree.push_back(max.y);
+	  vertices_octree.push_back(max.z);
+  }
 
   void setup(gxb::Level* level) {
     assert(level != NULL);
@@ -25,7 +37,8 @@ namespace octree {
     // add a buffer around octree
     min *= 1.1;
     max *= 1.1;
-
+	build_Octree(min, max);
+	logPrintLn("vertices_Octree.size = ", vertices_octree.size());
     // build vao
     glGenVertexArrays(1, &vaoOctree);
     glGenBuffers(1, &vboOctree);
@@ -35,9 +48,7 @@ namespace octree {
     // glDrawArrays, it will use the vbo associated with the bound vao.
     glBindVertexArray(vaoOctree);
     glBindBuffer(GL_ARRAY_BUFFER, vboOctree);
-    //using the vertices_octree vertex array
-    const unsigned int num_lines = 1;
-    std::vector<float> vertices_octree{};
+    // vboOctree buffer data is from vertices_octree
     glBufferData(GL_ARRAY_BUFFER, vertices_octree.size() * sizeof(float), vertices_octree.data(), GL_STATIC_DRAW);
 
     // this will need modified
@@ -47,22 +58,17 @@ namespace octree {
     // an unbind the VBO and VAO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-  };
+  }
 
   void draw_octree() {
     glBindVertexArray(vaoOctree); //bind the octree vao
-    //glDrawArrays(...); //will use vboOctree
+    glDrawArrays(GL_LINES,(GLint)0,(GLint)vertices_octree.size()); //uses vboOctree
 
-  };
+  }
 
   void draw() {
     draw_octree();
-  };
-
-
-
-
-
+  }
 
 
 }
