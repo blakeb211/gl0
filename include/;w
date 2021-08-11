@@ -11,43 +11,7 @@ namespace octree {
 
   void build_lines_vert_buf(v3 min, v3 max) {
 	  assert(glm::distance(min,max) > 3);
-	  auto dim = v3(max - min);	  
-	  auto push_floats = [&](v3 corner) {
-		  vertices_octree.push_back(corner.x);
-		  vertices_octree.push_back(corner.y);
-		  vertices_octree.push_back(corner.z);
-	  };
-	 
-	  // GL_LINES draws verts 0 and 1 as first line, then 2 and 3 as next line
-	  push_floats(min);
-	  push_floats(min + v3(dim.x,0.f,0.f));
-	  push_floats(min);
-	  push_floats(min + v3(0.f,dim.y,0.f));
-	  push_floats(min);
-	  push_floats(min + v3(0.f,0.f,dim.z));
-
-	  push_floats(max);
-	  push_floats(max - v3(dim.x,0.f,0.f));
-	  push_floats(max);
-	  push_floats(max - v3(0.f,dim.y,0.f));
-	  push_floats(max);
-	  push_floats(max - v3(0.f,0.f,dim.z));
-
-	  push_floats(max - v3(0.f,dim.y,0.f));
-	  push_floats(max - v3(dim.x,dim.y,0.f));
-	  push_floats(max - v3(0.f,dim.y,0.f));
-	  push_floats(max - v3(0.f,dim.y,dim.z));
-
-	  push_floats(max - v3(dim.x,0.f,0.f));
-	  push_floats(max - v3(dim.x,dim.y,0.f));
-	  push_floats(max - v3(dim.x,0.f,0.f));
-	  push_floats(max - v3(dim.x,0.f,dim.z));
-
-	  push_floats(max - v3(0.f,0.f,dim.z));
-	  push_floats(max - v3(0.f,dim.y,dim.z));
-	  push_floats(max - v3(0.f,0.f,dim.z));
-	  push_floats(max - v3(dim.x,0.f,dim.z));
-
+	  v3 width = abs(max - min);	  
   }
 
   void setup(gxb::Level* level) {
@@ -97,6 +61,7 @@ namespace octree {
   void draw_octree() {
     glBindVertexArray(vaoOctree); //bind the octree vao
     glDrawArrays(GL_LINES,(GLint)0,(GLint)vertices_octree.size()); //uses vboOctree
+
   }
 
   void draw() {
