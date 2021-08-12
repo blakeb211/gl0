@@ -10,13 +10,14 @@ using byte = unsigned char;
 using List = std::forward_list<gxb::entity*>;
 using Queue = std::queue<gxb::entity*>;
 /* **************************************************************
- *  This file builds an Octree but the rendering is all handed by render.cpp
+ *  This file builds a uniform grid for collision testing; rendering handled by render.cpp
  *  ***************************************************************/
 
 namespace octree {
 
-gxb::Level* level;
-std::vector<float> vertices_linegrid{}; // for drawing, vertices of Octree bounding box lines
+// forward declarations
+void subdivide();
+int calc_side_length();
 
 struct BoundingBox {
     v3 min, max;
@@ -24,12 +25,18 @@ struct BoundingBox {
 
 struct Node {
 	BoundingBox bb;
-// list of objects 
-// children
-// pointer to parent
-
+	std::array<gxb::entity*,20> list;
+	// list of objects 
+	// children
 };
 
+// octree globals
+gxb::Level* level;
+std::vector<float> vertbufGridLines{}; // for drawing, vertices of Octree bounding box lines
+const float targetSideL = 3.0f;
+int numCells{};
+float cellL {}, worldL{};
+Node topNode;
 
 void add_lines_to_vert_buf(BoundingBox x) {
 	auto min = x.min;
@@ -37,9 +44,9 @@ void add_lines_to_vert_buf(BoundingBox x) {
     assert(glm::distance(min, max) > 3);
 
     auto push_floats = [&](v3 corner) {
-	vertices_linegrid.push_back(corner.x);
-	vertices_linegrid.push_back(corner.y);
-	vertices_linegrid.push_back(corner.z);
+	vertbufGridLines.push_back(corner.x);
+	vertbufGridLines.push_back(corner.y);
+	vertbufGridLines.push_back(corner.z);
     };
 
     auto push_cube = [&](v3 min, v3 max) {
@@ -79,11 +86,6 @@ void add_lines_to_vert_buf(BoundingBox x) {
     push_cube(min, max);
 }
 
-void subdivide(Node &n) {
-
-
-
-}
 
 unsigned int setup_octree(gxb::Level* level) {
     assert(level != NULL);
@@ -113,25 +115,63 @@ unsigned int setup_octree(gxb::Level* level) {
 	// expand max and min both outward 10%; this is very arbitrary
     min -= 0.1f * (orig_dim);
 	auto expanded_dim = (max + 0.1f * orig_dim) - min; 
+	
 	// take max dimension as our cube's side length
 	float cubic_dim = std::max({expanded_dim.x,expanded_dim.y,expanded_dim.z});
-	
-	max = min + v3(cubic_dim,cubic_dim,cubic_dim); 
     logPrintLn("octree extent:", cubic_dim);
+	worldL = cubic_dim;	
+
+	max = min + v3(cubic_dim,cubic_dim,cubic_dim); 
 
 	// create octree
-	auto topNode = BoundingBox{min,max};
-	// subdivide topNode until smallest node is 3x3x3
-    add_lines_to_vert_buf(topNode);
+	topNode = Node{BoundingBox{min,max}};
+	// subdivide topNode until 
+	// 		a bin contains fewer than a given number of points
+	// 		a bin reaches a minimum size based on the length of its edges
+    add_lines_to_vert_buf(topNode.bb);
+	numCells = calc_side_length();
+	logPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 	
-	
-    return render::buildOctreeVAO(vertices_linegrid);
+	subdivide();
+   
+	return render::buildOctreeVAO(vertbufGridLines);
+}
+
+// fxn uses and modifies namespace globals to calculate
+// the side length and number of cells per dimension of the uniform grid
+int calc_side_length() {
+	assert(cellL < worldL);
+	auto numCells = std::floor(worldL / targetSideL);
+	while(worldL/cellL > numCells) {
+	cellL += 0.0001f;
+	}
+	return (int)(std::roundf(worldL / cellL));
+}
+
+// divide world into uniform grid of numCells x numCells x numCells chunks 
+// with side lengths equal to cellL >= targetSideL
+void subdivide() {
+	// start from min, add cellL to the x-coord numcells times
+	const auto & min = topNode.bb.min;
+	const auto & max = topNode.bb.max;
+	v3 old_min = min;
+	v3 new_min{};
+
+
+	for (int j = 0; j < numCells; j++) {
+		if (j != 0) {old_min = old_min + v3(0.f,0.f,cellL);}
+	for(int i = 0; i < numCells; i++) {
+		new_min = old_min + (float)(i)*v3(cellL,0.f,0.f);
+		BoundingBox bb{new_min,new_min + v3{cellL,cellL,cellL}};
+		add_lines_to_vert_buf(bb);
+	}
+	}
 }
 
 void draw_octree(unsigned int vaoOctree) {
     glBindVertexArray(vaoOctree);  // bind the octree vao
     glDrawArrays(GL_LINES, (GLint)0,
-		 (GLint)vertices_linegrid.size());  // uses vboOctree
+		 (GLint)vertbufGridLines.size());  // uses vboOctree
 }
 
 }  // namespace octree
