@@ -16,7 +16,7 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-inline static const auto FREE_MOVE = 0;
+inline static const auto FREE_MOVE = 1;
 inline static const auto VSYNC = 1;
 
 // -------------------------------------------
@@ -66,7 +66,7 @@ int main() {
 
   load_level("test");
 
-  auto vaoOctree = octree::setup(level.get());
+  auto vaoOctree = octree::setup_octree(level.get());
   test_naive_collision();
 
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),

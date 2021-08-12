@@ -6,7 +6,6 @@
 // Forward Declares
 namespace octree {
   void draw_octree(unsigned int vaoOctree);
-  void draw(unsigned int vaoOctree);
 };
 
 void render::draw_level(unsigned int vaoEntities, glm::mat4& model, Shader& progOne, unsigned int vaoOctree, gxb::Level* level, std::vector<gxb::PathPt>& path)
@@ -48,7 +47,7 @@ void render::draw_level(unsigned int vaoEntities, glm::mat4& model, Shader& prog
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     progOne.setMat4("model", model);
     progOne.setVec3("color", col::green);
-    octree::draw(vaoOctree);
+    octree::draw_octree(vaoOctree);
   }
   glBindVertexArray(0);
 }

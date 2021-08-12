@@ -16,13 +16,24 @@ using Queue = std::queue<gxb::entity*>;
 namespace octree {
 
 gxb::Level* level;
-std::vector<float> vertices_linegrid{};
+std::vector<float> vertices_linegrid{}; // for drawing, vertices of Octree bounding box lines
 
 struct BoundingBox {
     v3 min, max;
 };
 
-void build_lines_vert_buf(v3 min, v3 max) {
+struct Node {
+	BoundingBox bb;
+// list of objects 
+// children
+// pointer to parent
+
+};
+
+
+void add_lines_to_vert_buf(BoundingBox x) {
+	auto min = x.min;
+	auto max = x.max;
     assert(glm::distance(min, max) > 3);
 
     auto push_floats = [&](v3 corner) {
@@ -63,13 +74,18 @@ void build_lines_vert_buf(v3 min, v3 max) {
 	push_floats(max - v3(0.f, 0.f, dim.z));
 	push_floats(max - v3(dim.x, 0.f, dim.z));
     };
-
     // real action happens here
+	// adds 12 sets of line vertices to vertices vector so they can be drawn
     push_cube(min, max);
-    push_cube(min, min + (max - min) / 2.f);
 }
 
-unsigned int setup(gxb::Level* level) {
+void subdivide(Node &n) {
+
+
+
+}
+
+unsigned int setup_octree(gxb::Level* level) {
     assert(level != NULL);
     octree::level = level;
     glm::vec3 min{0}, max{0};
@@ -90,16 +106,25 @@ unsigned int setup(gxb::Level* level) {
     }
 
     logPrintLn("level min,max:", glm::to_string(min), glm::to_string(max));
-    logPrintLn("octree extent:", glm::to_string(max - min));
 
-    // add a buffer around octree
+    // add a buffer around world 
     auto orig_dim = max - min;
+	// want a cubic octree, so take max dimension and use that for x,y, and z
+	// expand max and min both outward 10%; this is very arbitrary
     min -= 0.1f * (orig_dim);
-    max += 0.1f * (orig_dim);
+	auto expanded_dim = (max + 0.1f * orig_dim) - min; 
+	// take max dimension as our cube's side length
+	float cubic_dim = std::max({expanded_dim.x,expanded_dim.y,expanded_dim.z});
+	
+	max = min + v3(cubic_dim,cubic_dim,cubic_dim); 
+    logPrintLn("octree extent:", cubic_dim);
 
-    build_lines_vert_buf(min, max);
-    logPrintLn("vertices_Octree.size = ", vertices_linegrid.size());
-
+	// create octree
+	auto topNode = BoundingBox{min,max};
+	// subdivide topNode until smallest node is 3x3x3
+    add_lines_to_vert_buf(topNode);
+	
+	
     return render::buildOctreeVAO(vertices_linegrid);
 }
 
@@ -107,10 +132,6 @@ void draw_octree(unsigned int vaoOctree) {
     glBindVertexArray(vaoOctree);  // bind the octree vao
     glDrawArrays(GL_LINES, (GLint)0,
 		 (GLint)vertices_linegrid.size());  // uses vboOctree
-}
-
-void draw(unsigned int vaoOctree) {
-    draw_octree(vaoOctree);
 }
 
 }  // namespace octree
