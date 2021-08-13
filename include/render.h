@@ -15,7 +15,8 @@ namespace render {
   void setGLflags();
   unsigned int buildOctreeVAO(const std::vector<float>&);
 
-  inline const auto DRAW_CAM_PATH = 1;
+  // make these toggleable with a hotkey
+  inline const auto DRAW_CAM_PATH = 0;
   inline const auto DRAW_OCTREE = 1;
 
 };
