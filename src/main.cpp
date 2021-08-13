@@ -168,7 +168,7 @@ int main() {
 // process all input: move player only
 // ---------------------------------------------------------------------------------------------------------
 void processInput_playerOnly(GLFWwindow* window, float deltaTime) {
-  constexpr auto playerSpeed = 0.01f;
+  const auto playerSpeed = 0.017f;
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
   auto& pos = level->objects[0]->pos;
@@ -197,21 +197,21 @@ void processInput_playerOnly(GLFWwindow* window, float deltaTime) {
 // ---------------------------------------------------------------------------------------------------------
 void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
   float deltaTime) {
-  const float cameraSpeed = 0.05f;  // adjust accordingly
+  const float cameraSpeed = 0.16f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
   if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, deltaTime);
+    cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, deltaTime, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, deltaTime);
+    cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, deltaTime, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, deltaTime);
+    cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, deltaTime, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime);
+    cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 

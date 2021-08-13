@@ -27,7 +27,6 @@ namespace gxb {
     float Yaw;
     float Pitch;
     // camera options
-    float MovementSpeed;
     float MouseSensitivity;
     float Zoom;
 
@@ -36,7 +35,6 @@ namespace gxb {
       glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW,
       float pitch = PITCH)
       : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      MovementSpeed(SPEED),
       MouseSensitivity(SENSITIVITY),
       Zoom(ZOOM) {
       Position = position;
@@ -49,7 +47,6 @@ namespace gxb {
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ,
       float yaw, float pitch)
       : Front(glm::vec3(0.0f, 0.0f, -1.0f)),
-      MovementSpeed(SPEED),
       MouseSensitivity(SENSITIVITY),
       Zoom(ZOOM) {
       Position = glm::vec3(posX, posY, posZ);
@@ -65,11 +62,12 @@ namespace gxb {
       return glm::lookAt(Position, Position + Front, Up);
     }
 
+    // This is camera movement only
     // processes input received from any keyboard-like input system. Accepts
     // input parameter in the form of camera defined ENUM (to abstract it from
     // windowing systems)
-    void ProcessKeyboard(gxb::Camera_Movement direction, float deltaTime) {
-      float velocity = MovementSpeed * deltaTime * SENSITIVITY;
+    void ProcessKeyboard(gxb::Camera_Movement direction, float deltaTime, float cameraSpeed) {
+      float velocity = cameraSpeed * deltaTime * SENSITIVITY;
       if (direction == Camera_Movement::FORWARD) Position += Front * velocity;
       if (direction == Camera_Movement::BACKWARD) Position -= Front * velocity;
       if (direction == Camera_Movement::LEFT) Position -= Right * velocity;
