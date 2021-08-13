@@ -1,6 +1,6 @@
-#calculategrididfromposition
+#calculate grid id from position
 
-min<-c(-12.000,-2.900,-45.100,
+min <- c(-12.000,-2.900,-45.100,
 -4.971,-2.900,-45.100,
 2.057,-2.900,-45.100,
 9.086,-2.900,-45.100,
@@ -346,6 +346,34 @@ min<-c(-12.000,-2.900,-45.100,
 
 mat<-matrix(data=min,ncol=3,byrow=TRUE)
 colnames(mat)<-c("x","y","z")
-min<-c(mat[1:3])
+
+
 library(scatterplot3d)
-scatterplot3d(mat)
+gridplot <- scatterplot3d(mat)
+
+min <- c(mat[1,])
+cellL <- 7.029
+
+calc_id <- function(pos) {
+  if (length(pos) != 3) { warning("only pass in 3-vectors!!") }
+  floor((pos - min)/cellL)
+}
+
+# should give (2,0,1)
+test_pos1 <- c(2.057,-2.900,-38.071) + 0.5*cellL
+# should give (6, 6, 6)
+test_pos2 <- c(30.171,39.271,-2.929) + 0.5*cellL
+# test on a boundary, should give (2,0,1) but does not
+test_pos3 <- c(2.057,-2.900,-38.071)
+
+gridplot$points3d(matrix(test_pos1,ncol=3,byrow=TRUE), pch = 16)
+gridplot$points3d(matrix(test_pos2,ncol=3,byrow=TRUE), pch = 8)
+
+print(calc_id(test_pos1))
+print(calc_id(test_pos2))
+
+# note that discrepancy shown below when testing on a boundary
+# is because we pasted this data in at a low level of precision.
+# internally the game holds the cellL value at a higher precision
+# than 3 decimal points
+print(calc_id(test_pos3))

@@ -60,7 +60,7 @@ void logPrintLn(const initializer_list<any> &il) {
     const string typeName{i.type().name()};
     buf.fill('-');
     if (typeid(0.1f) == i.type()) {
-      write_to_screen_and_disk<float>("{:<8.3f} ", i);
+      write_to_screen_and_disk<float>("{:<8.6f} ", i);
       continue;
     }
     if (typeid(const char *) == i.type()) {

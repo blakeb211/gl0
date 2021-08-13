@@ -20,6 +20,11 @@ namespace octree {
 void subdivide();
 int calc_side_length();
 iv3 get_grid_id_from_pos(v3 pos);
+void test_get_grid_id_from_pos_fxn();
+
+
+
+
 
 struct BoundingBox {
     v3 min, max;
@@ -98,7 +103,14 @@ void add_lines_to_vert_buf(BoundingBox x) {
     push_cube(min, max);
 }
 
-iv3 get_grid_id_from_pos(v3 pos);
+// get the grid id from position
+// returns (0,0,0) to (numCells-1,numCells-1,numCells-1)
+iv3 get_grid_id_from_pos(v3 pos) {
+    const auto& min = topNode.bb.min;
+    auto diff = (pos - min) / cellL;
+	// truncate to integer values
+    return iv3{(int)diff.x, (int)diff.y, (int)diff.z};
+}
 
 unsigned int setup_octree(gxb::Level* level) {
     assert(level != NULL);
@@ -146,7 +158,7 @@ unsigned int setup_octree(gxb::Level* level) {
     logPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
     subdivide();
-
+	test_get_grid_id_from_pos_fxn();
     return render::buildOctreeVAO(vertbufGridLines);
 }
 
@@ -156,7 +168,7 @@ int calc_side_length() {
     assert(cellL < worldL);
     auto numCells = std::floor(worldL / targetSideL);
     while (worldL / cellL > numCells) {
-	cellL += 0.0001f;
+	cellL += 0.00001f;
     }
     return (int)(std::roundf(worldL / cellL));
 }
@@ -198,5 +210,26 @@ void draw_octree(unsigned int vaoOctree) {
     glDrawArrays(GL_LINES, (GLint)0,
 		 (GLint)vertbufGridLines.size());  // uses vboOctree
 }
+
+void test_get_grid_id_from_pos_fxn() {
+    //  test get_grid_id_from_pos()
+    //	# should give (2,0,1)
+    //	test_pos1 <- c(2.057,-2.900,-38.071) + 0.5*cellL
+    //	# should give (6, 6, 6)
+    //	test_pos2 <- c(30.171,39.271,-2.929) + 0.5*cellL
+    //	# test on a boundary, should give (2,0,1) but does not
+    //	test_pos3 <- c(2.057,-2.900,-38.071)
+	//
+ 	// ***** note that these values are truncated
+	auto test1 = v3(2.057149,-2.900000,-38.071423);
+	auto test2 = v3(30.171448,39.271446,-2.928552) + v3(0.5f*cellL,0.5f*cellL,0.5f*cellL);
+	auto test3 = v3(2.057149,-2.900000,-38.071423);
+
+	logPrintLn(glm::to_string(get_grid_id_from_pos(test1)));
+	logPrintLn(glm::to_string(get_grid_id_from_pos(test2)));
+	logPrintLn(glm::to_string(get_grid_id_from_pos(test3)));
+}
+
+
 
 }  // namespace octree
