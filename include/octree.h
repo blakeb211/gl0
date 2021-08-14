@@ -54,8 +54,8 @@ namespace octree {
     return vertbufGridLines.size();
   }
 
-  iv3 grid_idx_to_id(int idx) {
-    assert(idx < id.size() && idx > -1);
+  iv3 grid_idx_to_id(size_t idx) {
+    assert(idx < id.size() && idx >= 0);
     return id[idx];
   }
 
