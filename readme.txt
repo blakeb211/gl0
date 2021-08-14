@@ -42,8 +42,8 @@ collision detection
 	+does collision checking need to be done every frame?
 	UNIFORM GRID SPATIAL PARTITIONING
 	+update grid node lists each frame
-	+use center for now
 	+only draw cells with list.size() > 0  // every 10th frame
+	+use center for now
 	+print nearest neighbors
 	+add bounding box to each object
 

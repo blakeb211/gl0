@@ -7,6 +7,7 @@ map! <S-Insert> *
 map  :cprevious
 map  :cnext
 vmap  "*d
+nnoremap - :e %:h
 map ; :
 nnoremap \i :GoImports
 nnoremap \t :vert term
@@ -16,8 +17,13 @@ vmap gx <Plug>NetrwBrowseXVis
 nmap gx <Plug>NetrwBrowseX
 vnoremap <silent> <Plug>NetrwBrowseXVis :call netrw#BrowseXVis()
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#BrowseX(netrw#GX(),netrw#CheckIfRemote(netrw#GX()))
+tnoremap <silent> <Plug>(fzf-normal) 
+tnoremap <silent> <Plug>(fzf-insert) i
+nnoremap <silent> <Plug>(fzf-normal) <Nop>
+nnoremap <silent> <Plug>(fzf-insert) i
 map <F10> :!c:\cprojects\gl0\x64\Debug\gl0.exe
 map <F9> :!msbuild c:\cprojects\gl0 
+map <F8> :!c:\cprojects\gl0\build.bat 
 map <F5> :!ctags -R –c++-kinds=+p –fields=+iaS –extra=+q ..
 map <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,
 nnoremap <F12> :buffers:buffer 
@@ -63,19 +69,19 @@ set textwidth=120
 set undofile
 set visualbell
 set wildmenu
-set window=36
+set window=63
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd c:\cprojects\gl0
+cd c:\cprojects
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
 argglobal
 %argdel
-$argadd src\main.cpp
+$argadd gl0\src\main.cpp
 edit c:\cprojects\gl0\readme.txt
 set splitbelow splitright
 set nosplitbelow
@@ -120,7 +126,7 @@ setlocal define=
 setlocal dictionary=
 setlocal nodiff
 setlocal equalprg=
-setlocal errorformat=\ %#%f(%l\\,%c):\ %m
+setlocal errorformat=
 setlocal noexpandtab
 if &filetype != 'text'
 setlocal filetype=text
@@ -155,7 +161,7 @@ setlocal nolisp
 setlocal lispwords=
 setlocal nolist
 setlocal makeencoding=
-setlocal makeprg=msbuild\ /nologo\ /v:q\ /property:GenerateFullPaths=true
+setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
@@ -211,17 +217,24 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 3 - ((2 * winheight(0) + 17) / 35)
+let s:l = 11 - ((10 * winheight(0) + 31) / 62)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
-normal! 0
+11
+normal! 04|
+lcd c:\cprojects
 tabnext 1
-badd +3 c:\cprojects\gl0\readme.txt
-badd +2 c:\cprojects\gl0\src\main.cpp
-badd +210 c:\cprojects\gl0\include\gamelib.h
-badd +114 C:\Program\ Files\ (x86)\Vim\vimrc
+badd +25 c:\cprojects\gl0\src\main.cpp
+badd +10 c:\cprojects\gl0\readme.txt
+badd +1 c:\cprojects\gl0\include\gamelib.h
+badd +1 C:\Program\ Files\ (x86)\Vim\vimrc
+badd +1 c:\cprojects\gl0\levels\test.txt
+badd +1 c:\cprojects\gl0\src\log.txt
+badd +27 c:\cprojects\gl0\include\log.h
+badd +1 c:\cprojects\gl0\src\render.cpp
+badd +1 c:\cprojects\gl0\include\octree.h
+badd +1 c:\cprojects\gl0\include
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

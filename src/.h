@@ -22,14 +22,12 @@ inline static const auto VSYNC = 1;
 // TYPEDEFS
 // -------------------------------------------
 using VecPP = std::vector<gxb::PathPt>;
-using v3 = glm::vec3;
 
 // -------------------------------------------
 // FORWARD DECLARATIONS
 // -------------------------------------------
 namespace octree {  // if octree wasn't header only I could remove this
 	std::vector<float>& setup_octree(gxb::Level*);
-	void update_grid(unsigned int, v3 , v3);
 };
 
 
@@ -126,7 +124,6 @@ int main() {
     progOne.use();
     // update objects 
     // movement is moderated by the elapsed time in case we change the framerate later
-	// @TODO: MOVE TO UDPATE .H and .CPP
     for (auto& o : level->objects) {
       auto const elapsed = fr.lastTimeInMs();
       switch (o->type) {
@@ -144,10 +141,6 @@ int main() {
         move_moving_ground(o, pos_dir, elapsed, 5.0f);
         break;
       }
-	  // update spatial grid
-	  if (fr.frame_count % 2 == 0) {
-		  octree::update_grid(o->id, o->pos, o->pos_last);
-	  }
     }
 
     // set transformations

@@ -18,8 +18,8 @@ namespace octree {
   // forward declarations
   void subdivide();
   int calc_side_length();
-  iv3 get_grid_id_from_pos(v3 pos);
-  void test_get_grid_id_from_pos_fxn();
+  iv3 pos_to_grid_id(v3 pos);
+  void test_pos_to_grid_id_fxn();
 
   struct BoundingBox {
     v3 min, max;
@@ -109,12 +109,49 @@ namespace octree {
 
   // get the grid id from position
   // returns (0,0,0) to (numCells-1,numCells-1,numCells-1)
-  iv3 get_grid_id_from_pos(v3 pos) {
+  iv3 pos_to_grid_id(v3 pos) {
     const auto& min = topNode.bb.min;
     auto diff = (pos - min) / cellL;
     // truncate to integer values
     return iv3{ (int)diff.x, (int)diff.y, (int)diff.z };
   }
+
+
+  int grid_id_to_idx(const iv3 id_to_match) {
+	  auto sz = id.size();
+	  for (int i = 0; i < sz; i++) {
+		  if (id[i] == id_to_match) {
+			return i;	
+		  }
+	  }
+	  logPrintLn("returning -1 from grid_id_to_idx. input id:", glm::to_string(id_to_match));
+	  return -1;
+  }
+  // find the the node that the object's center is in.
+  // update the Node.list to contain the object if it isn't already.
+  // remove object from lists that is used to be in 
+  // @TODO: separate this out so that stationary objects are only added to the 
+  // grid during setup.
+  // @TODO: RENAME pos_to_grid_id to pos_to_grid_id
+	void update_grid(unsigned int id, v3 pos, v3 last_pos ) {
+	auto curr_grid = pos_to_grid_id(pos);
+	auto last_grid = pos_to_grid_id(last_pos);
+
+	int last_idx = grid_id_to_idx(last_grid);
+	int curr_idx = grid_id_to_idx(curr_grid);
+
+	// remove id from last cell's list if the cell changed
+	if (curr_grid != last_grid) {
+	std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), id);
+	}
+	// add to curr cell's list if it isn't in it already
+	auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(),id);
+	bool not_in_curr_cell_list = (iter == grid[curr_idx].list.end()) ? true : false;
+	if (not_in_curr_cell_list) {
+	grid[curr_idx].list.push_back(id);
+	}
+
+	}
 
   std::vector<float>& setup_octree(gxb::Level* level) {
     assert(level != NULL);
@@ -162,7 +199,7 @@ namespace octree {
     logPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
     subdivide();
-    test_get_grid_id_from_pos_fxn();
+    test_pos_to_grid_id_fxn();
     return vertbufGridLines;
   }
 
@@ -208,8 +245,8 @@ namespace octree {
     }
   }
 
-  void test_get_grid_id_from_pos_fxn() {
-    //  test get_grid_id_from_pos()
+  void test_pos_to_grid_id_fxn() {
+    //  test pos_to_grid_id()
     //	# should give (2,0,1)
     //	test_pos1 <- c(2.057,-2.900,-38.071) + 0.5*cellL
     //	# should give (6, 6, 6)
@@ -222,9 +259,9 @@ namespace octree {
     auto test2 = v3(30.171448, 39.271446, -2.928552) + v3(0.5f * cellL, 0.5f * cellL, 0.5f * cellL);
     auto test3 = v3(2.057149, -2.900000, -38.071423);
 
-    logPrintLn(glm::to_string(get_grid_id_from_pos(test1)));
-    logPrintLn(glm::to_string(get_grid_id_from_pos(test2)));
-    logPrintLn(glm::to_string(get_grid_id_from_pos(test3)));
+    logPrintLn(glm::to_string(pos_to_grid_id(test1)));
+    logPrintLn(glm::to_string(pos_to_grid_id(test2)));
+    logPrintLn(glm::to_string(pos_to_grid_id(test3)));
   }
 
 

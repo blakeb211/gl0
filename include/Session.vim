@@ -7,6 +7,7 @@ map! <S-Insert> *
 map  :cprevious
 map  :cnext
 vmap  "*d
+nnoremap - :e %:h
 map ; :
 nnoremap \i :GoImports
 nnoremap \t :vert term
@@ -16,8 +17,13 @@ vmap gx <Plug>NetrwBrowseXVis
 nmap gx <Plug>NetrwBrowseX
 vnoremap <silent> <Plug>NetrwBrowseXVis :call netrw#BrowseXVis()
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#BrowseX(netrw#GX(),netrw#CheckIfRemote(netrw#GX()))
+tnoremap <silent> <Plug>(fzf-normal) 
+tnoremap <silent> <Plug>(fzf-insert) i
+nnoremap <silent> <Plug>(fzf-normal) <Nop>
+nnoremap <silent> <Plug>(fzf-insert) i
 map <F10> :!c:\cprojects\gl0\x64\Debug\gl0.exe
 map <F9> :!msbuild c:\cprojects\gl0 
+map <F8> :!c:\cprojects\gl0\build.bat 
 map <F5> :!ctags -R –c++-kinds=+p –fields=+iaS –extra=+q ..
 map <F4> :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,
 nnoremap <F12> :buffers:buffer 
@@ -63,20 +69,20 @@ set textwidth=120
 set undofile
 set visualbell
 set wildmenu
-set window=36
+set window=63
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 silent only
 silent tabonly
-cd c:\cprojects\gl0\src
+cd c:\cprojects
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
 argglobal
 %argdel
-$argadd main.cpp
-edit c:\cprojects\gl0\src\main.cpp
+$argadd gl0\src\main.cpp
+edit c:\cprojects\gl0\include\gamelib.h
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -102,7 +108,7 @@ setlocal cinkeys=0{,0},0),0],:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
-setlocal comments=sl:/*,mb:\ *,elx:\ */
+setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
@@ -211,23 +217,23 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-let s:l = 240 - ((31 * winheight(0) + 17) / 35)
+let s:l = 1 - ((0 * winheight(0) + 31) / 62)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-240
-normal! 06|
+1
+normal! 0
+lcd c:\cprojects
 tabnext 1
-badd +31 c:\cprojects\gl0\src\log.cpp
-badd +205 c:\cprojects\gl0\src\main.cpp
-badd +3 c:\cprojects\gl0\readme.txt
-badd +80 c:\cprojects\gl0\include\gamelib.h
-badd +114 C:\Program\ Files\ (x86)\Vim\vimrc
-badd +8 c:\cprojects\gl0\levels\test.txt
-badd +6 c:\cprojects\gl0\include\framerater.h
-badd +49 c:\cprojects\joint_allocator_example.cpp
-badd +4 c:\cprojects\gl0\src\log.txt
-badd +12 c:\cprojects\gl0\include\log.h
+badd +43 c:\cprojects\gl0\readme.txt
+badd +159 c:\cprojects\gl0\src\main.cpp
+badd +1 c:\cprojects\gl0\include\gamelib.h
+badd +1 c:\cprojects\gl0\levels\test.txt
+badd +1 c:\cprojects\gl0\src\log.txt
+badd +1 c:\cprojects\gl0\include\log.h
+badd +1 c:\cprojects\gl0\src\render.cpp
+badd +1 c:\cprojects\gl0\include\octree.h
+badd +1 c:\cprojects\gl0\include
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
@@ -239,6 +245,7 @@ if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &so = s:so_save | let &siso = s:siso_save
+nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :
