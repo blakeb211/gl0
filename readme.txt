@@ -41,10 +41,10 @@ collision detection
 	+do a coarse check before doing a granular check
 	+does collision checking need to be done every frame?
 	UNIFORM GRID SPATIAL PARTITIONING
-	+verify # of vertices per cell
-	+refactor subdivide
 	+update grid node lists each frame
 	+use center for now
+	+only draw cells with list.size() > 0  // every 10th frame
+	+print nearest neighbors
 	+add bounding box to each object
 
 level generator
