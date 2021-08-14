@@ -41,7 +41,8 @@ collision detection
 	+do a coarse check before doing a granular check
 	+does collision checking need to be done every frame?
 	UNIFORM GRID SPATIAL PARTITIONING
-	+ability to only draw certain cells and change the color 
+	+verify # of vertices per cell
+	+refactor subdivide
 	+update grid node lists each frame
 	+use center for now
 	+add bounding box to each object

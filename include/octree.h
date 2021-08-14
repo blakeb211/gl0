@@ -157,7 +157,7 @@ namespace octree {
     // subdivide topNode until
     // 		a bin contains fewer than a given number of points
     // 		a bin reaches a minimum size based on the length of its edges
-    add_lines_to_vert_buf(topNode.bb);
+    //add_lines_to_vert_buf(topNode.bb);
     numCells = calc_side_length();
     logPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
@@ -185,15 +185,15 @@ namespace octree {
     v3 old_min{};
     v3 new_min{};
     logPrintLn("topNode.bb.min", glm::to_string(min));
-    // outer loop is over y
+    // outer loop is over Y
     for (int k = 0; k < numCells; k++) {
       old_min = min + (float)(k)*v3(0.f, cellL, 0.f);
-      // middle loop is over z
+      // middle loop is over Z
       for (int j = 0; j < numCells; j++) {
         if (j != 0) {
           old_min = old_min + v3(0.f, 0.f, cellL);
         }
-        // inner loop is over x
+        // inner loop is over X
         for (int i = 0; i < numCells; i++) {
           new_min = old_min + (float)(i)*v3(cellL, 0.f, 0.f);
           BoundingBox bb{ new_min, new_min + v3{cellL, cellL, cellL} };

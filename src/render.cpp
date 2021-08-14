@@ -47,22 +47,22 @@ void render::draw_level(unsigned int vaoEntities, glm::mat4& model, Shader& prog
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     progOne.setMat4("model", model);
     glBindVertexArray(vaoOctree);  // bind the octree vao
-    const auto& vert_buf_sz = octree::getVertBufGridLinesSize();
+    const auto& tot_vert_num = octree::getVertBufGridLinesSize() / 3;
     size_t curr_cell_idx = -1;
-    // six floats per grid line x 12 lines per cell, 
-    // so 72 floats passed to glDrawArrays per uniform grid cell
-    for (int i = 0; i < vert_buf_sz - 72; i += 72)
+    // i loops over *vertices* not float. there are 3 floats per vertex
+    for (int i = 0; i < tot_vert_num; i += 24)
     {
       curr_cell_idx++;
       auto id = octree::grid_idx_to_id(curr_cell_idx);
-      if (id[0] == 0) {
+      if (id.x == 0) {
         progOne.setVec3("color", col::green);
       }
       else {
-        progOne.setVec3("color", col::darkred);
+        progOne.setVec3("color", col::black);
       }
+      // we draw 24 verts per cell, since there are 12 lines with 2 verts each
       glDrawArrays(GL_LINES, (GLint)i,
-        (GLint)72);  // uses vboOctree
+        (GLint)24);  // uses vboOctree
     }
     glBindVertexArray(0);
   }
