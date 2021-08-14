@@ -75,6 +75,7 @@
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <ClangTidyChecks>google-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,performance-*,modernize-*</ClangTidyChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
@@ -86,6 +87,7 @@
     <LibraryPath>.\thirdparty\libs;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
+    <ClangTidyChecks>google-*,clang-analyzer-*,cppcoreguidelines-*,readability-*,performance-*,modernize-*</ClangTidyChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
