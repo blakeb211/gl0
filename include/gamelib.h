@@ -7,8 +7,6 @@
 //@DESIGN: prefer passing a variable around to creating a global. watch out for
 // thread issues.
 
-//@TODO: Add an entity factory that takes an EntityType
-
 
 namespace gxb {
   inline std::string appRoot = std::string{ R"(c:\cprojects\gl0\)" };

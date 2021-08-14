@@ -9,7 +9,6 @@
 #include "glm.h"
 #include "headers.h"
 #include <magic_enum.h>
-#include "octree.h"
 #include "render.h"
 
 
@@ -27,6 +26,11 @@ using VecPP = std::vector<gxb::PathPt>;
 // -------------------------------------------
 // FORWARD DECLARATIONS
 // -------------------------------------------
+namespace octree {
+	std::vector<float>& setup_octree(gxb::Level*);
+};
+
+
 void test_naive_collision();
 void framebuf_size_callback(GLFWwindow* window, int width, int height);
 void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
@@ -66,7 +70,8 @@ int main() {
 
   load_level("test");
 
-  auto vaoOctree = octree::setup_octree(level.get());
+  auto vertBufGridLinesRef = octree::setup_octree(level.get());
+  auto vaoOctree = render::buildOctreeVAO(vertBufGridLinesRef);
   test_naive_collision();
 
   auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),

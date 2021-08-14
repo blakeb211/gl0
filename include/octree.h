@@ -3,7 +3,6 @@
 #include <queue>
 #include <vector>
 #include "gamelib.h"
-#include "render.h"
 
 using v3 = glm::vec3;
 using iv3 = glm::ivec3;
@@ -21,10 +20,6 @@ void subdivide();
 int calc_side_length();
 iv3 get_grid_id_from_pos(v3 pos);
 void test_get_grid_id_from_pos_fxn();
-
-
-
-
 
 struct BoundingBox {
     v3 min, max;
@@ -54,6 +49,15 @@ Node topNode;  // whole world
 std::vector<Node> grid;
 // uniform grid id e.g. (0,0,0) to (numCells-1,numCells-1,numCells-1)
 std::vector<iv3> id;
+
+size_t getVertBufGridLinesSize() {
+	return vertbufGridLines.size();
+}
+
+iv3 grid_idx_to_id(int idx) {
+	assert(idx < id.size() && idx > -1);
+	return id[idx];
+}
 
 void add_lines_to_vert_buf(BoundingBox x) {
     auto min = x.min;
@@ -112,7 +116,7 @@ iv3 get_grid_id_from_pos(v3 pos) {
     return iv3{(int)diff.x, (int)diff.y, (int)diff.z};
 }
 
-unsigned int setup_octree(gxb::Level* level) {
+std::vector<float> & setup_octree(gxb::Level* level) {
     assert(level != NULL);
     octree::level = level;
     glm::vec3 min{0}, max{0};
@@ -159,7 +163,7 @@ unsigned int setup_octree(gxb::Level* level) {
 
     subdivide();
 	test_get_grid_id_from_pos_fxn();
-    return render::buildOctreeVAO(vertbufGridLines);
+	return vertbufGridLines;
 }
 
 // fxn uses and modifies namespace globals to calculate
@@ -193,22 +197,14 @@ void subdivide() {
 	    for (int i = 0; i < numCells; i++) {
 		new_min = old_min + (float)(i)*v3(cellL, 0.f, 0.f);
 		BoundingBox bb{new_min, new_min + v3{cellL, cellL, cellL}};
-		// add Node to grid vector
+		// add Node and cell id to vectors 
 		grid.push_back(Node{bb});
 		id.push_back(iv3{i, k, j});
-		// add grid_id to pos vector
-
-		logPrintLn("x:", bb.min.x, "y:", bb.min.y, "z:", bb.min.z);
 		add_lines_to_vert_buf(bb);
+		logPrintLn("x:", bb.min.x, "y:", bb.min.y, "z:", bb.min.z);
 	    }
 	}
     }
-}
-
-void draw_octree(unsigned int vaoOctree) {
-    glBindVertexArray(vaoOctree);  // bind the octree vao
-    glDrawArrays(GL_LINES, (GLint)0,
-		 (GLint)vertbufGridLines.size());  // uses vboOctree
 }
 
 void test_get_grid_id_from_pos_fxn() {

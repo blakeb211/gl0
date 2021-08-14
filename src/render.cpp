@@ -1,12 +1,12 @@
 #include <glad\glad.h>
 #include <gamelib.h>
-#include <render.h>
+#include "render.h"
 #include <glm.h>
-
+#include "octree.h"
 // Forward Declares
-namespace octree {
-  void draw_octree(unsigned int vaoOctree);
-};
+//	namespace octree {
+//		size_t getVertBufGridLinesSize();
+//	};
 
 void render::draw_level(unsigned int vaoEntities, glm::mat4& model, Shader& progOne, unsigned int vaoOctree, gxb::Level* level, std::vector<gxb::PathPt>& path)
 {
@@ -46,19 +46,26 @@ void render::draw_level(unsigned int vaoEntities, glm::mat4& model, Shader& prog
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     progOne.setMat4("model", model);
-    progOne.setVec3("color", col::green);
-    octree::draw_octree(vaoOctree);
+    glBindVertexArray(vaoOctree);  // bind the octree vao
+	const auto & vert_buf_sz = octree::getVertBufGridLinesSize();
+	size_t curr_cell_idx = -1;
+	// six floats per grid line x 12 lines per cell, 
+	// so 72 floats passed to glDrawArrays per uniform grid cell
+	for(int i = 0; i < vert_buf_sz - 72; i += 72)
+	{
+	curr_cell_idx++;
+	auto id = octree::grid_idx_to_id(curr_cell_idx);
+	 if (id.x == 0) {
+    	progOne.setVec3("color", col::green);
+	 } else {
+    	progOne.setVec3("color", col::darkred);
+	 }
+    glDrawArrays(GL_LINES, (GLint)i,
+		 (GLint)72);  // uses vboOctree
+	}
+  	glBindVertexArray(0);
   }
-  glBindVertexArray(0);
 }
-
-
-
-
-
-
-
-
 
 void render::clearScreen() {
   glClearColor(0.2f, 0.3f, 0.7f, 1.0f);
