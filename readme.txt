@@ -6,8 +6,10 @@ VISIT THE SCREENSHOTS FOLDER TO SEE THE ENGINE IN ACTION
 	generated levels
 	death conditions: 	y = -20, health = 0, 
 	win condition:		touch the final fruit
+	add menu screen
 	audio
 	animation
+
 *****************************************/
 FILETYPES:
 	.txt	level file
@@ -15,37 +17,50 @@ FILETYPES:
 	.ppm	ppm file with initial cps points
 *****************************************/
 
-camera on a rail system - done
+
+
 
 game
+	collision detection and response
+	-------------------------------------------------
+	camera on a rail system - done
 	read a level and its campath file - done
 	camera follows campath - done
 	camera should follow campath smoothly - done
 
 refactoring
-	pull rendering system outside of main.cpp - done
+	Fix names: all types EntType MyStruct MyEnum. all multi-word variables camel case (see Google Style Guide)
+	move header and cpps into same directory
 	pull update outside of main.cpp
+	separate octree into header and cpp file
+	compile lib fmt and glm into a dll and add it to the project
 	need a tool to enforce style guide
+	-------------------------------------------------
+	pull rendering system outside of main.cpp - done
 
 campath editor
-	get campath control pts from a ppm - done
-	write cam path files - done
 	show coords on hover
 	move control points
 	delete control points
 	add control points
+	-------------------------------------------------
+	get campath control pts from a ppm - done
+	write cam path files - done
 	
 collision detection
+	NOTES
 	+keep separate list of stationary and moving objects
 	+use distance squared instead of actual distance
 	+do a coarse check before doing a granular check
 	+does collision checking need to be done every frame?
+
 	UNIFORM GRID SPATIAL PARTITIONING
-	+update grid node lists each frame
 	+only draw cells with list.size() > 0  // every 10th frame
 	+use center for now
 	+print nearest neighbors
 	+add bounding box to each object
+	-------------------------------------------------
+	+update grid node lists each frame - done
 
 level generator
 	terrain creation : generate levels and campaths
@@ -53,24 +68,12 @@ level generator
 need gravity
 entity states
 
-need level editor
-
-main loop should run based on level text data
-  object state machine based properties
-  checking win state of level
+main loop should run based on level text data - done
+  object state machine based properties - done
 
 finish opengl lighting section 
-need lighting
-animation
 
-add menu screen
 
 RESOURCED NEEDED
-  meshes
-  animation
-  textures
-  sounds
-
-object
 
 game modes
