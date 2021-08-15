@@ -80,7 +80,7 @@ namespace gxb {
 
   struct entity {
     entity()
-      : pos{ 0, 0, 0 }, rot{ 0, 0, 0 }, mesh_id{ 0 }, id{ IdFactory::getNewId() }, state_machine{ FSM_bin::States::pos } {}
+      : pos{ 0, 0, 0 }, pos_start{ 0,0,0 }, pos_last{ 0,0,0 }, rot{ 0, 0, 0 }, mesh_id{ 0 }, id{ IdFactory::getNewId() }, state_machine{ FSM_bin::States::pos }, has_been_added_to_grid{ false } {}
     const unsigned id;
     std::size_t mesh_id;
     ENTITY_TYPE type;
@@ -88,6 +88,7 @@ namespace gxb {
     glm::vec3 rot;
     glm::vec3 pos_start; // could be in derived type instead
     glm::vec3 pos_last;
+    bool has_been_added_to_grid;
     FSM_bin state_machine; // could be in derived type instead
   };
 
@@ -330,6 +331,7 @@ namespace gxb {
 
         entityPtr->type = str_to_type[entityName];
         entityPtr->pos = Pos;
+        entityPtr->pos_last = Pos;
         entityPtr->pos_start = Pos;
         entityPtr->rot = Rot;
         entityPtr->mesh_id = meshHashCode;

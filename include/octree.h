@@ -12,6 +12,8 @@ using Queue = std::queue<gxb::entity*>;
  *  This file builds a uniform grid for collision testing; rendering handled by
  * render.cpp
  *  ***************************************************************/
+ // @TODO: Center grid on the level so that it's unlikely objects will leave the grid
+// @TODO: An alternative would be to add a new grid cell if an object enters it
 
 namespace octree {
 
@@ -25,10 +27,12 @@ namespace octree {
     v3 min, max;
   };
 
-  struct Node {
-    Node() : list(20) {}
-    Node(BoundingBox bb) : list(20), bb{ bb } {
-      std::fill(list.begin(), list.end(), -1);
+  struct Cell {
+    Cell() : list(20) {
+      list.resize(0);
+    }
+    Cell(BoundingBox bb) : list(20), bb{ bb } {
+      list.resize(0);
     }
     BoundingBox bb;
     std::vector<int> list;
@@ -40,13 +44,13 @@ namespace octree {
   gxb::Level* level;
   std::vector<float>
     vertbufGridLines{};	 // for drawing, vertices of Octree bounding box lines
-  const float targetSideL = 7.f;
+  const float targetSideL = 4.f;
   int numCells{};
   float cellL{}, worldL{};
-  Node topNode;  // whole world
+  Cell topNode;  // whole world
 
   // uniform grid nodes
-  std::vector<Node> grid;
+  std::vector<Cell> grid;
   // uniform grid id e.g. (0,0,0) to (numCells-1,numCells-1,numCells-1)
   std::vector<iv3> id;
 
@@ -118,40 +122,52 @@ namespace octree {
 
 
   int grid_id_to_idx(const iv3 id_to_match) {
-	  auto sz = id.size();
-	  for (int i = 0; i < sz; i++) {
-		  if (id[i] == id_to_match) {
-			return i;	
-		  }
-	  }
-	  logPrintLn("returning -1 from grid_id_to_idx. input id:", glm::to_string(id_to_match));
-	  return -1;
+    auto sz = id.size();
+    for (int i = 0; i < sz; i++) {
+      if (id[i] == id_to_match) {
+        return i;
+      }
+    }
+    logPrintLn("returning -1 from grid_id_to_idx. input id:", glm::to_string(id_to_match));
+    return -1;
   }
-  // find the the node that the object's center is in.
-  // update the Node.list to contain the object if it isn't already.
+
+  void add_object_to_grid(gxb::entity& o) {
+
+
+
+
+  }
+  // find the the spatial grid cells that the object's center is in.
+  // update the Cell.list to contain the object if it isn't already.
   // remove object from lists that is used to be in 
   // @TODO: separate this out so that stationary objects are only added to the 
   // grid during setup.
   // @TODO: RENAME pos_to_grid_id to pos_to_grid_id
-	void update_grid(unsigned int id, v3 pos, v3 last_pos ) {
-	auto curr_grid = pos_to_grid_id(pos);
-	auto last_grid = pos_to_grid_id(last_pos);
+  void update_grid(gxb::entity* o) {
 
-	int last_idx = grid_id_to_idx(last_grid);
-	int curr_idx = grid_id_to_idx(curr_grid);
+    auto curr_grid = pos_to_grid_id(o->pos);
+    auto last_grid = pos_to_grid_id(o->pos_last);
 
-	// remove id from last cell's list if the cell changed
-	if (curr_grid != last_grid) {
-	std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), id);
-	}
-	// add to curr cell's list if it isn't in it already
-	auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(),id);
-	bool not_in_curr_cell_list = (iter == grid[curr_idx].list.end()) ? true : false;
-	if (not_in_curr_cell_list) {
-	grid[curr_idx].list.push_back(id);
-	}
+    int last_idx = grid_id_to_idx(last_grid);
+    int curr_idx = grid_id_to_idx(curr_grid);
 
-	}
+    if (curr_grid == last_grid && o->has_been_added_to_grid == true) { return; };
+
+    // remove id from last cell's list if the cell changed
+    if (curr_grid != last_grid) {
+      std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
+    }
+    // add to curr cell's list if it isn't in it already
+    auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(), o->id);
+    bool not_in_curr_cell_list = (iter == grid[curr_idx].list.end()) ? true : false;
+
+    if (not_in_curr_cell_list) {
+      grid[curr_idx].list.push_back(o->id);
+      logPrintLn("added object id:", o->id, " to grid @:", curr_idx, "with grid_id:", glm::to_string(id[curr_idx]));
+    }
+
+  }
 
   std::vector<float>& setup_octree(gxb::Level* level) {
     assert(level != NULL);
@@ -190,7 +206,7 @@ namespace octree {
     max = min + v3(cubic_dim, cubic_dim, cubic_dim);
 
     // create octree
-    topNode = Node{ BoundingBox{min, max} };
+    topNode = Cell{ BoundingBox{min, max} };
     // subdivide topNode until
     // 		a bin contains fewer than a given number of points
     // 		a bin reaches a minimum size based on the length of its edges
@@ -235,11 +251,11 @@ namespace octree {
           new_min = old_min + (float)(i)*v3(cellL, 0.f, 0.f);
           BoundingBox bb{ new_min, new_min + v3{cellL, cellL, cellL} };
           // add Node and cell id to vectors 
-          grid.push_back(Node{ bb });
+          grid.push_back(Cell{ bb });
           id.push_back(iv3{ i, k, j });
           add_lines_to_vert_buf(bb);
-          logPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
-          logPrintLn("id x,y,z:", "(", id[id.size() - 1].x, ",", id[id.size() - 1].y, ",", id[id.size() - 1].z, ")");
+          //logPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
+          //logPrintLn("id x,y,z:", "(", id[id.size() - 1].x, ",", id[id.size() - 1].y, ",", id[id.size() - 1].z, ")");
         }
       }
     }
