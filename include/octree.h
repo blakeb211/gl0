@@ -7,7 +7,7 @@
 using v3 = glm::vec3;
 using iv3 = glm::ivec3;
 using byte = unsigned char;
-using Queue = std::queue<gxb::entity*>;
+using Queue = std::queue<gxb::Entity*>;
 /* **************************************************************
  *  This file builds a uniform grid for collision testing; rendering handled by
  * render.cpp
@@ -15,13 +15,13 @@ using Queue = std::queue<gxb::entity*>;
  // @TODO: Center grid on the level so that it's unlikely objects will leave the grid
 // @TODO: An alternative would be to add a new grid cell if an object enters it
 
-namespace octree {
+namespace SpatialGrid {
 
   // forward declarations
-  void subdivide();
-  int calc_side_length();
-  iv3 pos_to_grid_id(v3 pos);
-  void test_pos_to_grid_id_fxn();
+  void Subdivide();
+  int CalcSideLength();
+  iv3 PosToGridCoords(v3 pos);
+  void TestPosToGridIdFxn();
 
   struct BoundingBox {
     v3 min, max;
@@ -40,8 +40,8 @@ namespace octree {
     // children
   };
 
-  // octree globals
-  gxb::Level* level;
+  // SpatialGrid globals
+  gxb::Level* level; // @TODO: add const
   std::vector<float>
     vertbufGridLines{};	 // for drawing, vertices of Octree bounding box lines
   const float targetSideL = 4.f;
@@ -54,16 +54,16 @@ namespace octree {
   // uniform grid id e.g. (0,0,0) to (numCells-1,numCells-1,numCells-1)
   std::vector<iv3> id;
 
-  size_t getVertBufGridLinesSize() {
+  size_t GetVertBufGridLinesSize() {
     return vertbufGridLines.size();
   }
 
-  iv3 grid_idx_to_id(size_t idx) {
+  iv3 GridIndexToId(size_t idx) {
     assert(idx < id.size() && idx >= 0);
     return id[idx];
   }
 
-  void add_lines_to_vert_buf(BoundingBox x) {
+  void AddLinesToVertBuf(BoundingBox x) {
     auto min = x.min;
     auto max = x.max;
     assert(glm::distance(min, max) > 3);
@@ -113,7 +113,7 @@ namespace octree {
 
   // get the grid id from position
   // returns (0,0,0) to (numCells-1,numCells-1,numCells-1)
-  iv3 pos_to_grid_id(v3 pos) {
+  iv3 PosToGridCoords(v3 pos) {
     const auto& min = topNode.bb.min;
     auto diff = (pos - min) / cellL;
     // truncate to integer values
@@ -121,36 +121,33 @@ namespace octree {
   }
 
 
-  int grid_id_to_idx(const iv3 id_to_match) {
+  // this finds the index in SpatialGrid::grid and SpatialGrid:id that corresponds to 
+  // a given set of grid coordinates. "Grid Id" means Grid Coordinates.
+  // e.g. (0,0,0) .. (numCells - 1, numCells -1, numCells - 1)
+  int GridCoordsToIndex(const iv3 id_to_match) {
     auto sz = id.size();
     for (int i = 0; i < sz; i++) {
       if (id[i] == id_to_match) {
         return i;
       }
     }
-    logPrintLn("returning -1 from grid_id_to_idx. input id:", glm::to_string(id_to_match));
+    LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was", glm::to_string(id_to_match));
     return -1;
   }
 
-  void add_object_to_grid(gxb::entity& o) {
-
-
-
-
-  }
   // find the the spatial grid cells that the object's center is in.
   // update the Cell.list to contain the object if it isn't already.
   // remove object from lists that is used to be in 
   // @TODO: separate this out so that stationary objects are only added to the 
   // grid during setup.
-  // @TODO: RENAME pos_to_grid_id to pos_to_grid_id
-  void update_grid(gxb::entity* o) {
+  // @TODO: RENAME PosToGridCoords to PosToGridCoords
+  void UpdateGrid(gxb::Entity* o) {
 
-    auto curr_grid = pos_to_grid_id(o->pos);
-    auto last_grid = pos_to_grid_id(o->pos_last);
+    auto curr_grid = PosToGridCoords(o->pos);
+    auto last_grid = PosToGridCoords(o->pos_last);
 
-    int last_idx = grid_id_to_idx(last_grid);
-    int curr_idx = grid_id_to_idx(curr_grid);
+    int last_idx = GridCoordsToIndex(last_grid);
+    int curr_idx = GridCoordsToIndex(curr_grid);
 
     if (curr_grid == last_grid && o->has_been_added_to_grid == true) { return; };
 
@@ -164,14 +161,15 @@ namespace octree {
 
     if (not_in_curr_cell_list) {
       grid[curr_idx].list.push_back(o->id);
-      logPrintLn("added object id:", o->id, " to grid @:", curr_idx, "with grid_id:", glm::to_string(id[curr_idx]));
+      o->has_been_added_to_grid = true;
+      LogPrintLn("added object id:", o->id, " to grid @:", curr_idx, "with grid_id:", glm::to_string(id[curr_idx]));
     }
 
   }
 
-  std::vector<float>& setup_octree(gxb::Level* level) {
+  std::vector<float>& SetupOctree(gxb::Level* level) {
     assert(level != NULL);
-    octree::level = level;
+    SpatialGrid::level = level;
     glm::vec3 min{ 0 }, max{ 0 };
     for (auto& i : level->objects) {
       if (i->pos.x < min.x)
@@ -191,37 +189,37 @@ namespace octree {
 
     // add a buffer around world
     auto orig_dim = max - min;
-    // want a cubic octree, so take max dimension and use that for x,y, and z
+    // want a cubic SpatialGrid, so take max dimension and use that for x,y, and z
     // expand max and min both outward 10%; this is very arbitrary
     min -= 0.1f * (orig_dim);
     max += 0.1f * (orig_dim);
     auto expanded_dim = max - min;
-    logPrintLn("level min, max:", glm::to_string(min), glm::to_string(max));
+    LogPrintLn("level min, max:", glm::to_string(min), glm::to_string(max));
     // take max dimension as our cube's side length
     float cubic_dim =
       std::max({ expanded_dim.x, expanded_dim.y, expanded_dim.z });
-    logPrintLn("octree extent:", cubic_dim);
+    LogPrintLn("SpatialGrid extent:", cubic_dim);
     worldL = cubic_dim;
 
     max = min + v3(cubic_dim, cubic_dim, cubic_dim);
 
-    // create octree
+    // create SpatialGrid
     topNode = Cell{ BoundingBox{min, max} };
-    // subdivide topNode until
+    // Subdivide topNode until
     // 		a bin contains fewer than a given number of points
     // 		a bin reaches a minimum size based on the length of its edges
-    //add_lines_to_vert_buf(topNode.bb);
-    numCells = calc_side_length();
-    logPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
+    //AddLinesToVertBuf(topNode.bb);
+    numCells = CalcSideLength();
+    LogPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
-    subdivide();
-    test_pos_to_grid_id_fxn();
+    Subdivide();
+    TestPosToGridIdFxn();
     return vertbufGridLines;
   }
 
   // fxn uses and modifies namespace globals to calculate
   // the side length and number of cells per dimension of the uniform grid
-  int calc_side_length() {
+  int CalcSideLength() {
     assert(cellL < worldL);
     auto numCells = std::floor(worldL / targetSideL);
     while (worldL / cellL > numCells) {
@@ -232,12 +230,12 @@ namespace octree {
 
   // divide world into uniform grid of numCells x numCells x numCells chunks
   // with side lengths equal to cellL >= targetSideL
-  void subdivide() {
+  void Subdivide() {
     // start from min, add cellL to the x-coord numcells times
     const auto& min = topNode.bb.min;
     v3 old_min{};
     v3 new_min{};
-    logPrintLn("topNode.bb.min", glm::to_string(min));
+    LogPrintLn("topNode.bb.min", glm::to_string(min));
     // outer loop is over Y
     for (int k = 0; k < numCells; k++) {
       old_min = min + (float)(k)*v3(0.f, cellL, 0.f);
@@ -253,16 +251,16 @@ namespace octree {
           // add Node and cell id to vectors 
           grid.push_back(Cell{ bb });
           id.push_back(iv3{ i, k, j });
-          add_lines_to_vert_buf(bb);
-          //logPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
-          //logPrintLn("id x,y,z:", "(", id[id.size() - 1].x, ",", id[id.size() - 1].y, ",", id[id.size() - 1].z, ")");
+          AddLinesToVertBuf(bb);
+          //LogPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
+          //LogPrintLn("id x,y,z:", "(", id[id.size() - 1].x, ",", id[id.size() - 1].y, ",", id[id.size() - 1].z, ")");
         }
       }
     }
   }
 
-  void test_pos_to_grid_id_fxn() {
-    //  test pos_to_grid_id()
+  void TestPosToGridIdFxn() {
+    //  test PosToGridCoords()
     //	# should give (2,0,1)
     //	test_pos1 <- c(2.057,-2.900,-38.071) + 0.5*cellL
     //	# should give (6, 6, 6)
@@ -275,11 +273,11 @@ namespace octree {
     auto test2 = v3(30.171448, 39.271446, -2.928552) + v3(0.5f * cellL, 0.5f * cellL, 0.5f * cellL);
     auto test3 = v3(2.057149, -2.900000, -38.071423);
 
-    logPrintLn(glm::to_string(pos_to_grid_id(test1)));
-    logPrintLn(glm::to_string(pos_to_grid_id(test2)));
-    logPrintLn(glm::to_string(pos_to_grid_id(test3)));
+    LogPrintLn(glm::to_string(PosToGridCoords(test1)));
+    LogPrintLn(glm::to_string(PosToGridCoords(test2)));
+    LogPrintLn(glm::to_string(PosToGridCoords(test3)));
   }
 
 
 
-}  // namespace octree
+}  // namespace SpatialGrid

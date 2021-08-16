@@ -3,41 +3,42 @@
 //
 #include "circular_buffer.h"
 
-constexpr auto FR_PRINT_FREQ = 400;
+constexpr auto FR_PRINT_FREQ = 1200;
 
-typedef std::chrono::high_resolution_clock::time_point timepoint;
+using timepoint = std::chrono::high_resolution_clock::time_point;
 
 class FrameRater {
- public:
+public:
+  // @TODO: replace with uint32
   unsigned long int frame_count;
   FrameRater()
-      : lastTime{std::chrono::high_resolution_clock::now()},
-        times{circular_buffer<double>(400)},
-        frame_count{0},
-        deltaTime{0.0f} {}
+    : last_time{ std::chrono::high_resolution_clock::now() },
+    times{ circular_buffer<double>(600) },
+    frame_count{ 0 },
+    delta_time{ 0.0f } {}
   void UpdateTimes() {
     // add to time point
     this->frame_count++;
     timepoint newTime = std::chrono::high_resolution_clock::now();
     auto diff_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                       newTime - this->lastTime)
-                       .count();
+      newTime - this->last_time)
+      .count();
 
     this->times.put((float)diff_ms);
-    this->deltaTime = (float)diff_ms;
-    this->lastTime = newTime;
+    this->delta_time = (float)diff_ms;
+    this->last_time = newTime;
   }
-  float lastTimeInMs() { return this->deltaTime; }
+  float lastTimeInMs() { return this->delta_time; }
   void printFrameRateIfFreqHasBeenReached() {
     if (this->frame_count % FR_PRINT_FREQ == 0) {
-      logPrintLn("avg framerate:", this->getAvgFrameRate());
+      LogPrintLn("avg framerate:", this->getAvgFrameRate());
     }
   }
 
- private:
-  timepoint lastTime;
+private:
+  timepoint last_time;
   circular_buffer<double> times;  // ms between frames
-  float deltaTime;                // ms between last frame
+  float delta_time;                // ms between last frame
 
   double getAvgFrameRate(void) {
     // sum and empty the circular_buffer

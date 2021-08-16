@@ -9,31 +9,31 @@
 
 
 namespace gxb {
-  inline std::string appRoot = std::string{ R"(c:\cprojects\gl0\)" };
-  inline std::string texturePath = appRoot + R"(textures\)";
-  inline std::string rootModelPath = appRoot + R"(models\)";
-  inline std::string rootLevelPath = appRoot + R"(levels\)";
-  inline std::string rootShaderPath = appRoot + R"(shaders\)";
+  inline const auto app_root = std::string{ R"(c:\cprojects\gl0\)" };
+  inline const auto  texture_path = app_root + R"(textures\)";
+  inline const auto model_root = app_root + R"(models\)";
+  inline const auto level_root = app_root + R"(levels\)";
+  inline const auto shader_root = app_root + R"(shaders\)";
 
   inline const unsigned int SCR_WIDTH = 1024;
   inline const unsigned int SCR_HEIGHT = 768;
 
-  inline std::hash<std::string> strHasher;
+  inline std::hash<std::string> str_hasher;
 
-  enum class ENTITY_TYPE {
+  enum class EntityType {
     unknown, hero, box, ground,
     moving_ground_x, moving_ground_z, moving_ground_y, fruit, baddie
   };
 
-  inline std::map<std::string, ENTITY_TYPE> str_to_type{
-      {"hero", ENTITY_TYPE::hero},     {"box", ENTITY_TYPE::box},
-      {"ground", ENTITY_TYPE::ground}, {"fruit", ENTITY_TYPE::fruit},
-      {"baddie", ENTITY_TYPE::baddie}, {"moving_ground_x", ENTITY_TYPE::moving_ground_x},
-    {"moving_ground_z", ENTITY_TYPE::moving_ground_z},
-    {"moving_ground_y", ENTITY_TYPE::moving_ground_y},
+  inline std::map<std::string, EntityType> str_to_type{
+      {"hero", EntityType::hero},     {"box", EntityType::box},
+      {"ground", EntityType::ground}, {"fruit", EntityType::fruit},
+      {"baddie", EntityType::baddie}, {"moving_ground_x", EntityType::moving_ground_x},
+    {"moving_ground_z", EntityType::moving_ground_z},
+    {"moving_ground_y", EntityType::moving_ground_y},
   };
 
-  inline std::map<ENTITY_TYPE, std::string> type_to_str{};
+  inline std::map<EntityType, std::string> type_to_str{};
 
   inline void initTypeToStrMap() {
     auto create_entry = [](decltype(*str_to_type.begin()) thing) { type_to_str[thing.second] = thing.first; };
@@ -65,7 +65,7 @@ namespace gxb {
 
 
   // A simple binary state machine for moving platforms
-  struct FSM_bin {
+  struct BinaryFsm {
     enum class States { pos = 1, neg = -1 };
     States current{ States::pos };
     void check_transition(float dist, glm::vec3 facing, float target, const glm::vec3 pos_dir) {
@@ -78,18 +78,18 @@ namespace gxb {
     }
   };
 
-  struct entity {
-    entity()
-      : pos{ 0, 0, 0 }, pos_start{ 0,0,0 }, pos_last{ 0,0,0 }, rot{ 0, 0, 0 }, mesh_id{ 0 }, id{ IdFactory::getNewId() }, state_machine{ FSM_bin::States::pos }, has_been_added_to_grid{ false } {}
+  struct Entity {
+    Entity()
+      : pos{ 0, 0, 0 }, pos_start{ 0,0,0 }, pos_last{ 0,0,0 }, rot{ 0, 0, 0 }, mesh_id{ 0 }, id{ IdFactory::getNewId() }, state_machine{ BinaryFsm::States::pos }, has_been_added_to_grid{ false } {}
     const unsigned id;
     std::size_t mesh_id;
-    ENTITY_TYPE type;
+    EntityType type;
     glm::vec3 pos;
     glm::vec3 rot;
     glm::vec3 pos_start; // could be in derived type instead
     glm::vec3 pos_last;
     bool has_been_added_to_grid;
-    FSM_bin state_machine; // could be in derived type instead
+    BinaryFsm state_machine; // could be in derived type instead
   };
 
 
@@ -133,11 +133,11 @@ namespace gxb {
   struct Level {
     std::vector<std::unique_ptr<mesh>> meshes;
     std::vector<int> mesh_first_vertex;
-    std::vector<std::unique_ptr<entity>> objects;
+    std::vector<std::unique_ptr<Entity>> objects;
     std::vector<unsigned int> vaos;
     std::vector<float> raw_data;
 
-    mesh* getMesh(size_t hashCode) {
+    mesh* GetMesh(size_t hashCode) {
       for (size_t i = 0; i < meshes.size(); i++) {
         if (meshes[i]->hash_code == hashCode) {
           return meshes[i].get();
@@ -147,23 +147,23 @@ namespace gxb {
     }
   };
 
-  inline std::unique_ptr<std::string> levelPath(std::string name,
+  inline std::unique_ptr<std::string> LevelPath(std::string name,
     const char* ext) {
-    auto path = std::make_unique<std::string>(rootLevelPath + name + "." + ext);
+    auto path = std::make_unique<std::string>(level_root + name + "." + ext);
     return path;
   }
 
-  inline std::unique_ptr<std::string> modelPath(std::string name) {
-    auto path = std::make_unique<std::string>(rootModelPath + name + ".obj");
+  inline std::unique_ptr<std::string> ModelPath(std::string name) {
+    auto path = std::make_unique<std::string>(model_root + name + ".obj");
     return path;
   }
 
-  inline std::unique_ptr<std::string> shaderPath(std::string name) {
-    auto path = std::make_unique<std::string>(rootShaderPath + name);
+  inline std::unique_ptr<std::string> ShaderPath(std::string name) {
+    auto path = std::make_unique<std::string>(shader_root + name);
     return path;
   }
 
-  inline std::optional<std::pair<int, int>> extract_pair_of_ints(
+  inline std::optional<std::pair<int, int>> ExtractPairOfInts(
     std::string& token, std::string& delim) {
     size_t pos = 0;
     pos = token.find(delim);
@@ -171,74 +171,74 @@ namespace gxb {
       return std::nullopt;  // return on error
     }
     std::string firstNum;
-    int faceId, normalId;
-    faceId = normalId = -1;
+    int face_id, normal_id;
+    face_id = normal_id = -1;
     firstNum = token.substr(0, pos);
-    faceId = (unsigned int)atoi(firstNum.c_str());
+    face_id = (unsigned int)atoi(firstNum.c_str());
     token = token.erase(0, pos + delim.length());
-    normalId = (unsigned int)atoi(token.c_str());
-    return std::optional<std::pair<int, int>>{std::make_pair(faceId, normalId)};
+    normal_id = (unsigned int)atoi(token.c_str());
+    return std::optional<std::pair<int, int>>{std::make_pair(face_id, normal_id)};
   }
 
   // v  float float float
   // vn float float float
   // f  1// 1 22//22 9//9
   //
-  inline std::unique_ptr<mesh> load_mesh_from_disk(const char* name) {
+  inline std::unique_ptr<mesh> LoadMeshFromDisk(const char* name) {
     using std::string;
     using std::stringstream;
-    stringstream fileData{};
-    fileData = slurp::get_file_contents(modelPath(name)->c_str());
+    stringstream file_data{};
+    file_data = slurp::GetFileContents(ModelPath(name)->c_str());
 
     // add error checking and return null
     auto m = std::make_unique<mesh>();
     m->name = name;
 
-    unsigned int lineNum = 0;
-    string line{}, firstTok{};
+    unsigned int line_num = 0;
+    string line{}, first_tok{};
 
     while (1) {
-      lineNum++;
-      getline(fileData, line, '\n');
+      line_num++;
+      getline(file_data, line, '\n');
 
-      if (fileData.fail()) break;
+      if (file_data.fail()) break;
 
-      stringstream lineStream{ line };
-      lineStream >> firstTok;
+      stringstream line_stream{ line };
+      line_stream >> first_tok;
 
-      if (firstTok == "v") {
+      if (first_tok == "v") {
         // read vertex
         glm::vec3 pos = { 0.f, 0.f, 0.f };
-        lineStream >> pos.x >> pos.y >> pos.z;
-        if (lineStream.fail()) {
-          logErr(__FILE__, __LINE__, "trouble reading position data");
+        line_stream >> pos.x >> pos.y >> pos.z;
+        if (line_stream.fail()) {
+          LogErr(__FILE__, __LINE__, "trouble reading position data");
         }
         m->vertices.push_back(pos);
       }
 
-      if (firstTok == "vn") {
+      if (first_tok == "vn") {
         // read normal
         glm::vec3 normal;
-        lineStream >> normal.x >> normal.y >> normal.z;
-        if (lineStream.fail()) {
-          logPrintLn("error reading normal coords");
+        line_stream >> normal.x >> normal.y >> normal.z;
+        if (line_stream.fail()) {
+          LogPrintLn("error reading normal coords");
         }
         m->normals.push_back(normal);
       }
 
-      if (firstTok == "f") {
+      if (first_tok == "f") {
         string token;
         glm::u32vec3 faces;
 
         for (int i = 0; i < 3; i++) {
-          lineStream >> token;  // example 1//1
+          line_stream >> token;  // example 1//1
           std::string delimiter = "//";
-          auto resultPair = extract_pair_of_ints(token, delimiter);
-          if (!resultPair) {
-            logErr("ERROR:: < file line # , model name > ::", lineNum, name);
+          auto result_pair = ExtractPairOfInts(token, delimiter);
+          if (!result_pair) {
+            LogErr("ERROR:: < file line # , model name > ::", line_num, name);
           }
-          auto [faceId, normalId] = *resultPair;
-          faces[i] = faceId;
+          auto [face_id, normal_id] = *result_pair;
+          faces[i] = face_id;
         }
         m->faces.push_back(faces);
       }
@@ -247,136 +247,136 @@ namespace gxb {
     return m;
   }
 
-  inline std::vector<PathPt> load_campath(std::string levelName) {
+  inline std::vector<PathPt> LoadCamPath(std::string level_name) {
     using std::vector, std::ifstream, glm::vec3, std::make_unique;
-    bool fileExist = slurp::checkFileExist(rootLevelPath, levelName, "cmp");
+    bool fileExist = slurp::CheckFileExist(level_root, level_name, "cmp");
     if (!fileExist) {
-      logPrintLn("CamPath file for level", levelName, " was not found.\n");
+      LogPrintLn("CamPath file for level", level_name, " was not found.\n");
       return vector<PathPt>{};
     }
 
     // load camPath
     vector<PathPt> pts;
-    auto pathData =
-      slurp::get_file_contents(levelPath(levelName, "cmp")->c_str());
+    auto path_data =
+      slurp::GetFileContents(LevelPath(level_name, "cmp")->c_str());
 
-    while (pathData.good()) {
+    while (path_data.good()) {
       float x{}, y{}, z{};
-      pathData >> x >> y >> z;
-      if (pathData.good())
+      path_data >> x >> y >> z;
+      if (path_data.good())
         pts.push_back(PathPt{ vec3{x, y, -z}, 0.0f });
     }
-    logPrintLn(pts.size(), "points loaded from", levelName, ".cmp");
+    LogPrintLn(pts.size(), "points loaded from", level_name, ".cmp");
 
-    logPrintLn("CamPath file for ", levelName, " loaded");
+    LogPrintLn("CamPath file for ", level_name, " loaded");
 
     return std::move(pts);
   }
   // format of level
   // 							 pos   rot
   // entity_type  model_name  x y z x y z
-  inline std::unique_ptr<Level> load_level(std::string levelName) {
+  inline std::unique_ptr<Level> LoadLevel(std::string levelName) {
     auto l = std::make_unique<Level>();
-    std::string line, entityName = "";
+    std::string line, entity_name = "";
 
-    bool levelExist = slurp::checkFileExist(rootLevelPath, levelName, "txt");
+    bool levelExist = slurp::CheckFileExist(level_root, levelName, "txt");
 
     if (levelExist) {
       auto levelData =
-        slurp::get_file_contents(levelPath(levelName, "txt")->c_str());
-      logPrintLn("SUCCESS:: level", levelName, "slurped from disk");
+        slurp::GetFileContents(LevelPath(levelName, "txt")->c_str());
+      LogPrintLn("SUCCESS:: level", levelName, "slurped from disk");
 
-      int lineNum = 0;
+      int line_num = 0;
 
-      logPrintLn("mesh         	  v        n        f        hash");
+      LogPrintLn("mesh         	  v        n        f        hash");
 
       while (levelData.good()) {
-        lineNum++;
+        line_num++;
         getline(levelData, line,
           '\n');  // getline sets stream bits on error
 
-        std::stringstream lineStream{ line };
-        lineStream >> entityName;
-        auto type = str_to_type.count(entityName) ? str_to_type[entityName]
-          : ENTITY_TYPE::unknown;
-        if (type == ENTITY_TYPE::unknown) {
-          logErr(levelName, lineNum, "entity type unknown");
+        std::stringstream line_stream{ line };
+        line_stream >> entity_name;
+        auto type = str_to_type.count(entity_name) ? str_to_type[entity_name]
+          : EntityType::unknown;
+        if (type == EntityType::unknown) {
+          LogErr(levelName, line_num, "Entity type unknown");
           continue;
         }
 
-        std::string meshName;
-        glm::vec3 Pos{};
-        glm::vec3 Rot{};
-        lineStream >> meshName;
-        lineStream >> Pos.x >> Pos.y >> Pos.z;
-        lineStream >> Rot.x >> Rot.y >> Rot.z;
+        std::string mesh_name;
+        glm::vec3 pos{};
+        glm::vec3 rot{};
+        line_stream >> mesh_name;
+        line_stream >> pos.x >> pos.y >> pos.z;
+        line_stream >> rot.x >> rot.y >> rot.z;
 
-        const bool lineStreamBad = lineStream.fail();
-        if (lineStreamBad && levelData.eof()) {
+        const bool line_stream_bad = line_stream.fail();
+        if (line_stream_bad && levelData.eof()) {
           break;
         }
 
-        if (lineStreamBad) {
-          logPrintLn("ERROR: wrong values on line <", lineNum, ">",
+        if (line_stream_bad) {
+          LogPrintLn("ERROR: wrong values on line <", line_num, ">",
             "level:", levelName);
           continue;
         }
 
         // load model file into level struct
-        auto meshPtr = std::make_unique<mesh>();
-        auto entityPtr = std::make_unique<entity>();
+        auto mesh_ptr = std::make_unique<mesh>();
+        auto entity_ptr = std::make_unique<Entity>();
 
-        // set meshPtr properties
-        size_t meshHashCode = strHasher(meshName);
+        // set mesh_ptr properties
+        size_t mesh_hash_code = str_hasher(mesh_name);
 
-        entityPtr->type = str_to_type[entityName];
-        entityPtr->pos = Pos;
-        entityPtr->pos_last = Pos;
-        entityPtr->pos_start = Pos;
-        entityPtr->rot = Rot;
-        entityPtr->mesh_id = meshHashCode;
+        entity_ptr->type = str_to_type[entity_name];
+        entity_ptr->pos = pos;
+        entity_ptr->pos_last = pos;
+        entity_ptr->pos_start = pos;
+        entity_ptr->rot = rot;
+        entity_ptr->mesh_id = mesh_hash_code;
 
-        bool modelExist = slurp::checkFileExist(rootModelPath, meshName, "obj");
-        bool meshAlreadyLoaded =
-          (l->getMesh(meshHashCode) == nullptr) ? false : true;
+        bool model_exist = slurp::CheckFileExist(model_root, mesh_name, "obj");
+        bool mesh_already_loaded =
+          (l->GetMesh(mesh_hash_code) == nullptr) ? false : true;
 
-        if (!modelExist) {
+        if (!model_exist) {
           // can only reach this line if model file was not found
-          logPrintLn("ERROR::missing mesh file:", meshName,
+          LogPrintLn("ERROR::missing mesh file:", mesh_name,
             "while loading level:", levelName);
           return nullptr;
         }
-        if (meshAlreadyLoaded) {
+        if (mesh_already_loaded) {
           //
-          mesh* mesh_ = l->getMesh(meshHashCode);
+          mesh* mesh_ = l->GetMesh(mesh_hash_code);
           std::copy(mesh_->vertices.begin(), mesh_->vertices.end(),
-            std::back_inserter(meshPtr->vertices));
+            std::back_inserter(mesh_ptr->vertices));
           std::copy(mesh_->faces.begin(), mesh_->faces.end(),
-            std::back_inserter(meshPtr->faces));
+            std::back_inserter(mesh_ptr->faces));
           std::copy(mesh_->normals.begin(), mesh_->normals.end(),
-            std::back_inserter(meshPtr->normals));
+            std::back_inserter(mesh_ptr->normals));
           //
         }
         else {
           // read in vertices, normals, and faces from disk
-          meshPtr = load_mesh_from_disk(meshName.c_str());
+          mesh_ptr = LoadMeshFromDisk(mesh_name.c_str());
           //
         }
 
-        // set meshPtr properties
-        meshPtr->name = meshName;
-        meshPtr->hash_code = meshHashCode;
+        // set mesh_ptr properties
+        mesh_ptr->name = mesh_name;
+        mesh_ptr->hash_code = mesh_hash_code;
         // create one giant raw_data array on the level to hold all model
         // triangles
         // @TODO: save the starting vertex in the raw_data array to the
-        // entity struct
+        // Entity struct
         // @Note: vertices are in raw data in the order that model is in the
         // meshes vector
-        if (!meshAlreadyLoaded) {
-          int facesAddedToRaw = 0;
-          auto& v = meshPtr->vertices;
-          meshPtr->pos_first_vert = l->raw_data.size() / 3;
-          for (const auto& face : meshPtr->faces) {
+        if (!mesh_already_loaded) {
+          int face_added_to_raw = 0;
+          auto& v = mesh_ptr->vertices;
+          mesh_ptr->pos_first_vert = l->raw_data.size() / 3;
+          for (const auto& face : mesh_ptr->faces) {
             // push a float onto vertexarray
             // @NOTE: faces integers in object file start at 1 instead
             // of 0
@@ -389,22 +389,22 @@ namespace gxb {
             l->raw_data.push_back(v[(size_t)face.z - 1].x);
             l->raw_data.push_back(v[(size_t)face.z - 1].y);
             l->raw_data.push_back(v[(size_t)face.z - 1].z);
-            facesAddedToRaw++;
+            face_added_to_raw++;
           }
-          const std::string spacer(15 - meshName.length(), ' ');
-          logPrintLn(meshName, spacer, meshPtr->vertices.size(),
-            meshPtr->normals.size(), meshPtr->faces.size(),
-            meshPtr->hash_code);
+          const std::string spacer(15 - mesh_name.length(), ' ');
+          LogPrintLn(mesh_name, spacer, mesh_ptr->vertices.size(),
+            mesh_ptr->normals.size(), mesh_ptr->faces.size(),
+            mesh_ptr->hash_code);
 
-          assert(meshPtr->hash_code != 0);
-          l->meshes.push_back(std::move(meshPtr));
+          assert(mesh_ptr->hash_code != 0);
+          l->meshes.push_back(std::move(mesh_ptr));
         }
 
-        l->objects.push_back(std::move(entityPtr));
+        l->objects.push_back(std::move(entity_ptr));
 
       }  // end while
-      logPrintLn("objects created:", l->objects.size());
-      logPrintLn("meshes loaded from disk:", l->meshes.size());
+      LogPrintLn("objects created:", l->objects.size());
+      LogPrintLn("meshes loaded from disk:", l->meshes.size());
       return std::move(l);
     }
     return nullptr;

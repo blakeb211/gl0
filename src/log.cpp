@@ -13,7 +13,7 @@ using namespace std;
 
 constexpr auto BUFFER_LEN = 512;
 
-static FILE *fptr;
+static FILE* fptr;
 array<char, BUFFER_LEN> buf;
 
 bool closeLog() {
@@ -27,7 +27,7 @@ bool closeLog() {
   return false;
 }
 
-bool setLogFile(std::string fname) {
+bool SetLogFile(std::string fname) {
   if (fname.empty()) {
     return false;
   }
@@ -35,7 +35,8 @@ bool setLogFile(std::string fname) {
   fptr = fopen(fname.c_str(), "w+");
   if (fptr != NULL) {
     return true;
-  } else {
+  }
+  else {
     return false;
   }
 }
@@ -49,26 +50,26 @@ template <class T> void write_to_screen_and_disk(const string fmt, any val) {
   fwrite(buf.data(), sizeof(char), cnt_, fptr);
 }
 
-// This method has the logPrintLn({ calling syntax and is only used internally 
-// by log.h and log.cpp via the logPrintLn template.
+// This method has the LogPrintLn({ calling syntax and is only used internally 
+// by log.h and log.cpp via the LogPrintLn template.
 // It should not be used by any other files in case I want to remove it.
 // 
 // Instead should probably be customizing types with fmt::print
-void logPrintLn(const initializer_list<any> &il) {
+void LogPrintLn(const initializer_list<any>& il) {
   assert(fptr != nullptr);
-  for (auto &i : il) {
-    const string typeName{i.type().name()};
+  for (auto& i : il) {
+    const string typeName{ i.type().name() };
     buf.fill('-');
     if (typeid(0.1f) == i.type()) {
       write_to_screen_and_disk<float>("{:<8.6f} ", i);
       continue;
     }
-    if (typeid(const char *) == i.type()) {
-      write_to_screen_and_disk<const char *>("{} ", i);
+    if (typeid(const char*) == i.type()) {
+      write_to_screen_and_disk<const char*>("{} ", i);
       continue;
     }
-    if (typeid(char *) == i.type()) {
-      write_to_screen_and_disk<char *>("{} ", i);
+    if (typeid(char*) == i.type()) {
+      write_to_screen_and_disk<char*>("{} ", i);
       continue;
     }
     if (typeid(1) == i.type()) {
@@ -94,11 +95,11 @@ void logPrintLn(const initializer_list<any> &il) {
     //****************************************************************
     // add handling for next type here
     //****************************************************************
-    write_to_screen_and_disk<const string>("ERROR: add type <{}> to logPrintLn",
-                                           typeName);
+    write_to_screen_and_disk<const string>("ERROR: add type <{}> to LogPrintLn",
+      typeName);
   }
 }
 
-void logErr(const string fname, const int lineNum, const string msg) {
-  logPrintLn("ERROR: file <", fname, "> line <", lineNum, "> ==", msg);
+void LogErr(const string fname, const int lineNum, const string msg) {
+  LogPrintLn("ERROR: file <", fname, "> line <", lineNum, "> ==", msg);
 }

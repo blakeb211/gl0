@@ -66,8 +66,8 @@ namespace gxb {
     // processes input received from any keyboard-like input system. Accepts
     // input parameter in the form of camera defined ENUM (to abstract it from
     // windowing systems)
-    void ProcessKeyboard(gxb::Camera_Movement direction, float deltaTime, float cameraSpeed) {
-      float velocity = cameraSpeed * deltaTime * SENSITIVITY;
+    void ProcessKeyboard(gxb::Camera_Movement direction, float delta_time, float cameraSpeed) {
+      float velocity = cameraSpeed * delta_time * SENSITIVITY;
       if (direction == Camera_Movement::FORWARD) Position += Front * velocity;
       if (direction == Camera_Movement::BACKWARD) Position -= Front * velocity;
       if (direction == Camera_Movement::LEFT) Position -= Right * velocity;

@@ -4,24 +4,24 @@
 #include <string>
 
 // print arguments to log file and screen and add a newline
-void logPrintLn(const std::initializer_list<std::any>& il);
+void LogPrintLn(const std::initializer_list<std::any>& il);
 
 
 // This creates a lambda function and processes each arg of a vararg with it.
 template<typename ... T>
-void logPrintLn(T const& ... args) {
-   
-    ([&](auto const& element) {
-   
-   logPrintLn({element});
+void LogPrintLn(T const& ... args) {
+
+  ([&](auto const& element) {
+
+    LogPrintLn({ element });
 
     }(args), ...);
 
-	logPrintLn({"\n"});
+  LogPrintLn({ "\n" });
 }
- 
-void logErr(const std::string, const int, const std::string msg);
 
-bool setLogFile(std::string);
+void LogErr(const std::string, const int, const std::string msg);
+
+bool SetLogFile(std::string);
 
 bool closeLog();

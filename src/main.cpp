@@ -15,7 +15,7 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-inline static const auto FREE_MOVE = 1;
+inline static const auto FREE_MOVE = 0;
 inline static const auto VSYNC = 1;
 
 // -------------------------------------------
@@ -28,35 +28,35 @@ using iv3 = glm::ivec3;
 // -------------------------------------------
 // FORWARD DECLARATIONS
 // -------------------------------------------
-namespace octree {  // if octree wasn't header only I could remove this
-  std::vector<float>& setup_octree(gxb::Level*);
-  void update_grid(gxb::entity*);
+namespace SpatialGrid {  // if SpatialGrid wasn't header only I could remove this
+  std::vector<float>& SetupOctree(gxb::Level*);
+  void UpdateGrid(gxb::Entity*);
 };
 
 
-void test_naive_collision();
-void framebuf_size_callback(GLFWwindow* window, int width, int height);
-void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
-  float deltaTime);
-void processInput_playerOnly(GLFWwindow* window, float deltaTime);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void mouse_callback_null(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-glm::vec3 selectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
+void TestNaiveCollision();
+void FrameBufSizeCallback(GLFWwindow* window, int width, int height);
+void ProcessInputCamOnly(GLFWwindow* window, gxb::Camera& cam,
+  float delta_time);
+void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time);
+void MouseCallback(GLFWwindow* window, double x_pos, double y_pos);
+void MouseCallbackNull(GLFWwindow* window, double x_pos, double y_pos);
+void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset);
+glm::vec3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& newCamPos);
-void addCamPathToRawData(const VecPP& path, gxb::Level* l);
+void AddCamPathToRawData(const VecPP& path, gxb::Level* l);
 
 
-GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
+GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title,
   GLFWframebuffersizefun);
-void camGoalSeek(float deltaTime);
-void load_level(std::string name);
+void CamGoalSeek(float delta_time);
+void LoadLevel(std::string name);
 // -------------------------------------------
 // GLOBALS
 // -------------------------------------------
 gxb::Camera camera{};
-float lastX = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
-bool firstMouse = true;
+float last_x = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
+bool first_mouse = true;
 std::unique_ptr<gxb::Level> level = nullptr;
 std::vector<gxb::PathPt> path;
 constexpr auto CAM_MOVE_SPEED = 0.001f;
@@ -65,27 +65,28 @@ constexpr auto CAM_MOVE_SPEED = 0.001f;
 int main() {
   gxb::initTypeToStrMap();  // creates str_to_type
   FrameRater fr{};
-  setLogFile("log.txt");
+  SetLogFile("log.txt");
 
   const auto& w = gxb::SCR_WIDTH;
   const auto& h = gxb::SCR_HEIGHT;
-  GLFWwindow* window = initGLFW(w, h, "Learn OpenGL ", framebuf_size_callback);
+  GLFWwindow* window = InitGlfw(w, h, "Learn OpenGL ", FrameBufSizeCallback);
 
-  load_level("test2");
+  //@TODO: add ability to switch levels while game running
+  LoadLevel("test");
 
-  auto vertBufGridLinesRef = octree::setup_octree(level.get());
-  auto vaoOctree = render::buildOctreeVAO(vertBufGridLinesRef);
-  test_naive_collision();
+  auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
+  auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
+  TestNaiveCollision();
 
-  auto progOne = Shader(*gxb::shaderPath("3pos3color.vs"),
-    *gxb::shaderPath("colorFromVertex.fs"));
+  auto prog_one = Shader(*gxb::ShaderPath("3pos3color.vs"),
+    *gxb::ShaderPath("colorFromVertex.fs"));
 
   // add camPath points to level raw_data before building VAO 
   // so I can draw them if I need to debug.
-  addCamPathToRawData(path, level.get());
+  AddCamPathToRawData(path, level.get());
 
-  render::setGLflags();
-  auto VAO = render::buildVAO(level.get());
+  render::SetGlFlags();
+  auto vao = render::BuildLevelVao(level.get());
 
 
   glm::mat4 model = glm::mat4(1.0f);
@@ -95,16 +96,16 @@ int main() {
 
 
   // lambda for moving platform behavior
-  auto move_moving_ground = [&](std::unique_ptr<gxb::entity>& o, const glm::vec3& pos_dir, const float& frameTime, float speedup = 1.0)
+  auto update_platform_pos = [&](std::unique_ptr<gxb::Entity>& o, const glm::vec3& pos_dir, const float& frame_time, float speedup = 1.0)
   {
     glm::vec3 facing = o->pos - o->pos_last;
     facing = glm::normalize(facing);
     o->pos_last = o->pos;
     if (magic_enum::enum_name(o->state_machine.current) == "pos") {
-      o->pos += pos_dir * 0.001f * frameTime * speedup;
+      o->pos += pos_dir * 0.001f * frame_time * speedup;
     }
     else {
-      o->pos += -1.0f * pos_dir * 0.001f * frameTime * speedup;
+      o->pos += -1.0f * pos_dir * 0.001f * frame_time * speedup;
     }
     o->state_machine.check_transition(glm::distance(o->pos, o->pos_start), facing, 4, pos_dir);
   };
@@ -113,18 +114,18 @@ int main() {
   // -----------
   while (!glfwWindowShouldClose(window)) {
     fr.UpdateTimes();
-    float deltaTime = fr.lastTimeInMs();
+    float delta_time = fr.lastTimeInMs();
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     if (FREE_MOVE)
-      processInput_camOnly(window, camera, deltaTime);
+      ProcessInputCamOnly(window, camera, delta_time);
     else {
-      processInput_playerOnly(window, deltaTime);
-      camGoalSeek(deltaTime);
+      ProcessInputPlayerOnly(window, delta_time);
+      CamGoalSeek(delta_time);
     }
 
-    progOne.use();
+    prog_one.Use();
     // update objects 
     // movement is moderated by the elapsed time in case we change the framerate later
   // @TODO: MOVE TO UDPATE .H and .CPP
@@ -132,38 +133,38 @@ int main() {
       auto const elapsed = fr.lastTimeInMs();
       switch (o->type) {
         glm::vec3 pos_dir;
-      case gxb::ENTITY_TYPE::moving_ground_x:
+      case gxb::EntityType::moving_ground_x:
         pos_dir = glm::vec3(1.f, 0.f, 0.f);
-        move_moving_ground(o, pos_dir, elapsed, 1.3f);
+        update_platform_pos(o, pos_dir, elapsed, 1.3f);
         break;
-      case gxb::ENTITY_TYPE::moving_ground_y:
+      case gxb::EntityType::moving_ground_y:
         pos_dir = glm::vec3(0.f, 1.f, 0.f);
-        move_moving_ground(o, pos_dir, elapsed, 2.0f);
+        update_platform_pos(o, pos_dir, elapsed, 2.0f);
         break;
-      case gxb::ENTITY_TYPE::moving_ground_z:
+      case gxb::EntityType::moving_ground_z:
         pos_dir = glm::vec3(0.f, 0.f, 1.f);
-        move_moving_ground(o, pos_dir, elapsed, 5.0f);
+        update_platform_pos(o, pos_dir, elapsed, 5.0f);
         break;
       }
       // update spatial grid
       if (fr.frame_count % 2 == 0) {
-        octree::update_grid(o.get());
+        SpatialGrid::UpdateGrid(o.get());
       }
     }
 
     // set transformations
     model = glm::mat4(1.0f);
     view = camera.GetViewMatrix();
-    progOne.setMat4("view", view);
+    prog_one.SetMat4("view", view);
 
     projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f,
       0.1f, 100.0f);
-    progOne.setMat4("projection", projection);
+    prog_one.SetMat4("projection", projection);
 
     // render
     // ------
     render::clearScreen();
-    render::draw_level(VAO, model, progOne, vaoOctree, level.get(), path);
+    render::DrawLevel(vao, model, prog_one, vao_spatial_grid, level.get(), path);
     glfwSwapBuffers(window);
     glfwPollEvents();
     fr.printFrameRateIfFreqHasBeenReached();
@@ -179,25 +180,25 @@ int main() {
 
 // process all input: move player only
 // ---------------------------------------------------------------------------------------------------------
-void processInput_playerOnly(GLFWwindow* window, float deltaTime) {
+void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time) {
   const auto playerSpeed = 0.017f;
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
   auto& pos = level->objects[0]->pos;
   if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    pos.x += playerSpeed * deltaTime;
+    pos.x += playerSpeed * delta_time;
   }
 
   if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-    pos.x -= playerSpeed * deltaTime;
+    pos.x -= playerSpeed * delta_time;
   }
 
   if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-    pos.z -= playerSpeed * deltaTime;
+    pos.z -= playerSpeed * delta_time;
   }
 
   if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-    pos.z += playerSpeed * deltaTime;
+    pos.z += playerSpeed * delta_time;
   }
 
   if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
@@ -207,23 +208,23 @@ void processInput_playerOnly(GLFWwindow* window, float deltaTime) {
 
 // process all input: move camera only
 // ---------------------------------------------------------------------------------------------------------
-void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
-  float deltaTime) {
+void ProcessInputCamOnly(GLFWwindow* window, gxb::Camera& cam,
+  float delta_time) {
   const float cameraSpeed = 0.16f;  // adjust accordingly
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
   if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, deltaTime, cameraSpeed);
+    cam.ProcessKeyboard(gxb::Camera_Movement::RIGHT, delta_time, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, deltaTime, cameraSpeed);
+    cam.ProcessKeyboard(gxb::Camera_Movement::LEFT, delta_time, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, deltaTime, cameraSpeed);
+    cam.ProcessKeyboard(gxb::Camera_Movement::FORWARD, delta_time, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, deltaTime, cameraSpeed);
+    cam.ProcessKeyboard(gxb::Camera_Movement::BACKWARD, delta_time, cameraSpeed);
 
   if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 
@@ -233,40 +234,40 @@ void processInput_camOnly(GLFWwindow* window, gxb::Camera& cam,
 // glfw: whenever the window size changed (by OS or user resize) this callback
 // function executes
 // ---------------------------------------------------------------------------------------------
-void framebuf_size_callback(GLFWwindow* window, int width, int height) {
+void FrameBufSizeCallback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-  if (firstMouse) {
-    lastX = (float)xpos;
-    lastY = (float)ypos;
-    firstMouse = false;
+void MouseCallback(GLFWwindow* window, double x_pos, double y_pos) {
+  if (first_mouse) {
+    last_x = (float)x_pos;
+    lastY = (float)y_pos;
+    first_mouse = false;
   }
 
-  float xoffset = (float)xpos - lastX;
+  float xoffset = (float)x_pos - last_x;
   float yoffset =
     lastY -
-    (float)ypos;  // reversed since y-coordinates go from bottom to top
+    (float)y_pos;  // reversed since y-coordinates go from bottom to top
 
-  lastX = (float)xpos;
-  lastY = (float)ypos;
+  last_x = (float)x_pos;
+  lastY = (float)y_pos;
 
   camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-void mouse_callback_null(GLFWwindow* window, double xpos, double ypos) {
+void MouseCallbackNull(GLFWwindow* window, double xpos, double ypos) {
   __noop;
   return;
 }
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
   camera.ProcessMouseScroll((float)yoffset);
 }
 
-GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
+GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title,
   GLFWframebuffersizefun fun) {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -277,7 +278,7 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   // --------------------
   GLFWwindow* window = glfwCreateWindow(w, h, title, NULL, NULL);
   if (window == NULL) {
-    logPrintLn("Failed to create GLFW window");
+    LogPrintLn("Failed to create GLFW window");
     glfwTerminate();
     return nullptr;
   }
@@ -287,16 +288,16 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   // glad: load all OpenGL function pointers
   // ---------------------------------------
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    logPrintLn("Failed to initialize GLAD");
+    LogPrintLn("Failed to initialize GLAD");
     return nullptr;
   }
 
   if (FREE_MOVE)
-    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetCursorPosCallback(window, MouseCallback);
   else
-    glfwSetCursorPosCallback(window, mouse_callback_null);
+    glfwSetCursorPosCallback(window, MouseCallbackNull);
 
-  glfwSetScrollCallback(window, scroll_callback);
+  glfwSetScrollCallback(window, ScrollCallback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   if (VSYNC)
@@ -312,7 +313,7 @@ GLFWwindow* initGLFW(unsigned int w, unsigned int h, const char* title,
   return window;
 }
 
-glm::vec3 selectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
+glm::vec3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = glm::vec3{ 0.f, 0.f, -1.f };
@@ -349,7 +350,7 @@ glm::vec3 selectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   return glm::vec3{}; // if no valid campath found, cam goes to 0,0,0
 }
 
-void addCamPathToRawData(const VecPP& path, gxb::Level* l) {
+void AddCamPathToRawData(const VecPP& path, gxb::Level* l) {
   auto func = [l](const gxb::PathPt pp) {
     for (int i = 0; i < 3; i++) {
       l->raw_data.push_back(pp.pos[i]);
@@ -360,26 +361,26 @@ void addCamPathToRawData(const VecPP& path, gxb::Level* l) {
 
 
 
-void camGoalSeek(float deltaTime) {
-  auto newCamGoalPos = selectNextCamPoint(level.get(), camera, path);
+void CamGoalSeek(float delta_time) {
+  auto new_cam_goal_pos = SelectNextCamPoint(level.get(), camera, path);
   // smoothly move cam towards goal pos
-  if (camera.Position != newCamGoalPos) {
-    const auto camDp = newCamGoalPos - camera.Position;
-    camera.moveTo(camera.Position + deltaTime * CAM_MOVE_SPEED * camDp);
+  if (camera.Position != new_cam_goal_pos) {
+    const auto camDp = new_cam_goal_pos - camera.Position;
+    camera.moveTo(camera.Position + delta_time * CAM_MOVE_SPEED * camDp);
     camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
   }
 }
 
 // load global level and path structs with data from files
-void load_level(std::string name) {
-  auto futureLevelPtr = async(std::launch::async, gxb::load_level, name);
-  level = futureLevelPtr.get();
+void LoadLevel(std::string name) {
+  auto future_level_ptr = async(std::launch::async, gxb::LoadLevel, name);
+  level = future_level_ptr.get();
 
-  auto futureCamPts = async(std::launch::async, gxb::load_campath, name);
-  path = futureCamPts.get();
+  auto future_cam_pts = async(std::launch::async, gxb::LoadCamPath, name);
+  path = future_cam_pts.get();
 }
 
-void test_naive_collision() {
+void TestNaiveCollision() {
   const auto ocnt = level->objects.size();
   int num_checks{ 0 };
   for (int i = 0; i < ocnt - 1; i++) {
@@ -387,5 +388,5 @@ void test_naive_collision() {
       num_checks++;
     }
   }
-  logPrintLn("NAIVE: num of collision checks:", num_checks);
+  LogPrintLn("NAIVE: num of collision checks:", num_checks);
 }
