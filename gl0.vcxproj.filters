@@ -51,12 +51,6 @@
     <ClCompile Include="src\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="thirdparty\src\fmt\format.cc">
-      <Filter>ThirdParty\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\src\fmt\os.cc">
-      <Filter>ThirdParty\Source</Filter>
-    </ClCompile>
     <ClCompile Include="src\update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -134,6 +128,12 @@
     </Text>
     <Text Include="levels\test2.cmp" />
     <Text Include="levels\test.cmp" />
+    <Text Include="thirdparty\src\fmt\rem_format.cc">
+      <Filter>ThirdParty\Source</Filter>
+    </Text>
+    <Text Include="thirdparty\src\fmt\rem_os..cc">
+      <Filter>ThirdParty\Source</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\colorFromVertex.fs">

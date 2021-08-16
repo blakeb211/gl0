@@ -29,13 +29,13 @@ game
 	camera should follow campath smoothly - done
 
 refactoring
-	Fix names: all types EntType MyStruct MyEnum. all multi-word variables camel case (see Google Style Guide)
 	move header and cpps into same directory
 	pull update outside of main.cpp
 	separate octree into header and cpp file
 	compile lib fmt and glm into a dll and add it to the project
 	need a tool to enforce style guide
 	-------------------------------------------------
+	Fix names: all types and functions InThisCase and all variables in_this_case - done
 	pull rendering system outside of main.cpp - done
 
 campath editor
@@ -55,10 +55,11 @@ collision detection
 	+does collision checking need to be done every frame?
 
 	UNIFORM GRID SPATIAL PARTITIONING
-	+only draw cells with list.size() > 0  // every 10th frame
+	+only draw cells with list.size() > 0  // Does the Grid[Index] match the Id[Index]? Can I use that?
 	+use center for now
-	+print nearest neighbors
-	+add bounding box to each object
+	+write method to print the nearest neighbors
+	+add bounding box to each object, consider spherical
+	+find nearest neighbors, then intersecting bounding boxes, then fine-grain triangle collision
 	-------------------------------------------------
 	+update grid node lists each frame - done
 
