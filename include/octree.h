@@ -274,13 +274,9 @@ namespace SpatialGrid {
     //	test_pos3 <- c(2.057,-2.900,-38.071)
   //
   // ***** note that these values are truncated
-    auto test1 = v3(2.057149, -2.900000, -38.071423);
-    auto test2 = v3(30.171448, 39.271446, -2.928552) + v3(0.5f * cellL, 0.5f * cellL, 0.5f * cellL);
-    auto test3 = v3(2.057149, -2.900000, -38.071423);
-
+    auto test1 = v3(0, 0, 1.649);
+	LogPrintLn("TESTING::TestPosToGridIdFxn");
     LogPrintLn(glm::to_string(PosToGridCoords(test1)));
-    LogPrintLn(glm::to_string(PosToGridCoords(test2)));
-    LogPrintLn(glm::to_string(PosToGridCoords(test3)));
   }
 
 
