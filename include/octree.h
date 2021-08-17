@@ -117,7 +117,7 @@ namespace SpatialGrid {
     const auto& min = topNode.bb.min;
     auto diff = (pos - min) / cellL;
     // truncate to integer values
-    return iv3{ (int)diff.x, (int)diff.y, (int)diff.z };
+    return iv3{ trunc(diff.x), trunc(diff.y), trunc(diff.z) };
   }
 
 

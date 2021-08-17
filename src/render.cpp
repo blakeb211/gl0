@@ -15,6 +15,7 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
   const size_t num_colors = col::list.size();
   for (size_t i = 0; i < level->objects.size(); i++) {
     model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     model = glm::translate(model, level->objects[i]->pos);
     curr_color_id =
       (curr_color_id == num_colors - 1) ? curr_color_id -= num_colors - 1 : curr_color_id += 1;
@@ -26,8 +27,13 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
     assert(mesh_ptr != nullptr);
 
     auto num_verts_model = static_cast<unsigned>(mesh_ptr->faces.size() * 3);
+	if (DRAW_OBJECT_OUTLINES) {
+    glDrawArrays(GL_LINE_LOOP, static_cast<GLint>(mesh_ptr->pos_first_vert),
+      num_verts_model);
+	} else {
     glDrawArrays(GL_TRIANGLES, static_cast<GLint>(mesh_ptr->pos_first_vert),
       num_verts_model);
+	}
   }
   if (render::DRAW_CAM_PATH) {
     model = glm::mat4(1.0f);

@@ -153,9 +153,7 @@ int main() {
         break;
       }
       // update spatial grid
-      if (fr.frame_count % 2 == 0) {
         SpatialGrid::UpdateGrid(o.get());
-      }
     }
 
     // set transformations
