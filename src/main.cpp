@@ -31,6 +31,7 @@ using iv3 = glm::ivec3;
 namespace SpatialGrid {  // if SpatialGrid wasn't header only I could remove this
   std::vector<float>& SetupOctree(gxb::Level*);
   void UpdateGrid(gxb::Entity*);
+  iv3 PosToGridCoords(v3 pos);
 };
 
 
@@ -72,7 +73,7 @@ int main() {
   GLFWwindow* window = InitGlfw(w, h, "Learn OpenGL ", FrameBufSizeCallback);
 
   //@TODO: add ability to switch levels while game running
-  LoadLevel("test");
+  LoadLevel("test2");
 
   auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
   auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
@@ -124,6 +125,11 @@ int main() {
       ProcessInputPlayerOnly(window, delta_time);
       CamGoalSeek(delta_time);
     }
+
+	// update window title with player position
+	const auto pos = level->objects[0]->pos;
+	auto str = std::string(glm::to_string(pos) + " " + glm::to_string(SpatialGrid::PosToGridCoords(pos)));
+    glfwSetWindowTitle(window, str.c_str());	
 
     prog_one.Use();
     // update objects 
@@ -185,6 +191,9 @@ void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
   auto& pos = level->objects[0]->pos;
+  // save last position before changing the position
+  level->objects[0]->pos_last = pos;
+
   if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
     pos.x += playerSpeed * delta_time;
   }
@@ -204,6 +213,8 @@ void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time) {
   if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 
   if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
+
+  
 }
 
 // process all input: move camera only

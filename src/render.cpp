@@ -29,9 +29,7 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
     glDrawArrays(GL_TRIANGLES, static_cast<GLint>(mesh_ptr->pos_first_vert),
       num_verts_model);
   }
-
   if (render::DRAW_CAM_PATH) {
-    // Draw CamPath
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     prog_one.SetMat4("model", model);
@@ -63,6 +61,12 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
         (GLint)24);  // uses vboOctree
     }
     glBindVertexArray(0);
+  }
+  if (render::DRAW_OBJECT_POS) {
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3{ 0, 0, 0 });
+    prog_one.SetMat4("model", model);
+    prog_one.SetVec3("color", col::red);
   }
 }
 

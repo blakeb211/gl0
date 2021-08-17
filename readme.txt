@@ -55,6 +55,9 @@ collision detection
 	+does collision checking need to be done every frame?
 
 	UNIFORM GRID SPATIAL PARTITIONING
+	+draw object positions to make sure its center of object
+	+fix PosToGridCoords if needed
+	+verify postion to grid coord is working
 	+only draw cells with list.size() > 0  // Does the Grid[Index] match the Id[Index]? Can I use that?
 	+use center for now
 	+write method to print the nearest neighbors

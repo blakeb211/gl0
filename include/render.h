@@ -18,5 +18,6 @@ namespace render {
   // make these toggleable with a hotkey
   inline const auto DRAW_CAM_PATH = 0;
   inline const auto DRAW_OCTREE = 1;
+  inline const auto DRAW_OBJECT_POS = 1;
 
 };

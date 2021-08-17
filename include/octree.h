@@ -131,6 +131,7 @@ namespace SpatialGrid {
         return i;
       }
     }
+	// if we get here, the coords we put in don't exist in the grid
     LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was", glm::to_string(id_to_match));
     return -1;
   }
@@ -152,8 +153,12 @@ namespace SpatialGrid {
     if (curr_grid == last_grid && o->has_been_added_to_grid == true) { return; };
 
     // remove id from last cell's list if the cell changed
-    if (curr_grid != last_grid) {
-      std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
+    if (curr_grid != last_grid && o->has_been_added_to_grid == true) {
+	  auto old_end = grid[last_idx].list.end();
+      auto new_end = std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
+	  if (old_end != new_end) {
+		  grid[last_idx].list.erase(new_end); 
+	  }
     }
     // add to curr cell's list if it isn't in it already
     auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(), o->id);
