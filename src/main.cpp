@@ -15,7 +15,7 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-inline static const auto FREE_MOVE = 0;
+inline static const auto FREE_MOVE = 1;
 inline static const auto VSYNC = 1;
 
 // -------------------------------------------
@@ -126,10 +126,10 @@ int main() {
       CamGoalSeek(delta_time);
     }
 
-	// update window title with player position
-	const auto pos = level->objects[0]->pos;
-	auto str = std::string(glm::to_string(pos) + " " + glm::to_string(SpatialGrid::PosToGridCoords(pos)));
-    glfwSetWindowTitle(window, str.c_str());	
+    // update window title with player position
+    const auto pos = level->objects[0]->pos;
+    auto str = std::string(glm::to_string(pos) + " " + glm::to_string(SpatialGrid::PosToGridCoords(pos)));
+    glfwSetWindowTitle(window, str.c_str());
 
     prog_one.Use();
     // update objects 
@@ -153,7 +153,7 @@ int main() {
         break;
       }
       // update spatial grid
-        SpatialGrid::UpdateGrid(o.get());
+      SpatialGrid::UpdateGrid(o.get());
     }
 
     // set transformations
@@ -212,7 +212,7 @@ void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time) {
 
   if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
 
-  
+
 }
 
 // process all input: move camera only
@@ -366,6 +366,10 @@ void AddCamPathToRawData(const VecPP& path, gxb::Level* l) {
     }
   };
   std::for_each(path.begin(), path.end(), func);
+  // Add min to raw_data
+  l->raw_data.push_back(-0.600000f);
+  l->raw_data.push_back(-0.700000f);
+  l->raw_data.push_back(-16.500000f);
 }
 
 

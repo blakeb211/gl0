@@ -66,7 +66,6 @@ namespace SpatialGrid {
   void AddLinesToVertBuf(BoundingBox x) {
     auto min = x.min;
     auto max = x.max;
-    assert(glm::distance(min, max) > 3);
 
     auto push_floats = [&](v3 corner) {
       vertbufGridLines.push_back(corner.x);
