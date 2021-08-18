@@ -17,9 +17,6 @@ FILETYPES:
 	.ppm	ppm file with initial cps points
 *****************************************/
 
-
-
-
 game
 	collision detection and response
 	-------------------------------------------------

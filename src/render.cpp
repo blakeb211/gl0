@@ -27,13 +27,14 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
     assert(mesh_ptr != nullptr);
 
     auto num_verts_model = static_cast<unsigned>(mesh_ptr->faces.size() * 3);
-	if (DRAW_OBJECT_OUTLINES) {
-    glDrawArrays(GL_LINE_LOOP, static_cast<GLint>(mesh_ptr->pos_first_vert),
-      num_verts_model);
-	} else {
-    glDrawArrays(GL_TRIANGLES, static_cast<GLint>(mesh_ptr->pos_first_vert),
-      num_verts_model);
-	}
+    if (DRAW_OBJECT_OUTLINES) {
+      glDrawArrays(GL_LINE_LOOP, static_cast<GLint>(mesh_ptr->pos_first_vert),
+        num_verts_model);
+    }
+    else {
+      glDrawArrays(GL_TRIANGLES, static_cast<GLint>(mesh_ptr->pos_first_vert),
+        num_verts_model);
+    }
   }
   if (render::DRAW_CAM_PATH) {
     model = glm::mat4(1.0f);
@@ -52,13 +53,12 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
     prog_one.SetMat4("model", model);
     glBindVertexArray(vao_spatial_grid);  // bind the SpatialGrid vao
     const auto& tot_vert_num = SpatialGrid::GetVertBufGridLinesSize() / 3;
-    size_t curr_cell_idx = -1;
+    int curr_cell_idx = -1;
     // i loops over *vertices* not float. there are 3 floats per vertex
     for (int i = 0; i < tot_vert_num; i += 24)
     {
       curr_cell_idx++;
       auto id = SpatialGrid::GridIndexToId(curr_cell_idx);
-
       // set color of current cell before drawing
       prog_one.SetVec3("color", col::black);
 

@@ -76,35 +76,34 @@ namespace SpatialGrid {
 
     auto push_cube = [&](v3 min, v3 max) {
       // GL_LINES draws verts 0 and 1 as first line, then 2 and 3 as next line
-      auto dim = v3(max - min);
       push_floats(min);
-      push_floats(min + v3(dim.x, 0.f, 0.f));
+      push_floats(min + v3(cellL, 0.f, 0.f));
       push_floats(min);
-      push_floats(min + v3(0.f, dim.y, 0.f));
+      push_floats(min + v3(0.f, cellL, 0.f));
       push_floats(min);
-      push_floats(min + v3(0.f, 0.f, dim.z));
+      push_floats(min + v3(0.f, 0.f, cellL));
 
       push_floats(max);
-      push_floats(max - v3(dim.x, 0.f, 0.f));
+      push_floats(max - v3(cellL, 0.f, 0.f));
       push_floats(max);
-      push_floats(max - v3(0.f, dim.y, 0.f));
+      push_floats(max - v3(0.f, cellL, 0.f));
       push_floats(max);
-      push_floats(max - v3(0.f, 0.f, dim.z));
+      push_floats(max - v3(0.f, 0.f, cellL));
 
-      push_floats(max - v3(0.f, dim.y, 0.f));
-      push_floats(max - v3(dim.x, dim.y, 0.f));
-      push_floats(max - v3(0.f, dim.y, 0.f));
-      push_floats(max - v3(0.f, dim.y, dim.z));
+      push_floats(max - v3(0.f, cellL, 0.f));
+      push_floats(max - v3(cellL, cellL, 0.f));
+      push_floats(max - v3(0.f, cellL, 0.f));
+      push_floats(max - v3(0.f, cellL, cellL));
 
-      push_floats(max - v3(dim.x, 0.f, 0.f));
-      push_floats(max - v3(dim.x, dim.y, 0.f));
-      push_floats(max - v3(dim.x, 0.f, 0.f));
-      push_floats(max - v3(dim.x, 0.f, dim.z));
+      push_floats(max - v3(cellL, 0.f, 0.f));
+      push_floats(max - v3(cellL, cellL, 0.f));
+      push_floats(max - v3(cellL, 0.f, 0.f));
+      push_floats(max - v3(cellL, 0.f, cellL));
 
-      push_floats(max - v3(0.f, 0.f, dim.z));
-      push_floats(max - v3(0.f, dim.y, dim.z));
-      push_floats(max - v3(0.f, 0.f, dim.z));
-      push_floats(max - v3(dim.x, 0.f, dim.z));
+      push_floats(max - v3(0.f, 0.f, cellL));
+      push_floats(max - v3(0.f, cellL, cellL));
+      push_floats(max - v3(0.f, 0.f, cellL));
+      push_floats(max - v3(cellL, 0.f, cellL));
     };
     // real action happens here
     // adds 12 sets of line vertices to vertices vector so they can be drawn
@@ -131,7 +130,7 @@ namespace SpatialGrid {
         return i;
       }
     }
-	// if we get here, the coords we put in don't exist in the grid
+    // if we get here, the coords we put in don't exist in the grid
     LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was", glm::to_string(id_to_match));
     return -1;
   }
@@ -154,11 +153,11 @@ namespace SpatialGrid {
 
     // remove id from last cell's list if the cell changed
     if (curr_grid != last_grid && o->has_been_added_to_grid == true) {
-	  auto old_end = grid[last_idx].list.end();
+      auto old_end = grid[last_idx].list.end();
       auto new_end = std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
-	  if (old_end != new_end) {
-		  grid[last_idx].list.erase(new_end); 
-	  }
+      if (old_end != new_end) {
+        grid[last_idx].list.erase(new_end);
+      }
     }
     // add to curr cell's list if it isn't in it already
     auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(), o->id);
@@ -176,6 +175,7 @@ namespace SpatialGrid {
     assert(level != NULL);
     SpatialGrid::level = level;
     glm::vec3 min{ 0 }, max{ 0 };
+
     for (auto& i : level->objects) {
       if (i->pos.x < min.x)
         min.x = i->pos.x;
@@ -257,7 +257,7 @@ namespace SpatialGrid {
           grid.push_back(Cell{ bb });
           id.push_back(iv3{ i, k, j });
           AddLinesToVertBuf(bb);
-          //LogPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
+          LogPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
           //LogPrintLn("id x,y,z:", "(", id[id.size() - 1].x, ",", id[id.size() - 1].y, ",", id[id.size() - 1].z, ")");
         }
       }
@@ -275,7 +275,7 @@ namespace SpatialGrid {
   //
   // ***** note that these values are truncated
     auto test1 = v3(0, 0, 1.649);
-	LogPrintLn("TESTING::TestPosToGridIdFxn");
+    LogPrintLn("TESTING::TestPosToGridIdFxn");
     LogPrintLn(glm::to_string(PosToGridCoords(test1)));
   }
 
