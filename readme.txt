@@ -44,23 +44,25 @@ campath editor
 	get campath control pts from a ppm - done
 	write cam path files - done
 	
-collision detection
+ COLLISION DETECTION - UNIFORM GRID
 	NOTES
 	+keep separate list of stationary and moving objects
 	+use distance squared instead of actual distance
 	+do a coarse check before doing a granular check
 	+does collision checking need to be done every frame?
-
-	UNIFORM GRID SPATIAL PARTITIONING
-	+draw object positions to make sure its center of object
-	+fix PosToGridCoords if needed
-	+verify postion to grid coord is working
+	+use center for now - done
+	
+	TODO
 	+only draw cells with list.size() > 0  // Does the Grid[Index] match the Id[Index]? Can I use that?
-	+use center for now
 	+write method to print the nearest neighbors
+	+split out stationary and moving objects
+
 	+add bounding box to each object, consider spherical
 	+find nearest neighbors, then intersecting bounding boxes, then fine-grain triangle collision
 	-------------------------------------------------
+	+verify postion to grid coord is working - done
+	+draw object positions to make sure its center of object - done
+	+fix PosToGridCoords if needed - not needed
 	+update grid node lists each frame - done
 
 level generator
