@@ -15,7 +15,7 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-inline static const auto FREE_MOVE = 1;
+inline static const auto FREE_MOVE = 0;
 inline static const auto VSYNC = 1;
 
 // -------------------------------------------
@@ -208,6 +208,14 @@ void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time) {
     pos.z += playerSpeed * delta_time;
   }
 
+  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+    pos.y += playerSpeed * delta_time;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS) {
+    pos.y -= playerSpeed * delta_time;
+  }
+
   if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) __noop;
 
   if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) __noop;
@@ -366,10 +374,6 @@ void AddCamPathToRawData(const VecPP& path, gxb::Level* l) {
     }
   };
   std::for_each(path.begin(), path.end(), func);
-  // Add min to raw_data
-  l->raw_data.push_back(-0.600000f);
-  l->raw_data.push_back(-0.700000f);
-  l->raw_data.push_back(-16.500000f);
 }
 
 
