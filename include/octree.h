@@ -165,11 +165,13 @@ namespace SpatialGrid {
     if (not_in_curr_cell_list) {
       grid[curr_idx].list.push_back(o->id);
       o->has_been_added_to_grid = true;
-      LogPrintLn("added object id:", o->id, " to grid @:", curr_idx, "with grid_id:", glm::to_string(id[curr_idx]));
+      LogPrintLn("added object id:", o->id, " to grid: ", glm::to_string(id[curr_idx]));
     }
 
   }
 
+  // find min and max of x,y,z objects in level and build a uniform
+  // grid enclosing it
   std::vector<float>& SetupOctree(gxb::Level* level) {
     assert(level != NULL);
     SpatialGrid::level = level;
@@ -217,7 +219,7 @@ namespace SpatialGrid {
     LogPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
     Subdivide();
-    TestPosToGridIdFxn();
+    //TestPosToGridIdFxn();
     return vertbufGridLines;
   }
 
@@ -256,7 +258,7 @@ namespace SpatialGrid {
           grid.push_back(Cell{ bb });
           id.push_back(iv3{ i, k, j });
           AddLinesToVertBuf(bb);
-          LogPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
+          //LogPrintLn("min x,y,z:", "(", bb.min.x, ",", bb.min.y, ",", bb.min.z, ")");
           //LogPrintLn("id x,y,z:", "(", id[id.size() - 1].x, ",", id[id.size() - 1].y, ",", id[id.size() - 1].z, ")");
         }
       }
