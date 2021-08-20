@@ -165,7 +165,7 @@ namespace SpatialGrid {
     if (not_in_curr_cell_list) {
       grid[curr_idx].list.push_back(o->id);
       o->has_been_added_to_grid = true;
-      LogPrintLn("added object id:", o->id, " to grid: ", glm::to_string(id[curr_idx]));
+      //LogPrintLn("added object id:", o->id, " to grid: ", glm::to_string(id[curr_idx]));
     }
 
   }
