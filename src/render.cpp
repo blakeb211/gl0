@@ -59,8 +59,14 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4& model, Shader& prog
     {
       curr_cell_idx++;
       auto id = SpatialGrid::GridIndexToId(curr_cell_idx);
+      if (SpatialGrid::grid[curr_cell_idx].list.size() > 0) {
+        prog_one.SetVec3("color", col::red);
+      }
+      else {
+        continue;
+      }
       // set color of current cell before drawing
-      prog_one.SetVec3("color", col::black);
+
 
       //LogPrintLn("drawing first pt " + glm::to_string(id), " @ ", SpatialGrid::vertbufGridLines[i], SpatialGrid::vertbufGridLines[i + 1], SpatialGrid::vertbufGridLines[i + 2]);
       //LogPrintLn("drawing second pt " + glm::to_string(id), " @ ", SpatialGrid::vertbufGridLines[i+3], SpatialGrid::vertbufGridLines[i + 4], SpatialGrid::vertbufGridLines[i + 5]);
