@@ -15,7 +15,7 @@
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
-inline static const auto FREE_MOVE = 0;
+inline static const auto FREE_MOVE = 1;
 inline static const auto VSYNC = 1;
 
 // -------------------------------------------
@@ -73,7 +73,7 @@ int main() {
   GLFWwindow* window = InitGlfw(w, h, "Learn OpenGL ", FrameBufSizeCallback);
 
   //@TODO: add ability to switch levels while game running
-  LoadLevel("test2");
+  LoadLevel("test");
 
   auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
   auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
