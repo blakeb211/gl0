@@ -44,7 +44,7 @@ namespace SpatialGrid {
   gxb::Level* level; // @TODO: add const
   std::vector<float>
     vertbufGridLines{};	 // for drawing, vertices of Octree bounding box lines
-  const float targetSideL = 4.f;
+  const float targetSideL = 3.f;
   int numCells{};
   float cellL{}, worldL{};
   Cell topNode;  // whole world
