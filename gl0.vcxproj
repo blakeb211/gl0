@@ -139,6 +139,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>5105;26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeaderFile>gamelib.h</PrecompiledHeaderFile>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -194,6 +195,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>5105;26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeaderFile>gamelib.h</PrecompiledHeaderFile>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
