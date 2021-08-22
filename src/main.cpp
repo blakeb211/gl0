@@ -4,7 +4,7 @@
 #include <stb\stb_image.h>
 //
 #include "gamelib.h"
-#include "frameRater.h"
+#include "framerater.h"
 #include "shader.h"
 #include "glm.h"
 #include "headers.h"
