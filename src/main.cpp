@@ -11,12 +11,11 @@
 #include <magic_enum.h>
 #include "render.h"
 
-
 // -------------------------------------------
 // DEFINES 
 // -------------------------------------------
 inline static const auto FREE_MOVE = 0;
-inline static const auto VSYNC = 1;
+inline static const auto VSYNC = 0;
 
 // -------------------------------------------
 // TYPEDEFS

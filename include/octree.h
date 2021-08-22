@@ -64,8 +64,8 @@ namespace SpatialGrid {
   }
 
   void AddLinesToVertBuf(BoundingBox x) {
-    auto min = x.min;
-    auto max = x.max;
+    const auto min = x.min;
+    const auto max = x.max;
 
     auto push_floats = [&](v3 corner) {
       vertbufGridLines.push_back(corner.x);
@@ -113,7 +113,7 @@ namespace SpatialGrid {
   // returns (0,0,0) to (numCells-1,numCells-1,numCells-1)
   iv3 PosToGridCoords(v3 pos) {
     const auto& min = topNode.bb.min;
-    auto diff = (pos - min) / cellL;
+    const auto diff = (pos - min) / cellL;
     // truncate to integer values
     return iv3{ trunc(diff.x), trunc(diff.y), trunc(diff.z) };
   }

@@ -45,13 +45,8 @@ campath editor
 	write cam path files - done
 	
 collision detection
-	NOTES
-	+keep separate list of stationary and moving objects
-	+use distance squared instead of actual distance
-	+do a coarse check before doing a granular check
-	+does collision checking need to be done every frame?
-
-	UNIFORM GRID SPATIAL PARTITIONING
+	TODO	
+	+let object be in more than one cell at once
 	+write method to print the nearest neighbors
 	+add bounding box to each object, consider spherical
 	+find nearest neighbors, then intersecting bounding boxes, then fine-grain triangle collision
@@ -61,6 +56,13 @@ collision detection
 	+verify postion to grid coord is working - done
 	+draw object positions to make sure its center of object - done
 	+update grid node lists each frame - done
+
+	NOTES
+	+keep separate list of stationary and moving objects
+	+use distance squared instead of actual distance
+	+do a coarse check before doing a granular check
+	+does collision checking need to be done every frame?
+
 
 level generator
 	terrain creation : generate levels and campaths
