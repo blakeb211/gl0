@@ -55,7 +55,7 @@ template <class T> void write_to_screen_and_disk(const string fmt, any val) {
 // It should not be used by any other files in case I want to remove it.
 // 
 // Instead should probably be customizing types with fmt::print
-void LogPrintLn(const initializer_list<any>& il) {
+void LogPrintOneItem(const initializer_list<any>& il) {
   assert(fptr != nullptr);
   for (auto& i : il) {
     const string typeName{ i.type().name() };
