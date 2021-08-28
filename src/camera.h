@@ -8,10 +8,10 @@ namespace gxb {
 
   // Default camera values used internally by Camera class
   const float YAW = -90.0f;
-  const float PITCH = -10.2f;
+  const float PITCH = 0.2f;
   const float SPEED = 0.05f;
   const float SENSITIVITY = 0.1f;
-  const float ZOOM = 25.0f;
+  const float ZOOM = 40.0f;
 
   // An abstract camera class that processes input and calculates the
   // corresponding Euler Angles, Vectors and Matrices for use in OpenGL
