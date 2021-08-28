@@ -26,7 +26,6 @@
 #include <utility>
 #include <vector>
 //
-#include "log.h"
 //
 #include "slurp.h"
 //

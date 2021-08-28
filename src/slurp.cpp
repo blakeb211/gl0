@@ -2,7 +2,7 @@
 
 //
 #include "headers.h"
-
+#include "log.h"
 using namespace std;
 
 namespace slurp {
