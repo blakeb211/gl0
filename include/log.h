@@ -13,7 +13,7 @@
 //
 //
 inline constexpr auto BUFFER_LEN = 512;
-inline static FILE* fptr;
+inline FILE* fptr;
 inline std::array<char, BUFFER_LEN> buf;
 /*******************************************************/
 
@@ -45,10 +45,10 @@ inline void LogPrintOneItem(const T& item) {
     write_to_screen_and_disk<float>("{:<8.6f} ", item);
     return;
   }
-  if (typeid(const char*) == typeid(item)) {
+  if (typeid(const char*) == typeid(std::decay<decltype(item)>::type)) {
     write_to_screen_and_disk<const char*>("{} ", item);
     return;
-  }
+  }	
   if (typeid(char*) == typeid(item)) {
     write_to_screen_and_disk<char*>("{} ", item);
     return;
@@ -76,6 +76,10 @@ inline void LogPrintOneItem(const T& item) {
   //****************************************************************
   // add handling for next type here
   //****************************************************************
+  { 
+  #include <iostream>
+	  std::cout << "Offending typeid:" << typeid(item).name() << std::endl;
+  }
   write_to_screen_and_disk<const std::string>("ERROR: add type <{}> to LogPrintLn",
     typeid(item).name());
 }

@@ -160,6 +160,7 @@ BACK	..\editor_campath\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAU
 BACK	..\playground\olcPixelGameEngine.h	/^		BACK, ESCAPE, RETURN, ENTER, PAUSE, SCROLL,$/;"	e	enum:olc::Key
 BACKWARD	..\include\camera.h	/^  enum class Camera_Movement { FORWARD, BACKWARD, LEFT, RIGHT };$/;"	m	class:gxb::Camera_Movement
 BLUE_SCALE_FACTOR	..\editor_campath\cam_path_editor.cpp	/^constexpr auto BLUE_SCALE_FACTOR = 3;$/;"	v
+BUFFER_LEN	..\include\log.h	/^inline constexpr auto BUFFER_LEN = 512;$/;"	v
 BinaryFsm	..\include\gamelib.h	/^  struct BinaryFsm {$/;"	s	namespace:gxb
 BoundingBox	..\include\octree.h	/^  struct BoundingBox {$/;"	s	namespace:SpatialGrid
 BuildLevelVao	..\src\render.cpp	/^unsigned int render::BuildLevelVao(const gxb::Level* l) {$/;"	f	class:render
@@ -503,8 +504,8 @@ DEL	..\editor_campath\olcPixelGameEngine.h	/^		SPACE, TAB, SHIFT, CTRL, INS, DEL
 DEL	..\playground\olcPixelGameEngine.h	/^		SPACE, TAB, SHIFT, CTRL, INS, DEL, HOME, END, PGUP, PGDN,$/;"	e	enum:olc::Key
 DOWN	..\editor_campath\olcPixelGameEngine.h	/^		UP, DOWN, LEFT, RIGHT,$/;"	e	enum:olc::Key
 DOWN	..\playground\olcPixelGameEngine.h	/^		UP, DOWN, LEFT, RIGHT,$/;"	e	enum:olc::Key
-DRAW_CAM_PATH	..\include\render.h	/^  inline const auto DRAW_CAM_PATH = 0;$/;"	v
-DRAW_OBJECT_OUTLINES	..\include\render.h	/^  inline const auto DRAW_OBJECT_OUTLINES = 1;$/;"	v
+DRAW_CAM_PATH	..\include\render.h	/^  inline const auto DRAW_CAM_PATH = 1;$/;"	v
+DRAW_OBJECT_OUTLINES	..\include\render.h	/^  inline const auto DRAW_OBJECT_OUTLINES = 0;$/;"	v
 DRAW_OBJECT_POS	..\include\render.h	/^  inline const auto DRAW_OBJECT_POS = 1;$/;"	v
 DRAW_OCTREE	..\include\render.h	/^  inline const auto DRAW_OCTREE = 1;$/;"	v
 Decal	..\editor_campath\olcPixelGameEngine.h	/^	Decal::Decal(const uint32_t nExistingTextureResource, olc::Sprite* spr)$/;"	f	class:olc::Decal
@@ -3234,9 +3235,10 @@ LoadPack	..\editor_campath\olcPixelGameEngine.h	/^	bool ResourcePack::LoadPack(c
 LoadPack	..\playground\olcPixelGameEngine.h	/^	bool ResourcePack::LoadPack(const std::string& sFile, const std::string& sKey)$/;"	f	class:olc::ResourcePack
 Loaded	..\editor_campath\olcPixelGameEngine.h	/^	bool ResourcePack::Loaded()$/;"	f	class:olc::ResourcePack
 Loaded	..\playground\olcPixelGameEngine.h	/^	bool ResourcePack::Loaded()$/;"	f	class:olc::ResourcePack
-LogErr	..\src\log.cpp	/^void LogErr(const string fname, const int lineNum, const string msg) {$/;"	f
-LogPrintLn	..\include\log.h	/^void LogPrintLn(T const& ... args) {$/;"	f
-LogPrintLn	..\src\log.cpp	/^void LogPrintLn(const initializer_list<any>& il) {$/;"	f
+LogErr	..\include\log.h	/^inline void LogErr(const std::string fname, const int lineNum, const std::string msg) {$/;"	f
+LogPrintLn	..\include\log.h	/^inline void LogPrintLn() {}$/;"	f
+LogPrintLn	..\include\log.h	/^inline void LogPrintLn(T head, Tail... tail) {$/;"	f
+LogPrintOneItem	..\include\log.h	/^inline void LogPrintOneItem(const T& item) {$/;"	f
 M	..\editor_campath\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 M	..\playground\olcPixelGameEngine.h	/^		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,$/;"	e	enum:olc::Key
 MAGIC_ENUM_RANGE_MAX	..\thirdparty\include\magic_enum.h	95;"	d
@@ -4435,7 +4437,7 @@ SetLayerScale	..\playground\olcPixelGameEngine.h	/^	void PixelGameEngine::SetLay
 SetLayerScale	..\playground\olcPixelGameEngine.h	/^	void PixelGameEngine::SetLayerScale(uint8_t layer, float x, float y)$/;"	f	class:olc::PixelGameEngine
 SetLayerTint	..\editor_campath\olcPixelGameEngine.h	/^	void PixelGameEngine::SetLayerTint(uint8_t layer, const olc::Pixel& tint)$/;"	f	class:olc::PixelGameEngine
 SetLayerTint	..\playground\olcPixelGameEngine.h	/^	void PixelGameEngine::SetLayerTint(uint8_t layer, const olc::Pixel& tint)$/;"	f	class:olc::PixelGameEngine
-SetLogFile	..\src\log.cpp	/^bool SetLogFile(std::string fname) {$/;"	f
+SetLogFile	..\include\log.h	/^inline bool SetLogFile(std::string fname) {$/;"	f
 SetMat4	..\include\shader.h	/^  void SetMat4(const std::string& name, const glm::mat4& mat) const$/;"	f	class:Shader
 SetPixel	..\editor_campath\olcPixelGameEngine.h	/^	bool Sprite::SetPixel(const olc::vi2d& a, Pixel p)$/;"	f	class:olc::Sprite
 SetPixel	..\editor_campath\olcPixelGameEngine.h	/^	bool Sprite::SetPixel(int32_t x, int32_t y, Pixel p)$/;"	f	class:olc::Sprite
@@ -4511,7 +4513,7 @@ VC_EXTRALEAN	..\editor_campath\olcPixelGameEngine.h	446;"	d
 VC_EXTRALEAN	..\playground\olcPixelGameEngine.h	446;"	d
 VERT	..\editor_campath\olcPixelGameEngine.h	/^		enum Flip { NONE = 0, HORIZ = 1, VERT = 2 };$/;"	e	enum:olc::Sprite::Flip
 VERT	..\playground\olcPixelGameEngine.h	/^		enum Flip { NONE = 0, HORIZ = 1, VERT = 2 };$/;"	e	enum:olc::Sprite::Flip
-VSYNC	..\src\main.cpp	/^inline static const auto VSYNC = 1;$/;"	v	file:
+VSYNC	..\src\main.cpp	/^inline static const auto VSYNC = 0;$/;"	v	file:
 Vec3	..\playground\Vec3.h	/^	Vec3() { }$/;"	f	struct:Vec3
 Vec3	..\playground\Vec3.h	/^	Vec3(float _x, float _y, float _z)$/;"	f	struct:Vec3
 Vec3	..\playground\Vec3.h	/^struct Vec3 {$/;"	s
@@ -4550,7 +4552,7 @@ Zoom	..\include\camera.h	/^    float Zoom;$/;"	m	class:gxb::Camera
 \i	..\include\Session.vim	/^nnoremap \\i :GoImports$/;"	m
 \t	..\Session.vim	/^nnoremap \\t :vert term$/;"	m
 \t	..\include\Session.vim	/^nnoremap \\t :vert term$/;"	m
-_CRT_SECURE_NO_WARNINGS	..\src\log.cpp	1;"	d	file:
+_CRT_SECURE_NO_WARNINGS	..\include\log.h	2;"	d
 _CRT_SECURE_NO_WARNINGS	..\src\slurp.cpp	1;"	d	file:
 _CRT_SECURE_NO_WARNINGS	..\thirdparty\src\fmt\rem_os..cc	10;"	d	file:
 _GLAD_IS_SOME_NEW_VERSION	..\thirdparty\src\glad\glad.c	158;"	d	file:
@@ -5053,7 +5055,7 @@ bright_yellow	..\thirdparty\include\fmt\color.h	/^  bright_yellow,$/;"	m	class:c
 brown	..\thirdparty\include\fmt\color.h	/^  brown = 0xA52A2A,                    \/\/ rgb(165,42,42)$/;"	m	class:color
 bsr2log10	..\thirdparty\include\fmt\format.h	/^FMT_INLINE uint16_t bsr2log10(int bsr) {$/;"	f
 bss_	..\thirdparty\include\glm\gtx\io.hpp	/^			basic_state_saver<CTy> const bss_;$/;"	m	class:glm::io::basic_format_saver
-buf	..\src\log.cpp	/^array<char, BUFFER_LEN> buf;$/;"	v
+buf	..\include\log.h	/^inline std::array<char, BUFFER_LEN> buf;$/;"	v
 buf	..\thirdparty\include\fmt\format-inl.h	/^  char* buf;$/;"	m	struct:detail::fixed_handler
 buf_	..\include\circular_buffer.h	/^    std::unique_ptr<T[]> buf_;$/;"	m	class:circular_buffer
 buffer	..\thirdparty\include\fmt\color.h	/^    Char buffer[7u + 3u * 4u + 1u];$/;"	m	struct:color::emphasis::detail::ansi_color_escape
@@ -5154,7 +5156,7 @@ clearScreen	..\src\render.cpp	/^void render::clearScreen() {$/;"	f	class:render
 close	..\thirdparty\include\fmt\os.h	/^  void close() {$/;"	f	class:final
 close	..\thirdparty\src\fmt\rem_os..cc	/^void buffered_file::close() {$/;"	f	class:buffered_file
 close	..\thirdparty\src\fmt\rem_os..cc	/^void file::close() {$/;"	f	class:file
-closeLog	..\src\log.cpp	/^bool closeLog() {$/;"	f
+closeLog	..\include\log.h	/^inline bool closeLog() {$/;"	f
 close_gl	..\thirdparty\src\glad\glad.c	/^static void close_gl(void) {$/;"	f	file:
 clz	..\thirdparty\include\fmt\format.h	/^inline int clz(uint32_t x) {$/;"	f	namespace:detail
 clzll	..\thirdparty\include\fmt\format.h	/^inline int clzll(uint64_t x) {$/;"	f	namespace:detail
@@ -5889,7 +5891,7 @@ fp	..\thirdparty\include\fmt\format-inl.h	/^  template <typename Double> explici
 fp	..\thirdparty\include\fmt\format-inl.h	/^class fp {$/;"	c	namespace:detail
 fprintf	..\thirdparty\include\fmt\printf.h	/^inline int fprintf(std::FILE* f, const S& format, const Args&... args) {$/;"	f
 fprintf	..\thirdparty\include\fmt\printf.h	/^inline int fprintf(std::basic_ostream<Char>& os, const S& format_str,$/;"	f
-fptr	..\src\log.cpp	/^static FILE* fptr;$/;"	v	file:
+fptr	..\include\log.h	/^inline FILE* fptr;$/;"	v
 fquat	..\thirdparty\include\glm\fwd.hpp	/^	typedef qua<float, defaultp>		fquat;$/;"	t	namespace:glm
 frameCnt	..\editor_campath\cam_path_editor.cpp	/^size_t frameCnt = 0;$/;"	v
 frame_count	..\include\framerater.h	/^  unsigned long int frame_count;$/;"	m	class:FrameRater
@@ -10129,6 +10131,7 @@ main	..\playground\draw.cpp	/^int main() {$/;"	f
 main	..\playground\main.cpp	/^int main(int argc, char **argv) {$/;"	f
 main	..\playground\test.cpp	/^int main() {$/;"	f
 main	..\src\main.cpp	/^int main() {$/;"	f
+main	..\test_ptr_decay_typeid.cpp	/^int main() {$/;"	f
 main	..\thirdparty\include\glm\out\build\x64-Debug\CMakeFiles\3.19.20122902-MSVC_2\CompilerIdCXX\CMakeCXXCompilerId.cpp	/^int main(int argc, char* argv[])$/;"	f
 main	..\thirdparty\include\glm\out\build\x64-Debug\CMakeFiles\3.19.20122902-MSVC_2\CompilerIdC\CMakeCCompilerId.c	/^int main(argc, argv) int argc; char *argv[];$/;"	f
 main	..\thirdparty\include\glm\out\build\x64-Debug\CMakeFiles\3.19.20122902-MSVC_2\CompilerIdC\CMakeCCompilerId.c	/^void main() {}$/;"	f
@@ -12165,7 +12168,7 @@ t	..\thirdparty\include\glm\detail\type_vec4.hpp	/^				struct { T s, t, p, q; };
 t	..\thirdparty\include\glm\detail\type_vec4.hpp	/^			union { T y, g, t; };$/;"	m	union:glm::vec::__anon43
 tail_	..\include\circular_buffer.h	/^    size_t tail_ = 0;$/;"	m	class:circular_buffer
 tan	..\thirdparty\include\fmt\color.h	/^  tan = 0xD2B48C,                      \/\/ rgb(210,180,140)$/;"	m	class:color
-targetSideL	..\include\octree.h	/^  const float targetSideL = 4.f;$/;"	v
+targetSideL	..\include\octree.h	/^  const float targetSideL = 3.f;$/;"	v
 taylorInvSqrt	..\thirdparty\include\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER T taylorInvSqrt(T const& r)$/;"	f	namespace:glm::detail
 taylorInvSqrt	..\thirdparty\include\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER vec<2, T, Q> taylorInvSqrt(vec<2, T, Q> const& r)$/;"	f	namespace:glm::detail
 taylorInvSqrt	..\thirdparty\include\glm\detail\_noise.hpp	/^	GLM_FUNC_QUALIFIER vec<3, T, Q> taylorInvSqrt(vec<3, T, Q> const& r)$/;"	f	namespace:glm::detail
@@ -12757,7 +12760,7 @@ write_null_pointer	..\thirdparty\include\fmt\printf.h	/^  void write_null_pointe
 write_null_pointer	..\thirdparty\include\fmt\printf.h	/^  void write_null_pointer(wchar_t) {$/;"	f	class:printf_arg_formatter
 write_pinf	..\thirdparty\include\fmt\chrono.h	/^  void write_pinf() { std::copy_n("inf", 3, out); }$/;"	f	struct:detail::chrono_formatter
 write_sign	..\thirdparty\include\fmt\chrono.h	/^  void write_sign() {$/;"	f	struct:detail::chrono_formatter
-write_to_screen_and_disk	..\src\log.cpp	/^template <class T> void write_to_screen_and_disk(const string fmt, any val) {$/;"	f
+write_to_screen_and_disk	..\include\log.h	/^template <class T> inline void write_to_screen_and_disk(const std::string fmt, std::any val) {$/;"	f
 wsAppName	..\editor_campath\olcPixelGameEngine.h	/^		std::wstring wsAppName;$/;"	m	class:olc::Platform_Windows
 wsAppName	..\playground\olcPixelGameEngine.h	/^		std::wstring wsAppName;$/;"	m	class:olc::Platform_Windows
 wstate_saver	..\thirdparty\include\glm\gtx\io.hpp	/^		typedef basic_state_saver<wchar_t> wstate_saver;$/;"	t	namespace:glm::io
