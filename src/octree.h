@@ -140,7 +140,7 @@ namespace SpatialGrid {
   // @TODO: separate this out so that stationary objects are only added to the 
   // grid during setup.
   void UpdateGrid(gxb::Entity* o) {
-
+	assert(o != nullptr);
     auto curr_grid = PosToGridCoords(o->pos);
     auto last_grid = PosToGridCoords(o->pos_last);
 

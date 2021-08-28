@@ -71,7 +71,7 @@ inline void LogPrintOneItem(const T& item) {
     typeid(item).name());
 }
 
-// deal with the param pack recursion base case
+// Base case for variadic template 
 inline void LogPrintLn() {
   LogPrintOneItem("\n");
 }
