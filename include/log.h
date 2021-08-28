@@ -31,11 +31,6 @@ template <class T> inline void write_to_screen_and_disk(const std::string fmt, s
   fwrite(buf.data(), sizeof(char), cnt_, fptr);
 }
 
-// This method has the LogPrintLn({ calling syntax and is only used internally 
-// by log.h and log.cpp via the LogPrintLn template.
-// It should not be used by any other files in case I want to remove it.
-// 
-// Instead should probably be customizing types with fmt::print
 template<typename T>
 inline void LogPrintOneItem(const T& item) {
   assert(fptr != nullptr);
@@ -85,14 +80,15 @@ inline void LogPrintOneItem(const T& item) {
 }
 
 
-inline void LogPrintLn() {}
+inline void LogPrintLn() {
+  LogPrintOneItem("\n");
+}
 // This creates a lambda function and processes each arg of a vararg with it.
 template<typename T, typename... Tail>
 inline void LogPrintLn(T head, Tail... tail) {
 
   LogPrintOneItem(head);
   LogPrintLn(tail...);
-  LogPrintOneItem("\n");
 }
 
 
