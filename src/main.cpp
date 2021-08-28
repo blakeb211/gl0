@@ -133,7 +133,6 @@ int main() {
     prog_one.Use();
     // update objects 
     // movement is moderated by the elapsed time in case we change the framerate later
-  // @TODO: MOVE TO UDPATE .H and .CPP
     for (auto& o : level->objects) {
       auto const elapsed = fr.lastTimeInMs();
       switch (o->type) {

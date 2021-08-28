@@ -139,7 +139,6 @@ namespace SpatialGrid {
   // remove object from lists that is used to be in 
   // @TODO: separate this out so that stationary objects are only added to the 
   // grid during setup.
-  // @TODO: RENAME PosToGridCoords to PosToGridCoords
   void UpdateGrid(gxb::Entity* o) {
 
     auto curr_grid = PosToGridCoords(o->pos);
@@ -265,6 +264,7 @@ namespace SpatialGrid {
     }
   }
 
+  //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
   void TestPosToGridIdFxn() {
     //  test PosToGridCoords()
     //	# should give (2,0,1)
