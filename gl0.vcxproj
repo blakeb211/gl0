@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\cprojects\gl0\include;C:\cprojects\gl0\thirdparty\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\cprojects\gl0\include;C:\cprojects\gl0\thirdparty\include;$(IncludePath);C:\cprojects\gl0\src</IncludePath>
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
@@ -79,11 +79,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\cprojects\gl0\include;C:\cprojects\gl0\thirdparty\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\cprojects\gl0\src;C:\cprojects\gl0\thirdparty\include;$(IncludePath);C:\cprojects\gl0\src</IncludePath>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>.\include;.\thirdparty\include;$(IncludePath)</IncludePath>
+    <IncludePath>.\include;.\thirdparty\include;$(IncludePath);C:\cprojects\gl0\src</IncludePath>
     <LibraryPath>.\thirdparty\libs;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <EnableClangTidyCodeAnalysis>true</EnableClangTidyCodeAnalysis>
@@ -91,7 +91,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\cprojects\gl0\thirdparty\libs;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\cprojects\gl0\include;C:\cprojects\gl0\thirdparty\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\cprojects\gl0\src;C:\cprojects\gl0\thirdparty\include;$(IncludePath);C:\cprojects\gl0\src</IncludePath>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -286,19 +286,19 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\camera.h" />
-    <ClInclude Include="include\circular_buffer.h" />
-    <ClInclude Include="include\colors.h" />
-    <ClInclude Include="include\framerater.h" />
-    <ClInclude Include="include\glm.h" />
-    <ClInclude Include="include\headers.h" />
-    <ClInclude Include="include\log.h" />
-    <ClInclude Include="include\gamelib.h" />
-    <ClInclude Include="include\octree.h" />
-    <ClInclude Include="include\render.h" />
-    <ClInclude Include="include\shader.h" />
-    <ClInclude Include="include\slurp.h" />
-    <ClInclude Include="include\update.h" />
+    <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\circular_buffer.h" />
+    <ClInclude Include="src\colors.h" />
+    <ClInclude Include="src\framerater.h" />
+    <ClInclude Include="src\gamelib.h" />
+    <ClInclude Include="src\glm.h" />
+    <ClInclude Include="src\headers.h" />
+    <ClInclude Include="src\log.h" />
+    <ClInclude Include="src\octree.h" />
+    <ClInclude Include="src\render.h" />
+    <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\slurp.h" />
+    <ClInclude Include="src\update.h" />
     <ClInclude Include="thirdparty\include\fmt\format.h" />
     <ClInclude Include="thirdparty\include\fmt\os.h" />
     <ClInclude Include="thirdparty\include\glad\glad.h" />

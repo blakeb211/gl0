@@ -1,7 +1,7 @@
 #include <glad\glad.h>
-#include <gamelib.h>
+#include "gamelib.h"
 #include "render.h"
-#include <glm.h>
+#include "glm.h"
 #include "octree.h"
 // Forward Declares
 //	namespace SpatialGrid {
