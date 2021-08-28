@@ -20,7 +20,7 @@ namespace SpatialGrid {
   // forward declarations
   void Subdivide();
   int CalcSideLength();
-  iv3 PosToGridCoords(v3 pos);
+  iv3 PosToGridCoords(const v3& pos);
   void TestPosToGridIdFxn();
 
   struct BoundingBox {
@@ -111,7 +111,7 @@ namespace SpatialGrid {
 
   // get the grid id from position
   // returns (0,0,0) to (numCells-1,numCells-1,numCells-1)
-  iv3 PosToGridCoords(v3 pos) {
+  iv3 PosToGridCoords(const v3& pos) {
     const auto& min = topNode.bb.min;
     const auto diff = (pos - min) / cellL;
     // truncate to integer values

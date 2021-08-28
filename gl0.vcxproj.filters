@@ -131,6 +131,28 @@
     <Text Include="thirdparty\src\fmt\rem_os..cc">
       <Filter>ThirdParty\Source</Filter>
     </Text>
+    <Text Include="models\cube.obj">
+      <Filter>Resource Files\models</Filter>
+    </Text>
+    <Text Include="models\plane.obj">
+      <Filter>Resource Files\models</Filter>
+    </Text>
+    <Text Include="models\sphere.obj">
+      <Filter>Resource Files\models</Filter>
+    </Text>
+    <Text Include="models\cube.mtl" />
+    <Text Include="models\cube2.mtl" />
+    <Text Include="models\cube2.obj" />
+    <Text Include="models\cylinder.mtl" />
+    <Text Include="models\cylinder.obj" />
+    <Text Include="models\mini_cube.mtl" />
+    <Text Include="models\mini_cube.obj" />
+    <Text Include="models\plane.mtl" />
+    <Text Include="models\plane2.mtl" />
+    <Text Include="models\plane2.obj" />
+    <Text Include="models\sphere.mtl" />
+    <Text Include="models\sphere2.mtl" />
+    <Text Include="models\sphere2.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\colorFromVertex.fs">
@@ -142,17 +164,23 @@
     <None Include=".gitignore">
       <Filter>Resource Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="models\plane.obj">
-      <Filter>Resource Files\models</Filter>
-    </Object>
-    <Object Include="models\sphere.obj">
-      <Filter>Resource Files\models</Filter>
-    </Object>
-    <Object Include="models\cube.obj">
-      <Filter>Resource Files\models</Filter>
-    </Object>
+    <None Include="vimrc\darkzen.vim" />
+    <None Include="vimrc\vimrc" />
+    <None Include="run.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="build.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="build_and_run.bat">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="calc_grid_id_from_pos.r" />
+    <None Include=".gitattributes" />
+    <None Include="Session.vim" />
+    <None Include="vars_vstudio.bat">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="levels\test4.xcf" />
@@ -165,5 +193,14 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="levels\test.ppm" />
+    <Image Include="screenshots\bezier_camera_path.JPG">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="screenshots\spatial_grid.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="screenshots\working_3d_engine.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@
 // DEFINES 
 // -------------------------------------------
 inline static const auto FREE_MOVE = 0;
-inline static const auto VSYNC = 1;
+inline static const auto VSYNC = 0;
 
 // -------------------------------------------
 // TYPEDEFS
@@ -30,7 +30,7 @@ using iv3 = glm::ivec3;
 namespace SpatialGrid {  // if SpatialGrid wasn't header only I could remove this
   std::vector<float>& SetupOctree(gxb::Level*);
   void UpdateGrid(gxb::Entity*);
-  iv3 PosToGridCoords(v3 pos);
+  iv3 PosToGridCoords(const v3& pos);
 };
 
 
@@ -42,7 +42,7 @@ void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time);
 void MouseCallback(GLFWwindow* window, double x_pos, double y_pos);
 void MouseCallbackNull(GLFWwindow* window, double x_pos, double y_pos);
 void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset);
-glm::vec3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
+v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& newCamPos);
 void AddCamPathToRawData(const VecPP& path, gxb::Level* l);
 
@@ -96,9 +96,9 @@ int main() {
 
 
   // lambda for moving platform behavior
-  auto update_platform_pos = [&](std::unique_ptr<gxb::Entity>& o, const glm::vec3& pos_dir, const float& frame_time, float speedup = 1.0)
+  auto update_platform_pos = [&](std::unique_ptr<gxb::Entity>& o, const v3& pos_dir, const float& frame_time, float speedup = 1.0)
   {
-    glm::vec3 facing = o->pos - o->pos_last;
+    v3 facing = o->pos - o->pos_last;
     facing = glm::normalize(facing);
     o->pos_last = o->pos;
     if (magic_enum::enum_name(o->state_machine.current) == "pos") {
@@ -126,8 +126,9 @@ int main() {
     }
 
     // update window title with player position
-    const auto pos = level->objects[0]->pos;
-    auto str = std::string(glm::to_string(pos) + " " + glm::to_string(SpatialGrid::PosToGridCoords(pos)));
+    const glm::vec3& pos = level->objects[0]->pos;
+    const glm::ivec3 grid_coords{ SpatialGrid::PosToGridCoords((v3&)pos) };
+    auto str = std::string(glm::to_string(pos) + " " + glm::to_string(grid_coords));
     glfwSetWindowTitle(window, str.c_str());
 
     prog_one.Use();
@@ -136,17 +137,17 @@ int main() {
     for (auto& o : level->objects) {
       auto const elapsed = fr.lastTimeInMs();
       switch (o->type) {
-        glm::vec3 pos_dir;
+        v3 pos_dir;
       case gxb::EntityType::moving_ground_x:
-        pos_dir = glm::vec3(1.f, 0.f, 0.f);
+        pos_dir = v3(1.f, 0.f, 0.f);
         update_platform_pos(o, pos_dir, elapsed, 1.3f);
         break;
       case gxb::EntityType::moving_ground_y:
-        pos_dir = glm::vec3(0.f, 1.f, 0.f);
+        pos_dir = v3(0.f, 1.f, 0.f);
         update_platform_pos(o, pos_dir, elapsed, 2.0f);
         break;
       case gxb::EntityType::moving_ground_z:
-        pos_dir = glm::vec3(0.f, 0.f, 1.f);
+        pos_dir = v3(0.f, 0.f, 1.f);
         update_platform_pos(o, pos_dir, elapsed, 5.0f);
         break;
       }
@@ -328,20 +329,20 @@ GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title,
   return window;
 }
 
-glm::vec3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
+v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
   const VecPP& path) {
   const auto heroPos = l->objects[0]->pos;
-  const auto negZvec = glm::vec3{ 0.f, 0.f, -1.f };
+  const auto negZvec = v3{ 0.f, 0.f, -1.f };
 
   size_t path_sz = path.size();
   std::vector<std::pair<float, float>> dist_ang(path_sz);
 
-  glm::vec3 pathPos{}, cam2hero{};
+  v3 pathPos{}, cam2hero{};
   float dist{}, angle{};
 
   for (int i = 0; i < path_sz; i++) {
     pathPos = path[i].pos;
-    cam2hero = glm::vec3{ glm::normalize(heroPos - pathPos) };
+    cam2hero = v3{ glm::normalize(heroPos - pathPos) };
     dist = glm::distance(heroPos, path[i].pos);
     angle = glm::acos(glm::dot(negZvec, cam2hero));
     dist_ang[i].first = dist;
@@ -362,7 +363,7 @@ glm::vec3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam,
       return path[i].pos;
     }
   }
-  return glm::vec3{}; // if no valid campath found, cam goes to 0,0,0
+  return v3{}; // if no valid campath found, cam goes to 0,0,0
 }
 
 void AddCamPathToRawData(const VecPP& path, gxb::Level* l) {

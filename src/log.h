@@ -17,11 +17,7 @@ inline FILE* fptr;
 inline std::array<char, BUFFER_LEN> buf;
 /*******************************************************/
 
-// print arguments to log file and screen and add a newline
-
-
-
-
+// print arguments to log file and screen
 template <class T> inline void write_to_screen_and_disk(const std::string fmt, std::any val) {
   const auto fmt_ = fmt;
   const auto arg_ = std::any_cast<T>(val);
@@ -71,27 +67,20 @@ inline void LogPrintOneItem(const T& item) {
   //****************************************************************
   // add handling for next type here
   //****************************************************************
-  { 
-  #include <iostream>
-	  std::cout << "Offending typeid:" << typeid(item).name() << std::endl;
-  }
   write_to_screen_and_disk<const std::string>("ERROR: add type <{}> to LogPrintLn",
     typeid(item).name());
 }
 
-
+// deal with the param pack recursion base case
 inline void LogPrintLn() {
   LogPrintOneItem("\n");
 }
 // This creates a lambda function and processes each arg of a vararg with it.
 template<typename T, typename... Tail>
 inline void LogPrintLn(T head, Tail... tail) {
-
   LogPrintOneItem(head);
   LogPrintLn(tail...);
 }
-
-
 
 inline void LogErr(const std::string fname, const int lineNum, const std::string msg) {
   LogPrintLn("ERROR: file <", fname, "> line <", lineNum, "> ==", msg);

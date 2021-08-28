@@ -8,6 +8,8 @@
 // thread issues.
 
 
+using v3 = glm::vec3;
+
 namespace gxb {
   inline const auto app_root = std::string{ R"(c:\cprojects\gl0\)" };
   inline const auto  texture_path = app_root + R"(textures\)";
@@ -59,7 +61,7 @@ namespace gxb {
   //********************************************************
 
   struct PathPt {
-    glm::vec3 pos;
+    v3 pos;
     float dist;
   };
 
@@ -68,7 +70,7 @@ namespace gxb {
   struct BinaryFsm {
     enum class States { pos = 1, neg = -1 };
     States current{ States::pos };
-    void check_transition(float dist, glm::vec3 facing, float target, const glm::vec3 pos_dir) {
+    void check_transition(float dist, v3 facing, float target, const v3 pos_dir) {
       if (magic_enum::enum_name(current) == "pos" && glm::dot(facing, pos_dir) > 0 && dist >= target) {
         current = States::neg;
       }
@@ -84,10 +86,10 @@ namespace gxb {
     const unsigned id;
     std::size_t mesh_id;
     EntityType type;
-    glm::vec3 pos;
-    glm::vec3 rot;
-    glm::vec3 pos_start; // could be in derived type instead
-    glm::vec3 pos_last;
+    v3 pos;
+    v3 rot;
+    v3 pos_start; // could be in derived type instead
+    v3 pos_last;
     bool has_been_added_to_grid;
     BinaryFsm state_machine; // could be in derived type instead
   };
@@ -97,37 +99,36 @@ namespace gxb {
     mesh() : hash_code{ 0 }, pos_first_vert{ 0 } {}
     std::string name;
     std::size_t hash_code;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> faces;
-    std::vector<glm::vec3> normals;
+    std::vector<v3> vertices;
+    std::vector<v3> faces;
+    std::vector<v3> normals;
     size_t pos_first_vert;
   };
 
   struct CamPath {
     CamPath() = delete;
-    CamPath(std::vector<glm::vec3> control_points) { cps = control_points; }
+    CamPath(std::vector<v3> control_points) { cps = control_points; }
     void createPathFromCps() {
-      using vec3 = glm::vec3;
       using std::vector;
       // cps.size() == 3 + 2
       for (size_t cpIdx = 0; cpIdx <= cps.size() - 3; cpIdx += 2) {
-        const vec3& p0 = cps[cpIdx];
-        const vec3& p1 = cps[cpIdx + 1];
-        const vec3& p2 = cps[cpIdx + 2];
+        const v3& p0 = cps[cpIdx];
+        const v3& p1 = cps[cpIdx + 1];
+        const v3& p2 = cps[cpIdx + 2];
         float x, y, z, t;
         x = y = z = t = 0.0f;
         while (t <= 1.0) {
           x = (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * p1.x + t * t * p2.x;
           y = (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * p1.y + t * t * p2.y;
           z = (1 - t) * (1 - t) * p0.z + 2 * (1 - t) * t * p1.z + t * t * p2.z;
-          pts.push_back(vec3{ x, y, z });
+          pts.push_back(v3{ x, y, z });
           t += 0.05f;
         }
       }
     }
-    std::vector<glm::vec3> cam_dir;
-    std::vector<glm::vec3> pts;
-    std::vector<glm::vec3> cps;
+    std::vector<v3> cam_dir;
+    std::vector<v3> pts;
+    std::vector<v3> cps;
   };
 
   struct Level {
@@ -208,7 +209,7 @@ namespace gxb {
 
       if (first_tok == "v") {
         // read vertex
-        glm::vec3 pos = { 0.f, 0.f, 0.f };
+        v3 pos = { 0.f, 0.f, 0.f };
         line_stream >> pos.x >> pos.y >> pos.z;
         if (line_stream.fail()) {
           LogErr(__FILE__, __LINE__, "trouble reading position data");
@@ -218,7 +219,7 @@ namespace gxb {
 
       if (first_tok == "vn") {
         // read normal
-        glm::vec3 normal;
+        v3 normal;
         line_stream >> normal.x >> normal.y >> normal.z;
         if (line_stream.fail()) {
           LogPrintLn("error reading normal coords");
@@ -248,7 +249,7 @@ namespace gxb {
   }
 
   inline std::vector<PathPt> LoadCamPath(std::string level_name) {
-    using std::vector, std::ifstream, glm::vec3, std::make_unique;
+    using std::vector, std::ifstream, std::make_unique;
     bool fileExist = slurp::CheckFileExist(level_root, level_name, "cmp");
     if (!fileExist) {
       LogPrintLn("CamPath file for level", level_name, " was not found.\n");
@@ -264,7 +265,7 @@ namespace gxb {
       float x{}, y{}, z{};
       path_data >> x >> y >> z;
       if (path_data.good())
-        pts.push_back(PathPt{ vec3{x, y, -z}, 0.0f });
+        pts.push_back(PathPt{ v3{x, y, -z}, 0.0f });
     }
     LogPrintLn(pts.size(), "points loaded from", level_name, ".cmp");
 
@@ -305,8 +306,8 @@ namespace gxb {
         }
 
         std::string mesh_name;
-        glm::vec3 pos{};
-        glm::vec3 rot{};
+        v3 pos{};
+        v3 rot{};
         line_stream >> mesh_name;
         line_stream >> pos.x >> pos.y >> pos.z;
         line_stream >> rot.x >> rot.y >> rot.z;
@@ -368,8 +369,6 @@ namespace gxb {
         mesh_ptr->hash_code = mesh_hash_code;
         // create one giant raw_data array on the level to hold all model
         // triangles
-        // @TODO: save the starting vertex in the raw_data array to the
-        // Entity struct
         // @Note: vertices are in raw data in the order that model is in the
         // meshes vector
         if (!mesh_already_loaded) {
