@@ -419,6 +419,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
     </Text>
+    <None Include="models\.gitignore">
+      <FileType>Text</FileType>
+    </None>
     <None Include="run.bat">
       <FileType>Script</FileType>
     </None>

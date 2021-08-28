@@ -181,6 +181,7 @@
     <None Include="vars_vstudio.bat">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="models\.gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="levels\test4.xcf" />
