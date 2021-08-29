@@ -2,6 +2,7 @@
 #include "gamelib.h"
 #include "flags.h"
 #include <vector>
+#include <climits>
 
 using v3 = glm::vec3;
 using iv3 = glm::ivec3;
@@ -50,7 +51,7 @@ struct Cell
 // Globals
 gxb::Level *level;					   // @TODO: add const
 std::vector<float> vertbufGridLines{}; // for drawing, vertices of Octree bounding box lines
-constexpr float targetSideL = 3.f;
+constexpr float targetSideL = 1.5f;
 int numCells{};
 float cellL{}, worldL{};
 Cell topNode; // whole world
@@ -132,20 +133,18 @@ iv3 PosToGridCoords(const v3 &pos)
 // this finds the index in SpatialGrid::grid and SpatialGrid:id that corresponds to
 // a given set of grid coordinates. "Grid Id" means Grid Coordinates.
 // e.g. (0,0,0) .. (numCells - 1, numCells -1, numCells - 1)
-int GridCoordsToIndex(const iv3 id_to_match)
+size_t GridCoordsToIndex(const iv3 id_to_match)
 {
-	auto sz = id.size();
-	for (int i = 0; i < sz; i++)
-	{
-		if (id[i] == id_to_match)
-		{
-			return i;
-		}
+	auto is_match = [&id_to_match](const iv3& coords) {	return coords == id_to_match; };
+
+	if (const auto result = find_if(id.begin(), id.end(), is_match); result != id.end() ) {
+		return result - id.begin();	
 	}
-	// if we get here, the coords we put in don't exist in the grid
+	// if we get here, an object moved to a position outside of our spatial grid 
 	LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
 			   glm::to_string(id_to_match));
-	return -1;
+	
+	return UINT_MAX;
 }
 
 // find the the spatial grid cells that the object's center is in.
@@ -161,8 +160,8 @@ void UpdateGrid(gxb::Entity *o)
 	auto curr_grid = PosToGridCoords(o->pos);
 	auto last_grid = PosToGridCoords(o->pos_last);
 
-	int last_idx = GridCoordsToIndex(last_grid);
-	int curr_idx = GridCoordsToIndex(curr_grid);
+	size_t last_idx = GridCoordsToIndex(last_grid);
+	size_t curr_idx = GridCoordsToIndex(curr_grid);
 
 	if (curr_grid == last_grid && o->has_been_added_to_grid == true)
 	{
