@@ -11,11 +11,6 @@
 #include <magic_enum.h>
 #include "render.h"
 
-// -------------------------------------------
-// DEFINES 
-// -------------------------------------------
-inline static const auto FREE_MOVE = 0;
-inline static const auto VSYNC = 0;
 
 // -------------------------------------------
 // TYPEDEFS
@@ -50,7 +45,6 @@ void AddCamPathToRawData(const VecPP& path, gxb::Level* l);
 GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title,
   GLFWframebuffersizefun);
 void CamGoalSeek(float delta_time);
-void LoadLevel(std::string name);
 // -------------------------------------------
 // GLOBALS
 // -------------------------------------------
@@ -72,7 +66,14 @@ int main() {
   GLFWwindow* window = InitGlfw(w, h, "Learn OpenGL ", FrameBufSizeCallback);
 
   //@TODO: add ability to switch levels while game running
-  LoadLevel("test");
+  // Load Level
+  auto level_name = "test";
+
+  //@TODO: Not sure if there is a point in doing this in another thread unless I'm
+  // going to save it to a future_ptr, do some other work and call .get() on it later
+  // Possibly it is preventing the screen from freezing?
+  level = async(std::launch::async, gxb::LoadLevel, level_name).get();
+  path = async(std::launch::async, gxb::LoadCamPath, level_name).get();
 
   auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
   auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
@@ -88,12 +89,9 @@ int main() {
   render::SetGlFlags();
   auto vao = render::BuildLevelVao(level.get());
 
-
   glm::mat4 model = glm::mat4(1.0f);
   glm::mat4 view = glm::mat4(1.0f);
   glm::mat4 projection = glm::mat4(1.0f);
-
-
 
   // lambda for moving platform behavior
   auto update_platform_pos = [&](std::unique_ptr<gxb::Entity>& o, const v3& pos_dir, const float& frame_time, float speedup = 1.0)
@@ -118,7 +116,7 @@ int main() {
 
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-    if (FREE_MOVE)
+    if (Flags::FREE_MOVE)
       ProcessInputCamOnly(window, camera, delta_time);
     else {
       ProcessInputPlayerOnly(window, delta_time);
@@ -308,7 +306,7 @@ GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title,
     return nullptr;
   }
 
-  if (FREE_MOVE)
+  if (Flags::FREE_MOVE)
     glfwSetCursorPosCallback(window, MouseCallback);
   else
     glfwSetCursorPosCallback(window, MouseCallbackNull);
@@ -316,7 +314,7 @@ GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title,
   glfwSetScrollCallback(window, ScrollCallback);
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-  if (VSYNC)
+  if (Flags::VSYNC)
     glfwSwapInterval(1);  // vsync on
   else
     glfwSwapInterval(0);  // vsync off
@@ -385,15 +383,6 @@ void CamGoalSeek(float delta_time) {
     camera.moveTo(camera.Position + delta_time * CAM_MOVE_SPEED * camDp);
     camera.Front = level->objects[0]->pos - camera.Position;  // look at hero
   }
-}
-
-// load global level and path structs with data from files
-void LoadLevel(std::string name) {
-  auto future_level_ptr = async(std::launch::async, gxb::LoadLevel, name);
-  level = future_level_ptr.get();
-
-  auto future_cam_pts = async(std::launch::async, gxb::LoadCamPath, name);
-  path = future_cam_pts.get();
 }
 
 void TestNaiveCollision() {

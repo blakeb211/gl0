@@ -4,7 +4,8 @@
 
 namespace gxb {
   struct Level;
-}
+  struct PathPt;
+};
 
 namespace render {
 
@@ -14,11 +15,5 @@ namespace render {
   void logOpenGLInfo();
   void SetGlFlags();
   unsigned int BuildSpatialGridVao(const std::vector<float>&);
-
-  // make these toggleable with a hotkey
-  inline const auto DRAW_CAM_PATH = 1;
-  inline const auto DRAW_OCTREE = 1;
-  inline const auto DRAW_OBJECT_POS = 1;
-  inline const auto DRAW_OBJECT_OUTLINES = 0;
 
 };
