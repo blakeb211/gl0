@@ -336,8 +336,19 @@ inline std::vector<PathPt> LoadCamPath(std::string level_name)
 
 inline float CalculateMeshSphericalBoundingBox(const mesh *const m)
 {
+	const auto& verts = m->vertices;
+	const auto sz = verts.size();
+	
 	float max_distance{0.f}; // max dist between any 2 vertices
 
+	for (int i = 0; i < sz - 1; i++)
+	{
+		for (int j = 1; j < sz; j++)
+		{
+		const auto tmp_dist = glm::distance(verts[i],verts[j]);
+		max_distance = (max_distance < tmp_dist) ? tmp_dist : max_distance;
+		}
+	}
 	return max_distance;
 }
 
@@ -358,7 +369,7 @@ inline std::unique_ptr<Level> LoadLevel(std::string levelName)
 
 		int line_num = 0;
 
-		LogPrintLn("mesh         	  v        n        f        hash");
+		LogPrintLn("mesh         	  v        n        f        hash			spherical radius");
 
 		while (levelData.good())
 		{
@@ -439,11 +450,11 @@ inline std::unique_ptr<Level> LoadLevel(std::string levelName)
 
 				// read in vertices, normals, and faces from disk; deletes existing mesh_ptr data
 				mesh_ptr = LoadMeshFromDisk(mesh_name.c_str());
-				// calculate radius of a spherical bounding box around the mesh
-				mesh_ptr->spherical_radius = CalculateMeshSphericalBoundingBox(mesh_ptr.get());
 				// set mesh_ptr properties
 				mesh_ptr->name = mesh_name;
 				mesh_ptr->hash_code = mesh_hash_code;
+				// calculate radius of a spherical bounding box around the mesh
+				mesh_ptr->spherical_radius = CalculateMeshSphericalBoundingBox(mesh_ptr.get());
 
 				int face_added_to_raw = 0;
 				auto &v = mesh_ptr->vertices;
@@ -466,7 +477,7 @@ inline std::unique_ptr<Level> LoadLevel(std::string levelName)
 				}
 				const std::string spacer(15 - mesh_name.length(), ' ');
 				LogPrintLn(mesh_name, spacer, mesh_ptr->vertices.size(), mesh_ptr->normals.size(),
-						   mesh_ptr->faces.size(), mesh_ptr->hash_code);
+						   mesh_ptr->faces.size(), mesh_ptr->hash_code, spacer, mesh_ptr->spherical_radius);
 
 				if (Flags::USE_ASSERTIONS)
 					assert(mesh_ptr->hash_code != 0);
