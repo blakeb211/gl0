@@ -60,12 +60,12 @@ std::vector<Cell> grid;
 // grid coordinates e.g. 0,1,2 that correspond to each cell in grid
 std::vector<iv3> id;
 
-size_t GetVertBufGridLinesSize()
+size_t GetVertBufGridLinesSize() 
 {
 	return vertbufGridLines.size();
 }
 
-iv3 GridIndexToId(size_t idx)
+iv3 GridIndexToId(const size_t idx) 
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(idx < id.size() && idx >= 0);
@@ -73,7 +73,7 @@ iv3 GridIndexToId(size_t idx)
 	return id[idx];
 }
 
-void AddLinesToVertBuf(BoundingBox x)
+void AddLinesToVertBuf(const BoundingBox x)
 {
 	const auto min = x.min;
 	const auto max = x.max;
@@ -153,7 +153,7 @@ size_t GridCoordsToIndex(const iv3 id_to_match)
 // remove object from lists that is used to be in
 // @TODO: separate this out so that stationary objects are only added to the
 // grid during setup.
-void UpdateGrid(gxb::Entity *o)
+void UpdateGrid(gxb::Entity * const o)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(o != nullptr);
@@ -193,7 +193,7 @@ void UpdateGrid(gxb::Entity *o)
 
 // find min and max of x,y,z objects in level and build a uniform
 // grid enclosing it
-std::vector<float> &SetupOctree(gxb::Level *level)
+std::vector<float> &SetupOctree(gxb::Level * level)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(level != NULL);

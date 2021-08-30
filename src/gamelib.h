@@ -147,7 +147,7 @@ struct CamPath
 	{
 		cps = control_points;
 	}
-	void createPathFromCps()
+	void createPathFromCps() 
 	{
 		using std::vector;
 		// cps.size() == 3 + 2
@@ -180,7 +180,7 @@ struct Level
 	std::vector<unsigned int> vaos;
 	std::vector<float> raw_data;
 
-	mesh *GetMesh(size_t hashCode)
+	mesh *GetMesh(const size_t hashCode) const
 	{
 		auto is_match = [&hashCode](const auto &m) { return m->hash_code == hashCode; };
 
@@ -192,25 +192,25 @@ struct Level
 	}
 };
 
-inline std::unique_ptr<std::string> LevelPath(std::string name, const char *ext)
+inline std::unique_ptr<std::string> LevelPath(const std::string name, const char * const ext)
 {
 	auto path = std::make_unique<std::string>(level_root + name + "." + ext);
 	return path;
 }
 
-inline std::unique_ptr<std::string> ModelPath(std::string name)
+inline std::unique_ptr<std::string> ModelPath(const std::string name)
 {
 	auto path = std::make_unique<std::string>(model_root + name + ".obj");
 	return path;
 }
 
-inline std::unique_ptr<std::string> ShaderPath(std::string name)
+inline std::unique_ptr<std::string> ShaderPath(const std::string name)
 {
 	auto path = std::make_unique<std::string>(shader_root + name);
 	return path;
 }
 
-inline std::optional<std::pair<int, int>> ExtractPairOfInts(std::string &token, std::string &delim)
+inline std::optional<std::pair<int, int>> ExtractPairOfInts(std::string & token, const std::string &delim)
 {
 	size_t pos = 0;
 	pos = token.find(delim);
@@ -232,7 +232,7 @@ inline std::optional<std::pair<int, int>> ExtractPairOfInts(std::string &token, 
 // vn float float float
 // f  1// 1 22//22 9//9
 //
-inline std::unique_ptr<mesh> LoadMeshFromDisk(const char *name)
+inline std::unique_ptr<mesh> LoadMeshFromDisk(const char * const name)
 {
 	using std::string;
 	using std::stringstream;
@@ -305,7 +305,7 @@ inline std::unique_ptr<mesh> LoadMeshFromDisk(const char *name)
 	return m;
 }
 
-inline std::vector<PathPt> LoadCamPath(std::string level_name)
+inline std::vector<PathPt> LoadCamPath(const std::string level_name)
 {
 	using std::vector, std::ifstream, std::make_unique;
 	bool fileExist = slurp::CheckFileExist(level_root, level_name, "cmp");
@@ -354,7 +354,7 @@ inline float CalculateMeshSphericalBoundingBox(const mesh *const m)
 // format of level
 // 							 pos   rot
 // entity_type  model_name  x y z x y z
-inline std::unique_ptr<Level> LoadLevel(std::string levelName)
+inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 {
 	auto l = std::make_unique<Level>();
 	std::string line, entity_name = "";

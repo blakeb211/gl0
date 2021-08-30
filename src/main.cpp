@@ -24,7 +24,7 @@ using iv3 = glm::ivec3;
 namespace SpatialGrid
 { // if SpatialGrid wasn't header only I could remove this
 std::vector<float> &SetupOctree(gxb::Level *);
-void UpdateGrid(gxb::Entity *);
+void UpdateGrid(gxb::Entity * const);
 iv3 PosToGridCoords(const v3 &pos);
 }; // namespace SpatialGrid
 

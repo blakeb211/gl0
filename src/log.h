@@ -21,7 +21,7 @@ inline std::array<char, BUFFER_LEN> buf;
 //@TODO: make log file save to AppRoot instead of the dir the program gets run from
 
 // print arguments to log file and screen
-template <class T> inline void write_to_screen_and_disk(const std::string fmt, std::any val)
+template <class T> inline void write_to_screen_and_disk(const std::string fmt, const std::any val)
 {
 	const auto fmt_ = fmt;
 	const auto arg_ = std::any_cast<T>(val);
@@ -115,7 +115,7 @@ inline bool closeLog()
 	return false;
 }
 
-inline bool SetLogFile(std::string fname)
+inline bool SetLogFile(const std::string fname)
 {
 	if (fname.empty())
 	{

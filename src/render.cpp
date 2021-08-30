@@ -125,7 +125,7 @@ void render::SetGlFlags()
 	glEnable(GL_PROGRAM_POINT_SIZE);
 }
 
-unsigned int render::BuildLevelVao(const gxb::Level *l)
+unsigned int render::BuildLevelVao(const gxb::Level * const l)
 {
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
