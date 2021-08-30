@@ -10,15 +10,17 @@
 //		size_t GetVertBufGridLinesSize();
 //	};
 
-void render::DrawLevel(unsigned int vao_entities, glm::mat4 &model, Shader &prog_one, unsigned int vao_spatial_grid,
-					   gxb::Level *level, std::vector<gxb::PathPt> &path)
+void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, const unsigned int vao_spatial_grid,
+					   const gxb::Level * const level, const std::vector<gxb::PathPt> &path)
 {
 	glBindVertexArray(vao_entities);
 	size_t curr_color_id = 0;
+	auto model = glm::mat4{}; // view & projection set elsewhere 
+
 	const size_t num_colors = col::list.size();
 	for (size_t i = 0; i < level->objects.size(); i++)
 	{
-		model = glm::mat4(1.0f);
+		model = glm::mat4(1.0f); 
 
 		model = glm::translate(model, glm::vec3{0, 0, 0});
 		model = glm::translate(model, level->objects[i]->pos);

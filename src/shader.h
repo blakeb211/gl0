@@ -9,7 +9,7 @@ public:
   unsigned int ID;
   // constructor generates the shader on the fly
   // ------------------------------------------------------------------------
-  Shader(std::string vertexStr, std::string fragStr)
+  Shader(const std::string vertexStr, const std::string fragStr)
   {
     // 1. retrieve the vertex/fragment source code from filePath
     auto vertexPath = vertexStr.c_str();
@@ -40,8 +40,8 @@ public:
       std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ:";
       std::cout << e.what() << std::endl;
     }
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
+    const char* const vShaderCode = vertexCode.c_str();
+    const char* const fShaderCode = fragmentCode.c_str();
     // 2. compile shaders
     unsigned int vertex, fragment;
     // vertex shader
@@ -137,7 +137,7 @@ public:
 private:
   // utility function for checking shader compilation/linking errors.
   // ------------------------------------------------------------------------
-  void checkCompileErrors(GLuint shader, std::string type)
+  void checkCompileErrors(const GLuint shader, const std::string type)
   {
     GLint success;
     GLchar infoLog[1024];

@@ -1,7 +1,7 @@
 #pragma once
 #include "headers.h"
 namespace slurp {
-  std::stringstream GetFileContents(const char*);
+  std::stringstream GetFileContents(const char* const);
 
   bool CheckFileExist(const std::string path,
     const std::string fname,

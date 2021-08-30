@@ -83,7 +83,6 @@ int main()
 	render::SetGlFlags();
 	auto vao = render::BuildLevelVao(level.get());
 
-	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
@@ -154,7 +153,6 @@ int main()
 		}
 
 		// set transformations
-		model = glm::mat4(1.0f);
 		view = camera.GetViewMatrix();
 		prog_one.SetMat4("view", view);
 
@@ -164,7 +162,7 @@ int main()
 		// render
 		// ------
 		render::clearScreen();
-		render::DrawLevel(vao, model, prog_one, vao_spatial_grid, level.get(), path);
+		render::DrawLevel(vao, prog_one, vao_spatial_grid, level.get(), path);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		fr.printFrameRateIfFreqHasBeenReached();
