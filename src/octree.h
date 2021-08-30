@@ -153,6 +153,19 @@ size_t GridCoordsToIndex(const iv3 id_to_match)
 // remove object from lists that is used to be in
 // @TODO: separate this out so that stationary objects are only added to the
 // grid during setup.
+
+/*
+ClearAllCells();
+foreach(entity)
+  int minXCoord = floor(entity->GetPosition().x-entity->GetRadius()) / CollisionGrid.CELL_SIZE;
+  int minYCoord = floor(entity->GetPosition().y-entity->GetRadius()) / CollisionGrid.CELL_SIZE;
+  int maxXCoord = ceil(entity->GetPosition().x+entity->GetRadius()) / CollisionGrid.CELL_SIZE;
+  int maxYCoord = ceil(entity->GetPosition().y+entity->GetRadius()) / CollisionGrid.CELL_SIZE;
+  for ( int x = minXCoord; x <= maxXCoord; x++ )
+    for ( int y = minYCoord; y <= maxYCoord; y++ )
+      grid[x][y].add(entity);
+*/
+
 void UpdateGrid(gxb::Entity * const o)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
