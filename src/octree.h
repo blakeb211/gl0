@@ -1,8 +1,8 @@
 #pragma once
-#include "gamelib.h"
 #include "flags.h"
-#include <vector>
+#include "gamelib.h"
 #include <climits>
+#include <vector>
 
 using v3 = glm::vec3;
 using iv3 = glm::ivec3;
@@ -67,7 +67,7 @@ size_t GetVertBufGridLinesSize()
 
 iv3 GridIndexToId(size_t idx)
 {
-	if (Flags::USE_ASSERTIONS)
+	if constexpr (Flags::USE_ASSERTIONS)
 		assert(idx < id.size() && idx >= 0);
 
 	return id[idx];
@@ -135,15 +135,16 @@ iv3 PosToGridCoords(const v3 &pos)
 // e.g. (0,0,0) .. (numCells - 1, numCells -1, numCells - 1)
 size_t GridCoordsToIndex(const iv3 id_to_match)
 {
-	auto is_match = [&id_to_match](const iv3& coords) {	return coords == id_to_match; };
+	auto is_match = [&id_to_match](const iv3 &coords) { return coords == id_to_match; };
 
-	if (const auto result = find_if(id.begin(), id.end(), is_match); result != id.end() ) {
-		return result - id.begin();	
+	if (const auto result = find_if(id.begin(), id.end(), is_match); result != id.end())
+	{
+		return result - id.begin();
 	}
-	// if we get here, an object moved to a position outside of our spatial grid 
+	// if we get here, an object moved to a position outside of our spatial grid
 	LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
 			   glm::to_string(id_to_match));
-	
+
 	return UINT_MAX;
 }
 
@@ -154,7 +155,7 @@ size_t GridCoordsToIndex(const iv3 id_to_match)
 // grid during setup.
 void UpdateGrid(gxb::Entity *o)
 {
-	if (Flags::USE_ASSERTIONS)
+	if constexpr (Flags::USE_ASSERTIONS)
 		assert(o != nullptr);
 
 	auto curr_grid = PosToGridCoords(o->pos);
@@ -194,8 +195,8 @@ void UpdateGrid(gxb::Entity *o)
 // grid enclosing it
 std::vector<float> &SetupOctree(gxb::Level *level)
 {
-	if (Flags::USE_ASSERTIONS)	
-	assert(level != NULL);
+	if constexpr (Flags::USE_ASSERTIONS)
+		assert(level != NULL);
 
 	SpatialGrid::level = level;
 	glm::vec3 min{0}, max{0};
@@ -250,7 +251,7 @@ std::vector<float> &SetupOctree(gxb::Level *level)
 // the side length and number of cells per dimension of the uniform grid
 int CalcSideLength()
 {
-	if (Flags::USE_ASSERTIONS)	
+	if constexpr (Flags::USE_ASSERTIONS)
 		assert(cellL < worldL);
 
 	auto numCells = std::floor(worldL / targetSideL);

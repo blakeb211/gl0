@@ -182,12 +182,11 @@ struct Level
 
 	mesh *GetMesh(size_t hashCode)
 	{
-		for (size_t i = 0; i < meshes.size(); i++)
+		auto is_match = [&hashCode](const auto &m) { return m->hash_code == hashCode; };
+
+		if (auto result = std::find_if(meshes.begin(), meshes.end(), is_match); result != meshes.end())
 		{
-			if (meshes[i]->hash_code == hashCode)
-			{
-				return meshes[i].get();
-			}
+			return result->get();
 		}
 		return nullptr;
 	}
@@ -336,17 +335,17 @@ inline std::vector<PathPt> LoadCamPath(std::string level_name)
 
 inline float CalculateMeshSphericalBoundingBox(const mesh *const m)
 {
-	const auto& verts = m->vertices;
+	const auto &verts = m->vertices;
 	const auto sz = verts.size();
-	
-	float max_distance{0.f}; // max dist between any 2 vertices
 
+	float max_distance{0.f}; // max dist between any 2 vertices
+	// loop over all distinct pairs of mesh vertices
 	for (int i = 0; i < sz - 1; i++)
 	{
 		for (int j = 1; j < sz; j++)
 		{
-		const auto tmp_dist = glm::distance(verts[i],verts[j]);
-		max_distance = (max_distance < tmp_dist) ? tmp_dist : max_distance;
+			const auto tmp_dist = glm::distance(verts[i], verts[j]);
+			max_distance = (max_distance < tmp_dist) ? tmp_dist : max_distance;
 		}
 	}
 	return max_distance;
@@ -479,7 +478,7 @@ inline std::unique_ptr<Level> LoadLevel(std::string levelName)
 				LogPrintLn(mesh_name, spacer, mesh_ptr->vertices.size(), mesh_ptr->normals.size(),
 						   mesh_ptr->faces.size(), mesh_ptr->hash_code, spacer, mesh_ptr->spherical_radius);
 
-				if (Flags::USE_ASSERTIONS)
+				if constexpr (Flags::USE_ASSERTIONS)
 					assert(mesh_ptr->hash_code != 0);
 
 				l->meshes.push_back(std::move(mesh_ptr));

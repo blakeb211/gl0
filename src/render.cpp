@@ -37,7 +37,7 @@ void render::DrawLevel(unsigned int vao_entities, glm::mat4 &model, Shader &prog
 
 		auto mesh_ptr = level->GetMesh(level->objects[i]->mesh_hash);
 
-		if (Flags::USE_ASSERTIONS)
+		if constexpr (Flags::USE_ASSERTIONS)
 			assert(mesh_ptr != nullptr);
 
 		auto num_verts_model = static_cast<unsigned>(mesh_ptr->faces.size() * 3);
@@ -129,7 +129,7 @@ unsigned int render::BuildLevelVao(const gxb::Level *l)
 {
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
-	if (Flags::USE_ASSERTIONS)
+	if constexpr (Flags::USE_ASSERTIONS)
 		assert(l != nullptr);
 
 	unsigned int VBO{};

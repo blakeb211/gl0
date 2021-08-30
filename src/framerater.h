@@ -2,6 +2,7 @@
 #include "headers.h"
 //
 #include "circular_buffer.h"
+#include "log.h"
 
 constexpr auto FR_PRINT_FREQ = 1200;
 

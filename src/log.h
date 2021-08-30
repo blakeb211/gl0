@@ -33,7 +33,7 @@ template <class T> inline void write_to_screen_and_disk(const std::string fmt, s
 
 template <typename T> inline void LogPrintOneItem(const T &item)
 {
-	if (Flags::USE_ASSERTIONS)
+	if constexpr (Flags::USE_ASSERTIONS)
 		assert(fptr != nullptr);
 
 	buf.fill('-');
