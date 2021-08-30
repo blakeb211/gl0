@@ -16,13 +16,13 @@ using iv3 = glm::ivec3;
 namespace SpatialGrid
 {
 
-constexpr int BOUNDING_BOX_VECTOR_MAX = 300;
 
 // forward declarations
 void Subdivide();
 int CalcSideLength();
 iv3 PosToGridCoords(const v3 &pos);
 void TestPosToGridIdFxn();
+
 
 struct BoundingBox
 {
@@ -52,9 +52,14 @@ struct Cell
 gxb::Level *level;					   // @TODO: add const
 std::vector<float> vertbufGridLines{}; // for drawing, vertices of Octree bounding box lines
 constexpr float targetSideL = 1.5f;
+constexpr int MAX_CELL_OCCUPATION_PER_ENTITY = 16;
+constexpr int MAX_ENTITIES = 500;
 int numCells{};
 float cellL{}, worldL{};
 Cell topNode; // whole world
+
+std::vector<std::vector<unsigned>> entity_id_to_list_of_cell_ids{MAX_ENTITIES};
+
 // uniform grid cells; size is numCells^3
 std::vector<Cell> grid;
 // grid coordinates e.g. 0,1,2 that correspond to each cell in grid
@@ -211,6 +216,13 @@ std::vector<float> &SetupOctree(gxb::Level * level)
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(level != NULL);
 
+	const auto sz = entity_id_to_list_of_cell_ids.size();
+	for (int i = 0; i < sz; i++) {
+		entity_id_to_list_of_cell_ids[i] = std::vector<unsigned>(MAX_CELL_OCCUPATION_PER_ENTITY);
+		entity_id_to_list_of_cell_ids[i].resize(0);
+	}
+
+	// match object id to cells that it occupies
 	SpatialGrid::level = level;
 	glm::vec3 min{0}, max{0};
 
