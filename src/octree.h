@@ -16,13 +16,11 @@ using iv3 = glm::ivec3;
 namespace SpatialGrid
 {
 
-
 // forward declarations
 void Subdivide();
 int CalcSideLength();
 iv3 PosToGridCoords(const v3 &pos);
 void TestPosToGridIdFxn();
-
 
 struct BoundingBox
 {
@@ -65,12 +63,12 @@ std::vector<Cell> grid;
 // grid coordinates e.g. 0,1,2 that correspond to each cell in grid
 std::vector<iv3> id;
 
-size_t GetVertBufGridLinesSize() 
+size_t GetVertBufGridLinesSize()
 {
 	return vertbufGridLines.size();
 }
 
-iv3 GridIndexToId(const size_t idx) 
+iv3 GridIndexToId(const size_t idx)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(idx < id.size() && idx >= 0);
@@ -135,7 +133,8 @@ iv3 PosToGridCoords(const v3 &pos)
 	return iv3{trunc(diff.x), trunc(diff.y), trunc(diff.z)};
 }
 
-// this finds the index in SpatialGrid::grid and SpatialGrid:id that corresponds to
+// @TODO look for mathematical equation linking grid_id to grid_coord.
+// This finds the index in SpatialGrid::grid and SpatialGrid:id that corresponds to
 // a given set of grid coordinates. "Grid Id" means Grid Coordinates.
 // e.g. (0,0,0) .. (numCells - 1, numCells -1, numCells - 1)
 size_t GridCoordsToIndex(const iv3 id_to_match)
@@ -167,57 +166,107 @@ foreach(entity)
   int maxXCoord = ceil(entity->GetPosition().x+entity->GetRadius()) / CollisionGrid.CELL_SIZE;
   int maxYCoord = ceil(entity->GetPosition().y+entity->GetRadius()) / CollisionGrid.CELL_SIZE;
   for ( int x = minXCoord; x <= maxXCoord; x++ )
-    for ( int y = minYCoord; y <= maxYCoord; y++ )
-      grid[x][y].add(entity);
+	for ( int y = minYCoord; y <= maxYCoord; y++ )
+	  grid[x][y].add(entity);
 */
 
-void UpdateGrid(gxb::Entity * const o)
+std::vector<iv3> grid_cells_entity_intersects;
+// @TODO: clear and rebuild all grid lists each frame?
+//
+void ClearGrid()
+{
+	const auto sz = grid.size();
+	for (int i = 0; i < sz; i++)
+		grid[i].list.resize(0);
+}
+
+void UpdateGrid(gxb::Entity *const o)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(o != nullptr);
 
-	auto curr_grid = PosToGridCoords(o->pos);
-	auto last_grid = PosToGridCoords(o->pos_last);
+	const auto &o_mesh = level->GetMesh(o->mesh_hash);
+	const auto &o_radius = o_mesh->spherical_diameter / 2.0f;
 
-	size_t last_idx = GridCoordsToIndex(last_grid);
-	size_t curr_idx = GridCoordsToIndex(curr_grid);
+	grid_cells_entity_intersects.resize(0);
 
-	if (curr_grid == last_grid && o->has_been_added_to_grid == true)
+	grid_cells_entity_intersects.push_back(PosToGridCoords(o->pos)); // center of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, 0.f, 0.f))); // +x boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, 0.f, 0.f))); // -x boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 1.f, 0.f))); // +y boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, -1.f, 0.f))); // -y boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 0.f, 1.f))); // +z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 0.f, -1.f))); // -z boundary of obj
+
+   // are there 8 corner cells?
+																 // +x+z
+																 // +x-z
+																 // +x+y
+																 // +x-y
+																 // +y+z
+																 // +y-z
+																 // -x+y
+																 // -x-y
+																 // -x-z
+	decltype(grid_cells_entity_intersects)::iterator end_it;
+	end_it = std::unique(grid_cells_entity_intersects.begin(),grid_cells_entity_intersects.end());  
+
+	for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it;
+		 curr_coord_it++)
 	{
-		return;
-	};
-
-	// remove id from last cell's list if the cell changed
-	if (curr_grid != last_grid && o->has_been_added_to_grid == true)
-	{
-		auto old_end = grid[last_idx].list.end();
-		auto new_end = std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
-		if (old_end != new_end)
-		{
-			grid[last_idx].list.erase(new_end);
-		}
-	}
-	// add to curr cell's list if it isn't in it already
-	auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(), o->id);
-	bool not_in_curr_cell_list = (iter == grid[curr_idx].list.end()) ? true : false;
-
-	if (not_in_curr_cell_list)
-	{
+		size_t curr_idx = GridCoordsToIndex(*curr_coord_it);
 		grid[curr_idx].list.push_back(o->id);
-		o->has_been_added_to_grid = true;
-		// LogPrintLn("added object id:", o->id, " to grid: ", glm::to_string(id[curr_idx]));
 	}
+
+
+	//		grid[curr_idx].list.push_back(o->id);
+	// rename spherical radius to spherical_diameter
+
+	//	if (curr_grid == last_grid && o->has_been_added_to_grid == true)
+	//	{
+	//		return;
+	//	};
+	//
+	//	// remove id from last cell's list if the cell changed
+	//	if (curr_grid != last_grid && o->has_been_added_to_grid == true)
+	//	{
+	//		auto old_end = grid[last_idx].list.end();
+	//		auto new_end = std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
+	//		if (old_end != new_end)
+	//		{
+	//			grid[last_idx].list.erase(new_end);
+	//		}
+	//	}
+	//	// add to curr cell's list if it isn't in it already
+	//	auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(), o->id);
+	//	bool not_in_curr_cell_list = (iter == grid[curr_idx].list.end()) ? true : false;
+	//
+	//	if (not_in_curr_cell_list)
+	//	{
+	//		grid[curr_idx].list.push_back(o->id);
+	//		o->has_been_added_to_grid = true;
+	//		// LogPrintLn("added object id:", o->id, " to grid: ", glm::to_string(id[curr_idx]));
+	//	}
 }
 
 // find min and max of x,y,z objects in level and build a uniform
 // grid enclosing it
-std::vector<float> &SetupOctree(gxb::Level * level)
+std::vector<float> &SetupOctree(gxb::Level *level)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(level != NULL);
 
+	grid_cells_entity_intersects.resize(30);
+
 	const auto sz = entity_id_to_list_of_cell_ids.size();
-	for (int i = 0; i < sz; i++) {
+	for (int i = 0; i < sz; i++)
+	{
 		entity_id_to_list_of_cell_ids[i] = std::vector<unsigned>(MAX_CELL_OCCUPATION_PER_ENTITY);
 		entity_id_to_list_of_cell_ids[i].resize(0);
 	}

@@ -24,8 +24,6 @@ inline const unsigned int SCR_HEIGHT = 768;
 
 inline std::hash<std::string> str_hasher;
 
-inline std::unordered_map<size_t, float> mesh_hash_code_to_spherical_radius;
-
 enum class EntityType
 {
 	unknown,
@@ -137,7 +135,7 @@ struct mesh
 	std::vector<v3> faces;
 	std::vector<v3> normals;
 	size_t pos_first_vert;
-	float spherical_radius;
+	float spherical_diameter;
 };
 
 struct CamPath
@@ -368,7 +366,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 
 		int line_num = 0;
 
-		LogPrintLn("mesh         	  v        n        f        hash			spherical radius");
+		LogPrintLn("mesh         	  v        n        f        hash			spherical diam");
 
 		while (levelData.good())
 		{
@@ -452,8 +450,8 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 				// set mesh_ptr properties
 				mesh_ptr->name = mesh_name;
 				mesh_ptr->hash_code = mesh_hash_code;
-				// calculate radius of a spherical bounding box around the mesh
-				mesh_ptr->spherical_radius = CalculateMeshSphericalBoundingBox(mesh_ptr.get());
+				// calculate diameter of a spherical bounding box around the mesh
+				mesh_ptr->spherical_diameter = CalculateMeshSphericalBoundingBox(mesh_ptr.get());
 
 				int face_added_to_raw = 0;
 				auto &v = mesh_ptr->vertices;
@@ -476,7 +474,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 				}
 				const std::string spacer(15 - mesh_name.length(), ' ');
 				LogPrintLn(mesh_name, spacer, mesh_ptr->vertices.size(), mesh_ptr->normals.size(),
-						   mesh_ptr->faces.size(), mesh_ptr->hash_code, spacer, mesh_ptr->spherical_radius);
+						   mesh_ptr->faces.size(), mesh_ptr->hash_code, spacer, mesh_ptr->spherical_diameter);
 
 				if constexpr (Flags::USE_ASSERTIONS)
 					assert(mesh_ptr->hash_code != 0);

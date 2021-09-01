@@ -1,4 +1,4 @@
-hero cube2 0.0 0.5 0.0  0.0 0.0 0.0
+hero sphere2 0.0 0.5 0.0  0.0 0.0 0.0
 fruit sphere2 5.0 5.0 -15.0  0.0 0.0 0.0
 fruit sphere2 0.0 5.0 -15.0  0.0 0.0 0.0
 fruit sphere2 0.0 7.0 -40.0  0.0 0.0 0.0

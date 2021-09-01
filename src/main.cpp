@@ -24,7 +24,8 @@ using iv3 = glm::ivec3;
 namespace SpatialGrid
 { // if SpatialGrid wasn't header only I could remove this
 std::vector<float> &SetupOctree(gxb::Level *);
-void UpdateGrid(gxb::Entity * const);
+void UpdateGrid(gxb::Entity *const);
+void ClearGrid();
 iv3 PosToGridCoords(const v3 &pos);
 }; // namespace SpatialGrid
 
@@ -127,6 +128,8 @@ int main()
 		glfwSetWindowTitle(window, str.c_str());
 
 		prog_one.Use();
+
+		SpatialGrid::ClearGrid();
 		// update objects
 		// movement is moderated by the elapsed time in case we change the framerate later
 		for (auto &o : level->objects)
