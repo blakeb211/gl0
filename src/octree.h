@@ -146,8 +146,8 @@ size_t GridCoordsToIndex(const iv3 id_to_match)
 		return result - id.begin();
 	}
 	// if we get here, an object moved to a position outside of our spatial grid
-	LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
-			   glm::to_string(id_to_match));
+	//LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
+	//		   glm::to_string(id_to_match));
 
 	return UINT_MAX;
 }
@@ -191,6 +191,12 @@ void UpdateGrid(gxb::Entity *const o)
 	grid_cells_entity_intersects.resize(0);
 
 	grid_cells_entity_intersects.push_back(PosToGridCoords(o->pos)); // center of obj
+
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 0.f, 1.f))); // +z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 0.f, -1.f))); // -z boundary of obj
+
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(1.f, 0.f, 0.f))); // +x boundary of obj
 	grid_cells_entity_intersects.push_back(
@@ -200,27 +206,59 @@ void UpdateGrid(gxb::Entity *const o)
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(0.f, -1.f, 0.f))); // -y boundary of obj
 	grid_cells_entity_intersects.push_back(
-		PosToGridCoords(o->pos + o_radius * v3(0.f, 0.f, 1.f))); // +z boundary of obj
+		PosToGridCoords(o->pos + o_radius * v3(1.f, 1.f, 0.f))); // +x+y boundary of obj
 	grid_cells_entity_intersects.push_back(
-		PosToGridCoords(o->pos + o_radius * v3(0.f, 0.f, -1.f))); // -z boundary of obj
+		PosToGridCoords(o->pos + o_radius * v3(1.f, -1.f, 0.f))); // +x-y boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, 1.f, 0.f))); // -x+y boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, 0.f))); // -x-y boundary of obj
 
-   // are there 8 corner cells?
-																 // +x+z
-																 // +x-z
-																 // +x+y
-																 // +x-y
-																 // +y+z
-																 // +y-z
-																 // -x+y
-																 // -x-y
-																 // -x-z
+
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, 0.f, 1.f))); // +x+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, 0.f, 1.f))); // -x+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 1.f, 1.f))); // +y+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, -1.f, 1.f))); // -y+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, 1.f, 1.f))); // +x+y+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, -1.f, 1.f))); // +x-y+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, 1.f, 1.f))); // -x+y+z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, 1.f))); // -x-y+z boundary of obj
+
+
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, 0.f, -1.f))); // +x-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, 0.f, -1.f))); // -x-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, 1.f, -1.f))); // +y-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(0.f, -1.f, -1.f))); // -y-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, 1.f, -1.f))); // +x+y-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(1.f, -1.f, -1.f))); // +x-y-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, 1.f, -1.f))); // -x+y-z boundary of obj
+	grid_cells_entity_intersects.push_back(
+		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, -1.f))); // -x-y-z boundary of obj
+
+
 	decltype(grid_cells_entity_intersects)::iterator end_it;
 	end_it = std::unique(grid_cells_entity_intersects.begin(),grid_cells_entity_intersects.end());  
 
 	for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it;
 		 curr_coord_it++)
 	{
-		size_t curr_idx = GridCoordsToIndex(*curr_coord_it);
+		int curr_idx = GridCoordsToIndex(*curr_coord_it);
+		if (curr_idx != UINT_MAX)
 		grid[curr_idx].list.push_back(o->id);
 	}
 

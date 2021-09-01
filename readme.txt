@@ -17,6 +17,23 @@ FILETYPES:
 	.ppm	ppm file with initial cps points
 *****************************************/
 
+// Optimization steps
+Your process should look like
+0. simplest implementation with basic optimization ->
+1. heavily optimized implementation ->
+2. multi threaded version of 1. ->
+3. move to GPU if testing a prototype version shows an improvement(edited)
+
+@Somewhat Accurate
+0. simplest implementation with basic optimization
+1. heavily optimized implementation
+2. multi threaded version of 1.
+3. move to GPU if testing a prototype version shows an improvement
+
+
+
+
+
 game
 	collision detection and response
 	-------------------------------------------------
