@@ -129,7 +129,8 @@ int main()
 
 		prog_one.Use();
 
-		SpatialGrid::ClearGrid();
+		if (fr.frame_count % 2 == 0)
+			SpatialGrid::ClearGrid();
 		// update objects
 		// movement is moderated by the elapsed time in case we change the framerate later
 		for (auto &o : level->objects)
@@ -152,7 +153,8 @@ int main()
 				break;
 			}
 			// update spatial grid
-			SpatialGrid::UpdateGrid(o.get());
+			if (fr.frame_count % 2 == 0)
+				SpatialGrid::UpdateGrid(o.get());
 		}
 
 		// set transformations
