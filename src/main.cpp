@@ -129,8 +129,6 @@ int main()
 
 		prog_one.Use();
 
-		if (fr.frame_count % 2 == 0)
-			SpatialGrid::ClearGrid();
 		// update objects
 		// movement is moderated by the elapsed time in case we change the framerate later
 		for (auto &o : level->objects)
@@ -152,8 +150,12 @@ int main()
 				update_platform_pos(o, pos_dir, elapsed, 5.0f);
 				break;
 			}
-			// update spatial grid
-			if (fr.frame_count % 2 == 0)
+		}
+		// update spatial grid
+		if (fr.frame_count % 2 == 0)
+		{
+			SpatialGrid::ClearGrid();
+			for (auto &o : level->objects)
 				SpatialGrid::UpdateGrid(o.get());
 		}
 
