@@ -106,7 +106,7 @@
       <EnableModules>false</EnableModules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks>UninitializedLocalUsageCheck</BasicRuntimeChecks>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>5105;26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -114,6 +114,10 @@
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/Oi %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -165,7 +169,7 @@
       <EnableModules>false</EnableModules>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BasicRuntimeChecks>UninitializedLocalUsageCheck</BasicRuntimeChecks>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <TreatWarningAsError>false</TreatWarningAsError>
       <DisableSpecificWarnings>5105;26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -173,6 +177,10 @@
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
       <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
       <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/Oi %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -289,6 +297,7 @@
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\circular_buffer.h" />
     <ClInclude Include="src\colors.h" />
+    <ClInclude Include="src\flags.h" />
     <ClInclude Include="src\framerater.h" />
     <ClInclude Include="src\gamelib.h" />
     <ClInclude Include="src\glm.h" />

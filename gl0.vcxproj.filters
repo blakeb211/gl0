@@ -110,6 +110,9 @@
     <ClInclude Include="src\update.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\flags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt">

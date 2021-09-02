@@ -49,7 +49,7 @@ struct Cell
 // Globals
 gxb::Level *level;					   // @TODO: add const
 std::vector<float> vertbufGridLines{}; // for drawing, vertices of Octree bounding box lines
-constexpr float targetSideL = 2.5f;
+constexpr float targetSideL = 1.7f;
 constexpr int MAX_CELL_OCCUPATION_PER_ENTITY = 16;
 constexpr int MAX_ENTITIES = 500;
 int numCells{};
