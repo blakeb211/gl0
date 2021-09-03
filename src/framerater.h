@@ -12,6 +12,7 @@ class FrameRater {
 public:
   // @TODO: replace with uint32
   unsigned long int frame_count;
+  double most_recent_frame_rate{0.f};
   FrameRater()
     : last_time{ std::chrono::high_resolution_clock::now() },
     times{ circular_buffer<double>(600) },
@@ -32,7 +33,9 @@ public:
   float lastTimeInMs() { return this->delta_time; }
   void printFrameRateIfFreqHasBeenReached() {
     if (this->frame_count % FR_PRINT_FREQ == 0) {
-      LogPrintLn("avg framerate:", this->getAvgFrameRate());
+		const auto frame_rate = this->getAvgFrameRate();
+      LogPrintLn("avg framerate:", frame_rate);
+	  most_recent_frame_rate = frame_rate;
     }
   }
 

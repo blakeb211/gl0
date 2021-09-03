@@ -124,7 +124,8 @@ int main()
 		// update window title with player position
 		const glm::vec3 &pos = level->objects[0]->pos;
 		const glm::ivec3 grid_coords{SpatialGrid::PosToGridCoords((v3 &)pos)};
-		auto str = std::string(glm::to_string(pos) + " " + glm::to_string(grid_coords));
+		auto str = std::string(glm::to_string(pos) + " " + glm::to_string(grid_coords) + 
+				" fr: " + std::to_string(static_cast<int>(fr.most_recent_frame_rate)));
 		glfwSetWindowTitle(window, str.c_str());
 
 		prog_one.Use();

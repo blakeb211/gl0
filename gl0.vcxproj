@@ -144,6 +144,7 @@
       <DisableSpecificWarnings>5105;26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeaderFile>gamelib.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -207,6 +208,7 @@
       <DisableSpecificWarnings>5105;26451;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeaderFile>gamelib.h</PrecompiledHeaderFile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
