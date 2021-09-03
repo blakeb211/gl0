@@ -10,8 +10,6 @@ using iv3 = glm::ivec3;
  *  This file builds a uniform grid for collision testing; rendering handled by
  * render.cpp
  *  ***************************************************************/
-// @TODO: Center grid on the level so that it's unlikely objects will leave the grid
-// @TODO: An alternative would be to add a new grid cell if an object enters it
 
 namespace SpatialGrid
 {
@@ -133,52 +131,15 @@ iv3 PosToGridCoords(const v3 &pos)
 	return iv3{trunc(diff.x), trunc(diff.y), trunc(diff.z)};
 }
 
-// @TODO look for mathematical equation linking grid_id to grid_coord.
-// This finds the index in SpatialGrid::grid and SpatialGrid:id that corresponds to
-// a given set of grid coordinates. "Grid Id" means Grid Coordinates.
-// e.g. (0,0,0) .. (numCells - 1, numCells -1, numCells - 1)
-size_t GridCoordsToIndex(const iv3 id_to_match)
-{
-	auto is_match = [&id_to_match](const iv3 &coords) { return coords == id_to_match; };
-
-	if (const auto result = find_if(id.begin(), id.end(), is_match); result != id.end())
-	{
-		return result - id.begin();
-	}
-	// if we get here, an object moved to a position outside of our spatial grid
-	// LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
-	//		   glm::to_string(id_to_match));
-
-	return UINT_MAX;
-}
-
-size_t GridCoordsToIndex2(const iv3 coords) {
+size_t GridCoordsToIndex(const iv3 coords) {
 	if (coords.x < 0 || coords.y < 0 || coords.z < 0 || coords.x > numCells -1 || coords.y > numCells - 1 || coords.z > numCells - 1)
 		return UINT_MAX;
 	return coords.x + numCells * (coords.z + numCells*coords.y); 
 }
 
-// find the the spatial grid cells that the object's center is in.
-// update the Cell.list to contain the object if it isn't already.
-// remove object from lists that is used to be in
-// @TODO: separate this out so that stationary objects are only added to the
-// grid during setup.
-
-/*
-ClearAllCells();
-foreach(entity)
-  int minXCoord = floor(entity->GetPosition().x-entity->GetRadius()) / CollisionGrid.CELL_SIZE;
-  int minYCoord = floor(entity->GetPosition().y-entity->GetRadius()) / CollisionGrid.CELL_SIZE;
-  int maxXCoord = ceil(entity->GetPosition().x+entity->GetRadius()) / CollisionGrid.CELL_SIZE;
-  int maxYCoord = ceil(entity->GetPosition().y+entity->GetRadius()) / CollisionGrid.CELL_SIZE;
-  for ( int x = minXCoord; x <= maxXCoord; x++ )
-	for ( int y = minYCoord; y <= maxYCoord; y++ )
-	  grid[x][y].add(entity);
-*/
-
+// this is a scratch pad vector used in the UpdateGridMethod
 std::vector<iv3> grid_cells_entity_intersects;
-// @TODO: clear and rebuild all grid lists each frame?
-//
+
 void ClearGrid()
 {
 	const auto sz = grid.size();
@@ -259,39 +220,10 @@ void UpdateGrid(gxb::Entity *const o)
 
 	for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it; curr_coord_it++)
 	{
-		int curr_idx = GridCoordsToIndex2(*curr_coord_it);
+		int curr_idx = GridCoordsToIndex(*curr_coord_it);
 		if (curr_idx != UINT_MAX)
 			grid[curr_idx].list.push_back(o->id);
 	}
-
-	//		grid[curr_idx].list.push_back(o->id);
-	// rename spherical radius to spherical_diameter
-
-	//	if (curr_grid == last_grid && o->has_been_added_to_grid == true)
-	//	{
-	//		return;
-	//	};
-	//
-	//	// remove id from last cell's list if the cell changed
-	//	if (curr_grid != last_grid && o->has_been_added_to_grid == true)
-	//	{
-	//		auto old_end = grid[last_idx].list.end();
-	//		auto new_end = std::remove(grid[last_idx].list.begin(), grid[last_idx].list.end(), o->id);
-	//		if (old_end != new_end)
-	//		{
-	//			grid[last_idx].list.erase(new_end);
-	//		}
-	//	}
-	//	// add to curr cell's list if it isn't in it already
-	//	auto iter = std::find(grid[curr_idx].list.begin(), grid[curr_idx].list.end(), o->id);
-	//	bool not_in_curr_cell_list = (iter == grid[curr_idx].list.end()) ? true : false;
-	//
-	//	if (not_in_curr_cell_list)
-	//	{
-	//		grid[curr_idx].list.push_back(o->id);
-	//		o->has_been_added_to_grid = true;
-	//		// LogPrintLn("added object id:", o->id, " to grid: ", glm::to_string(id[curr_idx]));
-	//	}
 }
 
 // find min and max of x,y,z objects in level and build a uniform
@@ -413,18 +345,7 @@ void Subdivide()
 //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
 void TestingStuffForOctree()
 {
-	//  test PosToGridCoords()
-	//	# should give (2,0,1)
-	//	test_pos1 <- c(2.057,-2.900,-38.071) + 0.5*cellL
-	//	# should give (6, 6, 6)
-	//	test_pos2 <- c(30.171,39.271,-2.929) + 0.5*cellL
-	//	# test on a boundary, should give (2,0,1) but does not
-	//	test_pos3 <- c(2.057,-2.900,-38.071)
-	//
-	// ***** note that these values are truncated
-	auto test1 = v3(0, 0, 1.649);
 	LogPrintLn("TESTING::TestingStuffForOctree");
-	// LogPrintLn(glm::to_string(PosToGridCoords(test1)));
 	using std::cout, std::endl;
 	cout << "id.size():" << id.size() << endl;
 	for (int i = 0; i < id.size(); i++)
