@@ -20,7 +20,7 @@ namespace SpatialGrid
 void Subdivide();
 int CalcSideLength();
 iv3 PosToGridCoords(const v3 &pos);
-void TestPosToGridIdFxn();
+void TestingStuffForOctree();
 
 struct BoundingBox
 {
@@ -49,7 +49,7 @@ struct Cell
 // Globals
 gxb::Level *level;					   // @TODO: add const
 std::vector<float> vertbufGridLines{}; // for drawing, vertices of Octree bounding box lines
-constexpr float targetSideL = 1.7f;
+constexpr float targetSideL = 2.0f;
 constexpr int MAX_CELL_OCCUPATION_PER_ENTITY = 16;
 constexpr int MAX_ENTITIES = 500;
 int numCells{};
@@ -146,10 +146,16 @@ size_t GridCoordsToIndex(const iv3 id_to_match)
 		return result - id.begin();
 	}
 	// if we get here, an object moved to a position outside of our spatial grid
-	//LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
+	// LogPrintLn("Grid Coords Not Found! Returning -1 from GridCoordsToIndex. The offending id was",
 	//		   glm::to_string(id_to_match));
 
 	return UINT_MAX;
+}
+
+size_t GridCoordsToIndex2(const iv3 coords) {
+	if (coords.x < 0 || coords.y < 0 || coords.z < 0 || coords.x > numCells -1 || coords.y > numCells - 1 || coords.z > numCells - 1)
+		return UINT_MAX;
+	return coords.x + numCells * (coords.z + numCells*coords.y); 
 }
 
 // find the the spatial grid cells that the object's center is in.
@@ -214,7 +220,6 @@ void UpdateGrid(gxb::Entity *const o)
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, 0.f))); // -x-y boundary of obj
 
-
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(1.f, 0.f, 1.f))); // +x+z boundary of obj
 	grid_cells_entity_intersects.push_back(
@@ -231,7 +236,6 @@ void UpdateGrid(gxb::Entity *const o)
 		PosToGridCoords(o->pos + o_radius * v3(-1.f, 1.f, 1.f))); // -x+y+z boundary of obj
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, 1.f))); // -x-y+z boundary of obj
-
 
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(1.f, 0.f, -1.f))); // +x-z boundary of obj
@@ -250,18 +254,15 @@ void UpdateGrid(gxb::Entity *const o)
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, -1.f))); // -x-y-z boundary of obj
 
-
 	decltype(grid_cells_entity_intersects)::iterator end_it;
-	end_it = std::unique(grid_cells_entity_intersects.begin(),grid_cells_entity_intersects.end());  
+	end_it = std::unique(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end());
 
-	for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it;
-		 curr_coord_it++)
+	for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it; curr_coord_it++)
 	{
-		int curr_idx = GridCoordsToIndex(*curr_coord_it);
+		int curr_idx = GridCoordsToIndex2(*curr_coord_it);
 		if (curr_idx != UINT_MAX)
-		grid[curr_idx].list.push_back(o->id);
+			grid[curr_idx].list.push_back(o->id);
 	}
-
 
 	//		grid[curr_idx].list.push_back(o->id);
 	// rename spherical radius to spherical_diameter
@@ -355,7 +356,8 @@ std::vector<float> &SetupOctree(gxb::Level *level)
 	LogPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
 	Subdivide();
-	// TestPosToGridIdFxn();
+	//TestingStuffForOctree();
+	// returns reference to the spatial grid's outlines so they can be drawn
 	return vertbufGridLines;
 }
 
@@ -409,7 +411,7 @@ void Subdivide()
 }
 
 //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
-void TestPosToGridIdFxn()
+void TestingStuffForOctree()
 {
 	//  test PosToGridCoords()
 	//	# should give (2,0,1)
@@ -421,8 +423,12 @@ void TestPosToGridIdFxn()
 	//
 	// ***** note that these values are truncated
 	auto test1 = v3(0, 0, 1.649);
-	LogPrintLn("TESTING::TestPosToGridIdFxn");
-	LogPrintLn(glm::to_string(PosToGridCoords(test1)));
+	LogPrintLn("TESTING::TestingStuffForOctree");
+	// LogPrintLn(glm::to_string(PosToGridCoords(test1)));
+	using std::cout, std::endl;
+	cout << "id.size():" << id.size() << endl;
+	for (int i = 0; i < id.size(); i++)
+	LogPrintLn(id[i].x,id[i].y,id[i].z, i);
 }
 
 } // namespace SpatialGrid

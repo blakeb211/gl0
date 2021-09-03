@@ -27,7 +27,7 @@ template <class T> inline void write_to_screen_and_disk(const std::string fmt, c
 	const auto arg_ = std::any_cast<T>(val);
 	auto cnt_ = fmt::formatted_size(fmt_, arg_);
 	auto _ = fmt::format_to_n(buf.begin(), cnt_, fmt_, arg_);
-	fmt::print(fmt_, arg_);
+	//fmt::print(fmt_, arg_);
 	fwrite(buf.data(), sizeof(char), cnt_, fptr);
 }
 
