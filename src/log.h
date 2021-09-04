@@ -20,6 +20,14 @@ inline std::array<char, BUFFER_LEN> buf;
 
 //@TODO: make log file save to AppRoot instead of the dir the program gets run from
 
+//@TODO: rewrite using ostream and ostreambuf 
+//	std::ofstream fout("vector.txt");
+//	fout.precision(10);
+//
+//	std::copy(numbers.begin(), numbers.end(),
+//		std::ostream_iterator<double>(fout, "\n"));
+
+// @TODO: remove the need to make a std::any copy of everything
 // print arguments to log file and screen
 template <class T> inline void write_to_screen_and_disk(const std::string fmt, const std::any val)
 {
