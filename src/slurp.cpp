@@ -1,4 +1,4 @@
-#include "headers.h"
+#include "headers.h" 
 #include "log.h"
 #include <streambuf>
 using namespace std;
@@ -10,16 +10,17 @@ stringstream GetFileContents(const std::string filename)
 {
 	try
 	{
-		std::ifstream t(filename);
-		std::string str;
+		ifstream t(filename);
+		string* str_ptr = new string;
+		t.seekg(0, ios::end);
+		str_ptr->reserve(t.tellg());
+		t.seekg(0, ios::beg);
 
-		t.seekg(0, std::ios::end);
-		str.reserve(t.tellg());
-		t.seekg(0, std::ios::beg);
-
-		str.assign((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-		// @NOTE: tbh I'm not sure if the std::move here does anything
-		return stringstream{std::move(str)};
+		str_ptr->assign((istreambuf_iterator<char>(t)), istreambuf_iterator<char>());
+		stringstream *ss = new stringstream;
+		ss->str(*str_ptr);
+		delete str_ptr;
+		return stringstream(std::move(*ss));
 	}
 	catch (...)
 	{
