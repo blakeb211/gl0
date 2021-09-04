@@ -18,8 +18,8 @@ stringstream GetFileContents(const std::string filename)
 		t.seekg(0, std::ios::beg);
 
 		str.assign((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-
-		return stringstream{str};
+		// @NOTE: tbh I'm not sure if the std::move here does anything
+		return stringstream{std::move(str)};
 	}
 	catch (...)
 	{
