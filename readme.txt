@@ -43,12 +43,11 @@ game
 	camera should follow campath smoothly - done
 
 refactoring
-	move header and cpps into same directory
 	pull update outside of main.cpp
 	separate octree into header and cpp file
 	compile lib fmt and glm into a dll and add it to the project
-	need a tool to enforce style guide
 	-------------------------------------------------
+	move header and cpps into same directory - done
 	Fix names: all types and functions InThisCase and all variables in_this_case - done
 	pull rendering system outside of main.cpp - done
 
