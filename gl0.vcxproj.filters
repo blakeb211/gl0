@@ -42,9 +42,6 @@
     <ClCompile Include="thirdparty\src\glad\glad.c">
       <Filter>ThirdParty\Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\stb_image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\slurp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
