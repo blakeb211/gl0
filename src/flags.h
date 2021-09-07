@@ -9,6 +9,6 @@ namespace Flags {
   inline constexpr bool DRAW_OBJECT_POS = 0;
   inline constexpr bool DRAW_OBJECT_OUTLINES = 0;
   inline constexpr bool USE_ASSERTIONS = 0;
-  inline constexpr bool LOG_PRINTS_TO_SCREEN = 0;
+  inline constexpr bool LOG_PRINTS_TO_SCREEN = 1;
 
 };

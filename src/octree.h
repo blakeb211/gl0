@@ -54,6 +54,7 @@ int numCells{};
 float cellL{}, worldL{};
 Cell topNode; // whole world
 
+// keep track of which cells each entity is in
 std::vector<std::vector<unsigned>> entity_id_to_list_of_cell_ids{MAX_ENTITIES};
 
 // uniform grid cells; size is numCells^3
@@ -139,6 +140,7 @@ size_t GridCoordsToIndex(const iv3 coords) {
 
 // this is a scratch pad vector used in the UpdateGridMethod
 std::vector<iv3> grid_cells_entity_intersects;
+std::vector<unsigned> grid_ids_entity_intersects;
 
 void ClearGrid()
 {
@@ -156,6 +158,7 @@ void UpdateGrid(gxb::Entity *const o)
 	const auto &o_radius = o_mesh->spherical_diameter / 2.0f;
 
 	grid_cells_entity_intersects.resize(0);
+	grid_ids_entity_intersects.resize(0);
 
 	grid_cells_entity_intersects.push_back(PosToGridCoords(o->pos)); // center of obj
 
@@ -224,6 +227,12 @@ void UpdateGrid(gxb::Entity *const o)
 		if (curr_idx != UINT_MAX)
 			grid[curr_idx].list.push_back(o->id);
 	}
+
+	// @TODO: 
+	// convert grid_cells_entity_intersects to grid_ids_entity_intersects
+	
+	// copy grid_cells_entity_intersects to entity_id_to_list_of_cell_ids
+	// std::copy(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end(), entity_id_to_list_of_cell_ids[o->id].begin());
 }
 
 // find min and max of x,y,z objects in level and build a uniform
@@ -288,7 +297,7 @@ std::vector<float> &SetupOctree(gxb::Level *level)
 	Log::PrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
 	Subdivide();
-	//TestingStuffForOctree();
+	TestingStuffForOctree();
 	// returns reference to the spatial grid's outlines so they can be drawn
 	return vertbufGridLines;
 }
@@ -342,14 +351,17 @@ void Subdivide()
 	}
 }
 
+std::vector<size_t> FindNearestNeighbors(gxb::Entity * o) {
+	return std::vector<size_t>{};
+}
+
 //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
 void TestingStuffForOctree()
 {
 	Log::PrintLn("TESTING::TestingStuffForOctree");
 	using std::cout, std::endl;
 	cout << "id.size():" << id.size() << endl;
-	for (int i = 0; i < id.size(); i++)
-	Log::PrintLn(id[i].x,id[i].y,id[i].z, i);
+	Log::PrintLn("sizeof ivec3: ", sizeof(iv3));
 }
 
 } // namespace SpatialGrid
