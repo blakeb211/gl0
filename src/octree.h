@@ -220,7 +220,7 @@ void UpdateGrid(gxb::Entity *const o)
 
 	for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it; curr_coord_it++)
 	{
-		int curr_idx = GridCoordsToIndex(*curr_coord_it);
+		size_t curr_idx = GridCoordsToIndex(*curr_coord_it);
 		if (curr_idx != UINT_MAX)
 			grid[curr_idx].list.push_back(o->id);
 	}
@@ -270,10 +270,10 @@ std::vector<float> &SetupOctree(gxb::Level *level)
 	min -= 0.1f * (orig_dim);
 	max += 0.1f * (orig_dim);
 	auto expanded_dim = max - min;
-	LogPrintLn("level min, max:", glm::to_string(min), glm::to_string(max));
+	Log::PrintLn("level min, max:", glm::to_string(min), glm::to_string(max));
 	// take max dimension as our cube's side length
 	float cubic_dim = std::max({expanded_dim.x, expanded_dim.y, expanded_dim.z});
-	LogPrintLn("SpatialGrid extent:", cubic_dim);
+	Log::PrintLn("SpatialGrid extent:", cubic_dim);
 	worldL = cubic_dim;
 
 	max = min + v3(cubic_dim, cubic_dim, cubic_dim);
@@ -285,7 +285,7 @@ std::vector<float> &SetupOctree(gxb::Level *level)
 	// 		a bin reaches a minimum size based on the length of its edges
 	// AddLinesToVertBuf(topNode.bb);
 	numCells = CalcSideLength();
-	LogPrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
+	Log::PrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
 	Subdivide();
 	//TestingStuffForOctree();
@@ -316,7 +316,7 @@ void Subdivide()
 	const auto &min = topNode.bb.min;
 	v3 old_min{};
 	v3 new_min{};
-	LogPrintLn("topNode.bb.min", glm::to_string(min));
+	Log::PrintLn("topNode.bb.min", glm::to_string(min));
 	// outer loop is over Y
 	for (int k = 0; k < numCells; k++)
 	{
@@ -345,11 +345,11 @@ void Subdivide()
 //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
 void TestingStuffForOctree()
 {
-	LogPrintLn("TESTING::TestingStuffForOctree");
+	Log::PrintLn("TESTING::TestingStuffForOctree");
 	using std::cout, std::endl;
 	cout << "id.size():" << id.size() << endl;
 	for (int i = 0; i < id.size(); i++)
-	LogPrintLn(id[i].x,id[i].y,id[i].z, i);
+	Log::PrintLn(id[i].x,id[i].y,id[i].z, i);
 }
 
 } // namespace SpatialGrid

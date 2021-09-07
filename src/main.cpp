@@ -54,7 +54,7 @@ int main()
 {
 	gxb::initTypeToStrMap(); // creates str_to_type
 	FrameRater fr{};
-	SetLogFile("log.txt");
+	Log::SetLogFile(gxb::app_root + "log.txt");
 
 	const auto &w = gxb::SCR_WIDTH;
 	const auto &h = gxb::SCR_HEIGHT;
@@ -176,7 +176,7 @@ int main()
 	} // end game loop
 
 	glfwTerminate();
-	closeLog();
+	Log::CloseLog();
 	return 0;
 }
 
@@ -306,7 +306,7 @@ GLFWwindow *InitGlfw(unsigned int w, unsigned int h, const char *title, GLFWfram
 	GLFWwindow *window = glfwCreateWindow(w, h, title, NULL, NULL);
 	if (window == NULL)
 	{
-		LogPrintLn("Failed to create GLFW window");
+		Log::PrintLn("Failed to create GLFW window");
 		glfwTerminate();
 		return nullptr;
 	}
@@ -317,7 +317,7 @@ GLFWwindow *InitGlfw(unsigned int w, unsigned int h, const char *title, GLFWfram
 	// ---------------------------------------
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		LogPrintLn("Failed to initialize GLAD");
+		Log::PrintLn("Failed to initialize GLAD");
 		return nullptr;
 	}
 
@@ -416,5 +416,5 @@ void TestNaiveCollision()
 			num_checks++;
 		}
 	}
-	LogPrintLn("NAIVE: num of collision checks:", num_checks);
+	Log::PrintLn("NAIVE: num of collision checks:", num_checks);
 }

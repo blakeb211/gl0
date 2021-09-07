@@ -1,26 +1,30 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
+#include "flags.h"
 #include <any>
 #include <array>
 #include <cassert>
 #include <cstdio>
+#include <filesystem>
 #include <fmt\core.h>
 #include <fmt\format.h>
 #include <fmt\os.h>
 #include <string>
-#include "flags.h"
 //
 // GLOBALS
 //
 //
-inline constexpr auto BUFFER_LEN = 512;
+//
+namespace Log
+{
+
+namespace Fs = std::filesystem;
 inline FILE *fptr;
-inline std::array<char, BUFFER_LEN> buf;
+inline Fs::path log_path{};
 /*******************************************************/
 
 //@TODO: make log file save to AppRoot instead of the dir the program gets run from
 
-//@TODO: rewrite using ostream and ostreambuf 
+//@TODO: rewrite using ostream and ostreambuf
 //	std::ofstream fout("vector.txt");
 //	fout.precision(10);
 //
@@ -29,22 +33,19 @@ inline std::array<char, BUFFER_LEN> buf;
 
 // @TODO: remove the need to make a std::any copy of everything
 // print arguments to log file and screen
-template <class T> inline void write_to_screen_and_disk(const std::string fmt, const std::any val)
+template <class T> inline void write_to_screen_and_disk(const std::string fmt, std::any val)
 {
 	const auto fmt_ = fmt;
 	const auto arg_ = std::any_cast<T>(val);
-	auto cnt_ = fmt::formatted_size(fmt_, arg_);
-	auto _ = fmt::format_to_n(buf.begin(), cnt_, fmt_, arg_);
-	//fmt::print(fmt_, arg_);
-	fwrite(buf.data(), sizeof(char), cnt_, fptr);
+	if constexpr (Flags::LOG_PRINTS_TO_SCREEN)
+		fmt::print(fmt_, arg_);
+	fmt::print(fptr, fmt_, arg_);
 }
 
 template <typename T> inline void LogPrintOneItem(const T &item)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(fptr != nullptr);
-
-	buf.fill('-');
 
 	if (typeid(0.1f) == typeid(item))
 	{
@@ -89,27 +90,27 @@ template <typename T> inline void LogPrintOneItem(const T &item)
 	//****************************************************************
 	// add handling for next type here
 	//****************************************************************
-	write_to_screen_and_disk<const std::string>("ERROR: add type <{}> to LogPrintLn", typeid(item).name());
+	write_to_screen_and_disk<const std::string>("ERROR: add type <{}> to PrintLn", typeid(item).name());
 }
 
 // Base case for variadic template
-inline void LogPrintLn()
+inline void PrintLn()
 {
 	LogPrintOneItem("\n");
 }
 // This creates a lambda function and processes each arg of a vararg with it.
-template <typename T, typename... Tail> inline void LogPrintLn(T head, Tail... tail)
+template <typename T, typename... Tail> inline void PrintLn(T head, Tail... tail)
 {
 	LogPrintOneItem(head);
-	LogPrintLn(tail...);
+	PrintLn(tail...);
 }
 
 inline void LogErr(const std::string fname, const int lineNum, const std::string msg)
 {
-	LogPrintLn("ERROR: file <", fname, "> line <", lineNum, "> ==", msg);
+	PrintLn("ERROR: file <", fname, "> line <", lineNum, "> ==", msg);
 }
 
-inline bool closeLog()
+inline bool CloseLog()
 {
 	if (fptr != NULL)
 	{
@@ -123,20 +124,20 @@ inline bool closeLog()
 	return false;
 }
 
-inline bool SetLogFile(const std::string fname)
+inline bool SetLogFile(const Fs::path path)
 {
-	if (fname.empty())
+	if (path.string().empty() || Fs::is_directory(path))
 	{
 		return false;
 	}
 
-	fptr = fopen(fname.c_str(), "w+");
-	if (fptr != NULL)
-	{
-		return true;
-	}
-	else
+	fopen_s(&fptr, path.string().c_str(), "w+");
+
+	if (fptr == NULL)
 	{
 		return false;
 	}
+	return true;
 }
+
+} // namespace Log

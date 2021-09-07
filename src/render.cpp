@@ -86,10 +86,6 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, 
 			}
 			// set color of current cell before drawing
 
-			// LogPrintLn("drawing first pt " + glm::to_string(id), " @ ", SpatialGrid::vertbufGridLines[i],
-			// SpatialGrid::vertbufGridLines[i + 1], SpatialGrid::vertbufGridLines[i + 2]); LogPrintLn("drawing second pt
-			// " + glm::to_string(id), " @ ", SpatialGrid::vertbufGridLines[i+3], SpatialGrid::vertbufGridLines[i + 4],
-			// SpatialGrid::vertbufGridLines[i + 5]);
 			// we draw 24 verts per cell, since there are 12 lines with 2 verts each
 			glDrawArrays(GL_LINES, (GLint)i,
 						 (GLint)24); // uses vboOctree
@@ -117,7 +113,7 @@ void render::logOpenGLInfo()
 	int glMajVers, glMinVers;
 	glGetIntegerv(GL_MAJOR_VERSION, &glMajVers);
 	glGetIntegerv(GL_MINOR_VERSION, &glMinVers);
-	LogPrintLn("OpenGL Version:", glMajVers, ".", glMinVers);
+	Log::PrintLn("OpenGL Version:", glMajVers, ".", glMinVers);
 }
 
 void render::SetGlFlags()

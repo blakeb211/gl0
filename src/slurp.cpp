@@ -24,7 +24,7 @@ stringstream GetFileContents(const std::string filename)
 	}
 	catch (...)
 	{
-		LogPrintLn("Error: GetFileContents() failed with argument:", filename);
+		Log::PrintLn("Error: GetFileContents() failed with argument:", filename);
 	}
 	return stringstream{""};
 }

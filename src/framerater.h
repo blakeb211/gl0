@@ -34,7 +34,7 @@ public:
   void printFrameRateIfFreqHasBeenReached() {
     if (this->frame_count % FR_PRINT_FREQ == 0) {
 		const auto frame_rate = this->getAvgFrameRate();
-      LogPrintLn("avg framerate:", frame_rate);
+		Log::PrintLn("avg framerate:", frame_rate);
 	  most_recent_frame_rate = frame_rate;
     }
   }

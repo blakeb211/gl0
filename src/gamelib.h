@@ -262,7 +262,7 @@ inline std::unique_ptr<mesh> LoadMeshFromDisk(const char * const name)
 			line_stream >> pos.x >> pos.y >> pos.z;
 			if (line_stream.fail())
 			{
-				LogErr(__FILE__, __LINE__, "trouble reading position data");
+				Log::LogErr(__FILE__, __LINE__, "trouble reading position data");
 			}
 			m->vertices.push_back(pos);
 		}
@@ -274,7 +274,7 @@ inline std::unique_ptr<mesh> LoadMeshFromDisk(const char * const name)
 			line_stream >> normal.x >> normal.y >> normal.z;
 			if (line_stream.fail())
 			{
-				LogPrintLn("error reading normal coords");
+				Log::PrintLn("error reading normal coords");
 			}
 			m->normals.push_back(normal);
 		}
@@ -291,7 +291,7 @@ inline std::unique_ptr<mesh> LoadMeshFromDisk(const char * const name)
 				auto result_pair = ExtractPairOfInts(token, delimiter);
 				if (!result_pair)
 				{
-					LogErr("ERROR:: < file line # , model name > ::", line_num, name);
+					Log::LogErr("ERROR:: < file line # , model name > ::", line_num, name);
 				}
 				auto [face_id, normal_id] = *result_pair;
 				faces[i] = face_id;
@@ -309,7 +309,7 @@ inline std::vector<PathPt> LoadCamPath(const std::string level_name)
 	bool fileExist = slurp::CheckFileExist(level_root, level_name, "cmp");
 	if (!fileExist)
 	{
-		LogPrintLn("CamPath file for level", level_name, " was not found.\n");
+		Log::PrintLn("CamPath file for level", level_name, " was not found.\n");
 		return vector<PathPt>{};
 	}
 
@@ -324,9 +324,9 @@ inline std::vector<PathPt> LoadCamPath(const std::string level_name)
 		if (path_data.good())
 			pts.push_back(PathPt{v3{x, y, -z}, 0.0f});
 	}
-	LogPrintLn(pts.size(), "points loaded from", level_name, ".cmp");
+	Log::PrintLn(pts.size(), "points loaded from", level_name, ".cmp");
 
-	LogPrintLn("CamPath file for ", level_name, " loaded");
+	Log::PrintLn("CamPath file for ", level_name, " loaded");
 
 	return std::move(pts);
 }
@@ -362,11 +362,11 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 	if (levelExist)
 	{
 		auto levelData = slurp::GetFileContents(LevelPath(levelName, "txt")->c_str());
-		LogPrintLn("SUCCESS:: level", levelName, "slurped from disk");
+		Log::PrintLn("SUCCESS:: level", levelName, "slurped from disk");
 
 		int line_num = 0;
 
-		LogPrintLn("mesh         	  v        n        f        hash			spherical diam");
+		Log::PrintLn("mesh         	  v        n        f        hash			spherical diam");
 
 		while (levelData.good())
 		{
@@ -379,7 +379,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 			auto type = str_to_type.count(entity_name) ? str_to_type[entity_name] : EntityType::unknown;
 			if (type == EntityType::unknown)
 			{
-				LogErr(levelName, line_num, "Entity type unknown");
+				Log::LogErr(levelName, line_num, "Entity type unknown");
 				continue;
 			}
 
@@ -398,7 +398,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 
 			if (line_stream_bad)
 			{
-				LogPrintLn("ERROR: wrong values on line <", line_num, ">", "level:", levelName);
+				Log::PrintLn("ERROR: wrong values on line <", line_num, ">", "level:", levelName);
 				continue;
 			}
 
@@ -422,7 +422,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 			if (!model_exist)
 			{
 				// can only reach this line if model file was not found
-				LogPrintLn("ERROR::missing mesh file:", mesh_name, "while loading level:", levelName);
+				Log::PrintLn("ERROR::missing mesh file:", mesh_name, "while loading level:", levelName);
 				return nullptr;
 			}
 
@@ -473,7 +473,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 					face_added_to_raw++;
 				}
 				const std::string spacer(15 - mesh_name.length(), ' ');
-				LogPrintLn(mesh_name, spacer, mesh_ptr->vertices.size(), mesh_ptr->normals.size(),
+				Log::PrintLn(mesh_name, spacer, mesh_ptr->vertices.size(), mesh_ptr->normals.size(),
 						   mesh_ptr->faces.size(), mesh_ptr->hash_code, spacer, mesh_ptr->spherical_diameter);
 
 				if constexpr (Flags::USE_ASSERTIONS)
@@ -485,8 +485,8 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 			l->objects.push_back(std::move(entity_ptr));
 
 		} // end while
-		LogPrintLn("objects created:", l->objects.size());
-		LogPrintLn("meshes loaded from disk:", l->meshes.size());
+		Log::PrintLn("objects created:", l->objects.size());
+		Log::PrintLn("meshes loaded from disk:", l->meshes.size());
 		return std::move(l);
 	}
 	return nullptr;
