@@ -228,11 +228,14 @@ void UpdateGrid(gxb::Entity *const o)
 			grid[curr_idx].list.push_back(o->id);
 	}
 
-	// @TODO: 
+	// Build entity_id_to_list_of_cell_ids for easy nearest neighbor searching
 	// convert grid_cells_entity_intersects to grid_ids_entity_intersects
-	
-	// copy grid_cells_entity_intersects to entity_id_to_list_of_cell_ids
-	// std::copy(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end(), entity_id_to_list_of_cell_ids[o->id].begin());
+	for(auto const & cell_xyz : grid_cells_entity_intersects) {
+		grid_ids_entity_intersects.push_back((unsigned)GridCoordsToIndex(cell_xyz));
+	}
+	// copy grid_ids_entity_intersects to entity_id_to_list_of_cell_ids
+	entity_id_to_list_of_cell_ids[o->id].resize(grid_ids_entity_intersects.size());
+	std::copy(grid_ids_entity_intersects.begin(), grid_ids_entity_intersects.end(), entity_id_to_list_of_cell_ids[o->id].begin());
 }
 
 // find min and max of x,y,z objects in level and build a uniform
