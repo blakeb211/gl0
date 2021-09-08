@@ -22,10 +22,11 @@ using iv3 = glm::ivec3;
 // -------------------------------------------
 namespace SpatialGrid
 { // if SpatialGrid wasn't header only I could remove this
-std::vector<float> &SetupOctree(gxb::Level *);
+std::vector<float> &SetupOctree(const gxb::Level *const);
 void UpdateGrid(gxb::Entity *const);
 void ClearGrid();
 iv3 PosToGridCoords(const v3 &pos);
+const std::vector<unsigned> &FindNearestNeighbors(const gxb::Entity *const);
 }; // namespace SpatialGrid
 
 void TestNaiveCollision();
@@ -123,8 +124,8 @@ int main()
 		// update window title with player position
 		const glm::vec3 &pos = level->objects[0]->pos;
 		const glm::ivec3 grid_coords{SpatialGrid::PosToGridCoords((v3 &)pos)};
-		auto str = std::string(glm::to_string(pos) + " " + glm::to_string(grid_coords) + 
-				" fr: " + std::to_string(static_cast<int>(fr.most_recent_frame_rate)));
+		auto str = std::string(glm::to_string(pos) + " " + glm::to_string(grid_coords) +
+							   " fr: " + std::to_string(static_cast<int>(fr.most_recent_frame_rate)));
 		glfwSetWindowTitle(window, str.c_str());
 
 		prog_one.Use();
@@ -156,8 +157,13 @@ int main()
 		{
 			SpatialGrid::ClearGrid();
 			for (auto &o : level->objects)
+			{
 				SpatialGrid::UpdateGrid(o.get());
+			}
 		}
+		// find hero nearest neighbors
+		// @TODO : DEBUG
+		// const auto & hero_nearest_neighbors = SpatialGrid::FindNearestNeighbors(0);
 
 		// set transformations
 		view = camera.GetViewMatrix();

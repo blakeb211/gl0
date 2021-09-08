@@ -57,6 +57,11 @@ Cell topNode; // whole world
 // keep track of which cells each entity is in
 std::vector<std::vector<unsigned>> entity_id_to_list_of_cell_ids{MAX_ENTITIES};
 
+// these are scratch pad vectors used in the UpdateGrid()
+std::vector<iv3> grid_cells_entity_intersects;
+std::vector<unsigned> grid_ids_entity_intersects;
+std::vector<unsigned> nearest_neighbor_entity_ids;
+
 // uniform grid cells; size is numCells^3
 std::vector<Cell> grid;
 // grid coordinates e.g. 0,1,2 that correspond to each cell in grid
@@ -132,15 +137,13 @@ iv3 PosToGridCoords(const v3 &pos)
 	return iv3{trunc(diff.x), trunc(diff.y), trunc(diff.z)};
 }
 
-size_t GridCoordsToIndex(const iv3 coords) {
-	if (coords.x < 0 || coords.y < 0 || coords.z < 0 || coords.x > numCells -1 || coords.y > numCells - 1 || coords.z > numCells - 1)
+size_t GridCoordsToIndex(const iv3 coords)
+{
+	if (coords.x < 0 || coords.y < 0 || coords.z < 0 || coords.x > numCells - 1 || coords.y > numCells - 1 ||
+		coords.z > numCells - 1)
 		return UINT_MAX;
-	return coords.x + numCells * (coords.z + numCells*coords.y); 
+	return coords.x + numCells * (coords.z + numCells * coords.y);
 }
-
-// this is a scratch pad vector used in the UpdateGridMethod
-std::vector<iv3> grid_cells_entity_intersects;
-std::vector<unsigned> grid_ids_entity_intersects;
 
 void ClearGrid()
 {
@@ -218,6 +221,8 @@ void UpdateGrid(gxb::Entity *const o)
 	grid_cells_entity_intersects.push_back(
 		PosToGridCoords(o->pos + o_radius * v3(-1.f, -1.f, -1.f))); // -x-y-z boundary of obj
 
+	auto const &entity_id = o->id;
+
 	decltype(grid_cells_entity_intersects)::iterator end_it;
 	end_it = std::unique(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end());
 
@@ -225,22 +230,23 @@ void UpdateGrid(gxb::Entity *const o)
 	{
 		size_t curr_idx = GridCoordsToIndex(*curr_coord_it);
 		if (curr_idx != UINT_MAX)
-			grid[curr_idx].list.push_back(o->id);
+		{
+			grid[curr_idx].list.push_back(entity_id);
+			grid_ids_entity_intersects.push_back(static_cast<unsigned>(curr_idx));
+		}
 	}
 
 	// Build entity_id_to_list_of_cell_ids for easy nearest neighbor searching
 	// convert grid_cells_entity_intersects to grid_ids_entity_intersects
-	for(auto const & cell_xyz : grid_cells_entity_intersects) {
-		grid_ids_entity_intersects.push_back((unsigned)GridCoordsToIndex(cell_xyz));
-	}
 	// copy grid_ids_entity_intersects to entity_id_to_list_of_cell_ids
-	entity_id_to_list_of_cell_ids[o->id].resize(grid_ids_entity_intersects.size());
-	std::copy(grid_ids_entity_intersects.begin(), grid_ids_entity_intersects.end(), entity_id_to_list_of_cell_ids[o->id].begin());
+	entity_id_to_list_of_cell_ids[entity_id].resize(grid_ids_entity_intersects.size());
+	std::copy(grid_ids_entity_intersects.begin(), grid_ids_entity_intersects.end(),
+			  entity_id_to_list_of_cell_ids[entity_id].begin());
 }
 
 // find min and max of x,y,z objects in level and build a uniform
 // grid enclosing it
-std::vector<float> &SetupOctree(gxb::Level *level)
+std::vector<float> &SetupOctree(const gxb::Level *const level)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(level != NULL);
@@ -255,7 +261,7 @@ std::vector<float> &SetupOctree(gxb::Level *level)
 	}
 
 	// match object id to cells that it occupies
-	SpatialGrid::level = level;
+	SpatialGrid::level = const_cast<gxb::Level *>(level);
 	glm::vec3 min{0}, max{0};
 
 	for (auto &i : level->objects)
@@ -354,8 +360,21 @@ void Subdivide()
 	}
 }
 
-std::vector<size_t> FindNearestNeighbors(gxb::Entity * o) {
-	return std::vector<size_t>{};
+const std::vector<unsigned> &FindNearestNeighbors(const gxb::Entity *const o)
+{
+	unsigned object_id = o->id;
+	const auto &occupied_grid_ids = entity_id_to_list_of_cell_ids[object_id];
+
+	for (const auto &grid_id : occupied_grid_ids)
+	{
+		for (const auto &curr_entity_id : grid[grid_id].list)
+		{
+			nearest_neighbor_entity_ids.push_back(curr_entity_id);
+		}
+	}
+	auto new_end_it = std::unique(nearest_neighbor_entity_ids.begin(), nearest_neighbor_entity_ids.end());
+	nearest_neighbor_entity_ids.resize(new_end_it - nearest_neighbor_entity_ids.begin());
+	return nearest_neighbor_entity_ids;
 }
 
 //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
@@ -365,6 +384,8 @@ void TestingStuffForOctree()
 	using std::cout, std::endl;
 	cout << "id.size():" << id.size() << endl;
 	Log::PrintLn("sizeof ivec3: ", sizeof(iv3));
+	Log::PrintLn("sizeof size_t: ", sizeof(size_t));
+	Log::PrintLn("sizeof unsigned: ", sizeof(unsigned));
 }
 
 } // namespace SpatialGrid
