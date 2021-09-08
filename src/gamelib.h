@@ -93,13 +93,15 @@ struct BinaryFsm
 		neg = -1
 	};
 	States current{States::pos};
-	void check_transition(float dist, v3 facing, float target, const v3 pos_dir)
+	void check_transition(glm::vec3 displacement, v3 facing, float target, const v3 pos_dir)
 	{
-		if (magic_enum::enum_name(current) == "pos" && glm::dot(facing, pos_dir) > 0 && dist >= target)
+	    float dist = glm::length(displacement);
+		float signed_magnitude_disp = displacement.x + displacement.y + displacement.z;
+		if (magic_enum::enum_name(current) == "pos" && glm::dot(facing, pos_dir) > 0 && signed_magnitude_disp > target)
 		{
 			current = States::neg;
 		}
-		if (magic_enum::enum_name(current) == "neg" && glm::dot(facing, -1.f * pos_dir) > 0 && dist >= target)
+		if (magic_enum::enum_name(current) == "neg" && glm::dot(facing, -1.f * pos_dir) > 0 && signed_magnitude_disp < -1.0f * target)
 		{
 			current = States::pos;
 		}
@@ -108,20 +110,17 @@ struct BinaryFsm
 
 struct Entity
 {
-	Entity()
-		: pos{0, 0, 0}, pos_start{0, 0, 0}, pos_last{0, 0, 0}, rot{0, 0, 0}, mesh_hash{0}, id{IdFactory::getNewId()},
-		  state_machine{BinaryFsm::States::pos}, has_been_added_to_grid{false}
-	{
-	}
-	const unsigned id;
-	std::size_t mesh_hash;
+	Entity() = default;
+	const unsigned id{IdFactory::getNewId()};
+	std::size_t mesh_hash{};
 	EntityType type;
-	v3 pos;
-	v3 rot;
-	v3 pos_start; // could be in derived type instead
-	v3 pos_last;
-	bool has_been_added_to_grid;
-	BinaryFsm state_machine; // could be in derived type instead
+	v3 pos{};
+	v3 rot{};
+	v3 pos_start{}; // could be in derived type instead
+	v3 pos_last{};
+	v3 vel{};
+	bool has_been_added_to_grid{false};
+	BinaryFsm state_machine{BinaryFsm::States::pos};
 };
 
 struct mesh

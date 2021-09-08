@@ -103,7 +103,7 @@ int main()
       {
         o->pos += -1.0f * pos_dir * 0.001f * frame_time * speedup;
       }
-      o->state_machine.check_transition(glm::distance(o->pos, o->pos_start), facing, 4, pos_dir);
+      o->state_machine.check_transition(o->pos - o->pos_start, facing, 4, pos_dir);
   };
 
   // Game loop
