@@ -30,6 +30,7 @@ namespace SpatialGrid
 }; // namespace SpatialGrid
 
 void TestNaiveCollision();
+void TestSpatialGridCollision();
 void FrameBufSizeCallback(GLFWwindow* window, int width, int height);
 void ProcessInputCamOnly(GLFWwindow* window, gxb::Camera& cam, float delta_time);
 void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time);
@@ -74,6 +75,7 @@ int main()
   auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
   auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
   TestNaiveCollision();
+ 
 
   auto prog_one = Shader(*gxb::ShaderPath("3pos3color.vs"), *gxb::ShaderPath("colorFromVertex.fs"));
 
@@ -163,15 +165,9 @@ int main()
 
     }
 
-    if (fr.frame_count % 250 == 0) {
+    if (fr.frame_count % 2 == 0) {
       // find hero nearest neighbors
-// @TODO : DEBUG
-      const auto& hero_nearest_neighbors = SpatialGrid::FindNearestNeighbors(level->objects[0].get());
-      Log::LogPrintOneItem("hero nearest neighbors:");
-      for (unsigned i : hero_nearest_neighbors) {
-        std::cout << i << ",";
-      }
-      std::cout << std::endl;
+       TestSpatialGridCollision();
     }
 
     // set transformations
@@ -432,4 +428,14 @@ void TestNaiveCollision()
     }
   }
   Log::PrintLn("NAIVE: num of collision checks:", num_checks);
+}
+
+void TestSpatialGridCollision()
+{
+  int num_checks{ 0 };
+  for (const auto& o : level->objects) {
+    auto neighbors = SpatialGrid::FindNearestNeighbors(o.get());
+    num_checks+= neighbors.size();
+  }
+  Log::PrintLn("Spatial Grid: num of collision checks:", num_checks);
 }

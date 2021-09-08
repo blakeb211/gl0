@@ -224,8 +224,7 @@ namespace SpatialGrid
     auto const& entity_id = o->id;
 
     decltype(grid_cells_entity_intersects)::iterator end_it;
-    //auto less_than_iv3 = [](const iv3& a, const iv3& b) { if (a.x < b.x || a.y < b.y || a.z < b.z) return true; return false; };
-    //std::sort(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end(), less_than_iv3);
+
 //# include<algorithm>// sort
 //#include<tuple>// tie
 //    std::vector<glm::vec3>a = { ... };
@@ -234,7 +233,8 @@ namespace SpatialGrid
 //        // Sort in ascending order by key x, y priority
 //        return std::tie(lhs.x, lhs.z) < std::tie(rhs.x, rhs.z);
 //      });
-
+    const auto less_than_iv3 = [](const iv3& a, const iv3& b) { return a.x < b.x && a.y < b.y && a.z < b.z; };
+    std::sort(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end(), less_than_iv3);
     end_it = std::unique(grid_cells_entity_intersects.begin(), grid_cells_entity_intersects.end());
 
     for (auto curr_coord_it = grid_cells_entity_intersects.begin(); curr_coord_it != end_it; curr_coord_it++)
@@ -386,8 +386,9 @@ namespace SpatialGrid
     }
     // unique only works on a sorted vector
     std::sort(nearest_neighbor_entity_ids.begin(), nearest_neighbor_entity_ids.end());
-    auto new_end_it = std::unique(nearest_neighbor_entity_ids.begin(), nearest_neighbor_entity_ids.end());
-    nearest_neighbor_entity_ids.erase(new_end_it - 1, nearest_neighbor_entity_ids.end());
+    nearest_neighbor_entity_ids.erase(std::unique(nearest_neighbor_entity_ids.begin(), nearest_neighbor_entity_ids.end()), nearest_neighbor_entity_ids.end());
+    // remove the object own id from the neighbor list
+    nearest_neighbor_entity_ids.erase( std::remove(nearest_neighbor_entity_ids.begin(), nearest_neighbor_entity_ids.end(), object_id), nearest_neighbor_entity_ids.end());
     return nearest_neighbor_entity_ids;
   }
 
