@@ -16,4 +16,5 @@ namespace render {
   void SetGlFlags();
   unsigned int BuildSpatialGridVao(const std::vector<float>&);
 
+  inline std::vector<unsigned> highlighted_entities{};
 };

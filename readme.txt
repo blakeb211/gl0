@@ -36,6 +36,11 @@ Your process should look like
 
 game
 	collision detection and response
+	loading screen either using async or other threading
+	menu screen
+	pause capability
+	reduce globals using state objects
+
 	-------------------------------------------------
 	camera on a rail system - done
 	read a level and its campath file - done
@@ -62,16 +67,17 @@ campath editor
 	
 collision detection
 	TODO	
-	+let object be in more than one cell at once
-	+write method to print the nearest neighbors
-	+add bounding box to each object, consider spherical
-	+find nearest neighbors, then intersecting bounding boxes, then fine-grain triangle collision
+	+fine-grain collision and response
+	+only check collisions for dynamic objects
 	-------------------------------------------------
 	+only draw cells with list.size() > 0  - done
 	+use center for now - done
 	+verify postion to grid coord is working - done
 	+draw object positions to make sure its center of object - done
 	+update grid node lists each frame - done
+	+let object be in more than one cell at once - done
+	+write method to print the nearest neighbors - done
+	+add bounding box to each object, consider spherical - done
 
 	NOTES
 	+keep separate list of stationary and moving objects

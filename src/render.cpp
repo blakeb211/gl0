@@ -42,8 +42,9 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, 
 		if constexpr (Flags::USE_ASSERTIONS)
 			assert(mesh_ptr != nullptr);
 
+		const auto object_id = level->objects[i]->id;
 		auto num_verts_model = static_cast<unsigned>(mesh_ptr->faces.size() * 3);
-		if (Flags::DRAW_OBJECT_OUTLINES)
+		if (Flags::DRAW_OBJECT_OUTLINES || std::count(highlighted_entities.begin(), highlighted_entities.end(), object_id))
 		{
 			glDrawArrays(GL_LINE_LOOP, static_cast<GLint>(mesh_ptr->pos_first_vert), num_verts_model);
 		}

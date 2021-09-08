@@ -74,8 +74,6 @@ int main()
 
   auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
   auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
-  TestNaiveCollision();
- 
 
   auto prog_one = Shader(*gxb::ShaderPath("3pos3color.vs"), *gxb::ShaderPath("colorFromVertex.fs"));
 
@@ -83,6 +81,8 @@ int main()
   // so I can draw them if I need to debug.
   AddCamPathToRawData(path, level.get());
 
+
+  TestNaiveCollision();
   render::SetGlFlags();
   auto vao = render::BuildLevelVao(level.get());
 
@@ -162,13 +162,11 @@ int main()
       {
         SpatialGrid::UpdateGrid(o.get());
       }
-
+      const auto near_neighbors = SpatialGrid::FindNearestNeighbors(level->objects[0].get());
+      render::highlighted_entities.resize(near_neighbors.size());
+      std::copy(near_neighbors.begin(), near_neighbors.end(), render::highlighted_entities.begin());
     }
 
-    if (fr.frame_count % 2 == 0) {
-      // find hero nearest neighbors
-       TestSpatialGridCollision();
-    }
 
     // set transformations
     view = camera.GetViewMatrix();
