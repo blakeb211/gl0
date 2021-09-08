@@ -119,22 +119,21 @@ struct Entity
 	v3 pos_start{}; // could be in derived type instead
 	v3 pos_last{};
 	v3 vel{};
+	v3 accel{};
 	bool has_been_added_to_grid{false};
 	BinaryFsm state_machine{BinaryFsm::States::pos};
 };
 
 struct mesh
 {
-	mesh() : hash_code{0}, pos_first_vert{0}
-	{
-	}
-	std::string name;
-	std::size_t hash_code;
+	mesh() = default;
+	std::string name{};
+	std::size_t hash_code{};
 	std::vector<v3> vertices;
 	std::vector<v3> faces;
 	std::vector<v3> normals;
-	size_t pos_first_vert;
-	float spherical_diameter;
+	size_t pos_first_vert{};
+	float spherical_diameter{};
 };
 
 struct CamPath
