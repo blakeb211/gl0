@@ -392,6 +392,13 @@ namespace SpatialGrid
     return nearest_neighbor_entity_ids;
   }
 
+  bool FineGrainCollisionCheck(const gxb::Entity* const a, const gxb::Entity* const b, v3 resultant_accel_modifier) {
+    
+    //for (int i = 0; i < 
+    return false;
+  }
+
+
   //@TODO: ADD PROPER TESTS USING CTEST OR GOOGLE TEST
   void TestingStuffForOctree()
   {
