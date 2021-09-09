@@ -82,9 +82,9 @@ int main()
   AddCamPathToRawData(path, level.get());
 
 
+  auto vao = render::BuildLevelVao(level.get());
   TestNaiveCollision();
   render::SetGlFlags();
-  auto vao = render::BuildLevelVao(level.get());
 
   glm::mat4 view = glm::mat4(1.0f);
   glm::mat4 projection = glm::mat4(1.0f);
@@ -110,10 +110,11 @@ int main()
   // -----------
   while (!glfwWindowShouldClose(window))
   {
-    fr.UpdateTimes();
+    
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	fr.UpdateTimes();
     float delta_time = fr.lastTimeInMs();
 
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
     if (Flags::FREE_MOVE)
       ProcessInputCamOnly(window, camera, delta_time);
@@ -166,6 +167,7 @@ int main()
       render::highlighted_entities.resize(near_neighbors.size());
       std::copy(near_neighbors.begin(), near_neighbors.end(), render::highlighted_entities.begin());
     }
+
 
 
     // set transformations
@@ -430,7 +432,7 @@ void TestNaiveCollision()
 
 void TestSpatialGridCollision()
 {
-  int num_checks{ 0 };
+  size_t num_checks{ 0 };
   for (const auto& o : level->objects) {
     auto neighbors = SpatialGrid::FindNearestNeighbors(o.get());
     num_checks+= neighbors.size();
