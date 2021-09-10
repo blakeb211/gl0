@@ -9,6 +9,7 @@ public:
   unsigned int ID;
   // constructor generates the shader on the fly
   // ------------------------------------------------------------------------
+  Shader() { }
   Shader(const std::string vertexStr, const std::string fragStr)
   {
     // 1. retrieve the vertex/fragment source code from filePath

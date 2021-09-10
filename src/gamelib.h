@@ -351,7 +351,7 @@ inline float CalculateMeshSphericalBoundingBox(const mesh *const m)
 // format of level
 // 							 pos   rot
 // entity_type  model_name  x y z x y z
-inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
+inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string levelName)
 {
 	auto l = std::make_unique<Level>();
 	std::string line, entity_name = "";
@@ -492,7 +492,7 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 		return std::move(l);
 	}
 	return nullptr;
-} // function LoadLevel
+} // function LoadLevelMeshesAndCamPath
 
 } // namespace gxb
 

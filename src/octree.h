@@ -64,6 +64,10 @@ Cell topNode; // whole world
 // uniform grid cells; size is numCells^3
 std::vector<Cell> grid;
 
+const std::vector<float>& GetVertBufGridLinesRef() {
+	return vertbufGridLines;
+}
+
 size_t GetVertBufGridLinesSize()
 {
 	return vertbufGridLines.size();
@@ -254,7 +258,7 @@ void UpdateGrid(gxb::Entity *const o)
 
 // find min and max of x,y,z objects in level and build a uniform
 // grid enclosing it
-std::vector<float> &SetupOctree(const gxb::Level *const level)
+void SetupOctree(const gxb::Level *const level)
 {
 	if constexpr (Flags::USE_ASSERTIONS)
 		assert(level != NULL);
@@ -314,9 +318,7 @@ std::vector<float> &SetupOctree(const gxb::Level *const level)
 	Log::PrintLn("ideal cellL found: ", cellL, "with numcells:", numCells);
 
 	Subdivide();
-	TestingStuffForOctree();
-	// returns reference to the spatial grid's outlines so they can be drawn
-	return vertbufGridLines;
+//	TestingStuffForOctree();
 }
 
 // fxn uses and modifies namespace globals to calculate
