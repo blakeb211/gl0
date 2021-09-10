@@ -319,6 +319,7 @@ GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title, GLFWfram
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_SAMPLES, 4);
 
   // glfw window creation
   // --------------------
@@ -353,6 +354,7 @@ GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title, GLFWfram
   else
     glfwSwapInterval(0); // vsync off
 
+  glEnable(GL_MULTISAMPLE);
   render::logOpenGLInfo();
 
   render::clearScreen();
