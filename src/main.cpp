@@ -81,7 +81,7 @@ int main()
     SpatialGrid::SetupOctree(level.get());
     // add camPath points to level raw_data so I can draw them for debug
     AddCamPathToRawData(level.get());
-    std::this_thread::sleep_for(50ms);
+    std::this_thread::sleep_for(5s);
     level_loaded = true;
   };
   //LoadLevel();
@@ -468,7 +468,7 @@ void ShowLevelLoading(GLFWwindow* window, const Shader& prog_one, std::atomic<bo
     // ------
     render::clearScreen();
     render::DrawLoadingScreen(vao_loading, prog_one);
-    //glfwSwapBuffers(window);
+    glfwSwapBuffers(window);
     glfwPollEvents();
     if (!Flags::VSYNC)
     {
