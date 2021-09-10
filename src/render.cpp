@@ -10,6 +10,11 @@
 //		size_t GetVertBufGridLinesSize();
 //	};
 
+void render::DrawLoadingScreen(const unsigned int vao_loading, const Shader& prog_one) {
+
+
+}
+
 void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, const unsigned int vao_spatial_grid,
 					   const gxb::Level * const level)
 {
