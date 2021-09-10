@@ -175,6 +175,7 @@ struct Level
 	std::vector<std::unique_ptr<Entity>> objects;
 	std::vector<unsigned int> vaos;
 	std::vector<float> raw_data;
+	std::vector<gxb::PathPt> path;
 
 	mesh *GetMesh(const size_t hashCode) const
 	{
@@ -483,6 +484,9 @@ inline std::unique_ptr<Level> LoadLevel(const std::string levelName)
 			l->objects.push_back(std::move(entity_ptr));
 
 		} // end while
+
+		// Load campath
+		l->path = LoadCamPath(levelName);
 		Log::PrintLn("objects created:", l->objects.size());
 		Log::PrintLn("meshes loaded from disk:", l->meshes.size());
 		return std::move(l);

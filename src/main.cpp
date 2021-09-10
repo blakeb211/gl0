@@ -37,8 +37,8 @@ void ProcessInputPlayerOnly(GLFWwindow* window, float delta_time);
 void MouseCallback(GLFWwindow* window, double x_pos, double y_pos);
 void MouseCallbackNull(GLFWwindow* window, double x_pos, double y_pos);
 void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset);
-v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam, const VecPP& newCamPos);
-void AddCamPathToRawData(const VecPP& path, gxb::Level* l);
+v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam);
+void AddCamPathToRawData(gxb::Level* l);
 
 GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title, GLFWframebuffersizefun);
 void CamGoalSeek(float delta_time);
@@ -49,7 +49,7 @@ gxb::Camera camera{};
 float last_x = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool first_mouse = true;
 std::unique_ptr<gxb::Level> level = nullptr;
-std::vector<gxb::PathPt> path;
+
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
 int main()
@@ -70,7 +70,6 @@ int main()
   // going to save it to a future_ptr, do some other work and call .get() on it later
   // Possibly it is preventing the screen from freezing?
   level = async(std::launch::async, gxb::LoadLevel, level_name).get();
-  path = async(std::launch::async, gxb::LoadCamPath, level_name).get();
 
   auto vertBufGridLinesRef = SpatialGrid::SetupOctree(level.get());
   auto vao_spatial_grid = render::BuildSpatialGridVao(vertBufGridLinesRef);
@@ -79,7 +78,7 @@ int main()
 
   // add camPath points to level raw_data before building VAO
   // so I can draw them if I need to debug.
-  AddCamPathToRawData(path, level.get());
+  AddCamPathToRawData(level.get());
 
 
   auto vao = render::BuildLevelVao(level.get());
@@ -180,7 +179,7 @@ int main()
     // render
     // ------
     render::clearScreen();
-    render::DrawLevel(vao, prog_one, vao_spatial_grid, level.get(), path);
+    render::DrawLevel(vao, prog_one, vao_spatial_grid, level.get());
     glfwSwapBuffers(window);
     glfwPollEvents();
     fr.printFrameRateIfFreqHasBeenReached();
@@ -352,12 +351,12 @@ GLFWwindow* InitGlfw(unsigned int w, unsigned int h, const char* title, GLFWfram
   return window;
 }
 
-v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam, const VecPP& path)
+v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam)
 {
   const auto heroPos = l->objects[0]->pos;
   const auto negZvec = v3{ 0.f, 0.f, -1.f };
 
-  size_t path_sz = path.size();
+  size_t path_sz = l->path.size();
   std::vector<std::pair<float, float>> dist_ang(path_sz);
 
   v3 pathPos{}, cam2hero{};
@@ -365,9 +364,9 @@ v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam, const VecPP& 
 
   for (int i = 0; i < path_sz; i++)
   {
-    pathPos = path[i].pos;
+    pathPos = l->path[i].pos;
     cam2hero = v3{ glm::normalize(heroPos - pathPos) };
-    dist = glm::distance(heroPos, path[i].pos);
+    dist = glm::distance(heroPos, l->path[i].pos);
     angle = glm::acos(glm::dot(negZvec, cam2hero));
     dist_ang[i].first = dist;
     dist_ang[i].second = angle;
@@ -387,13 +386,13 @@ v3 SelectNextCamPoint(const gxb::Level* const l, gxb::Camera& cam, const VecPP& 
   {
     if (check(dist_ang[i]))
     {
-      return path[i].pos;
+      return l->path[i].pos;
     }
   }
   return v3{}; // if no valid campath found, cam goes to 0,0,0
 }
 
-void AddCamPathToRawData(const VecPP& path, gxb::Level* l)
+void AddCamPathToRawData(gxb::Level* l)
 {
   auto func = [l](const gxb::PathPt pp) {
     for (int i = 0; i < 3; i++)
@@ -401,12 +400,12 @@ void AddCamPathToRawData(const VecPP& path, gxb::Level* l)
       l->raw_data.push_back(pp.pos[i]);
     }
   };
-  std::for_each(path.begin(), path.end(), func);
+  std::for_each(l->path.begin(), l->path.end(), func);
 }
 
 void CamGoalSeek(float delta_time)
 {
-  auto new_cam_goal_pos = SelectNextCamPoint(level.get(), camera, path);
+  auto new_cam_goal_pos = SelectNextCamPoint(level.get(), camera);
   // smoothly move cam towards goal pos
   if (camera.Position != new_cam_goal_pos)
   {

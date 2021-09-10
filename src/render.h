@@ -8,8 +8,7 @@ namespace gxb {
 };
 
 namespace render {
-
-  void DrawLevel(const unsigned int vaoEntities, const Shader& progOne, const unsigned int vaoOctree, const gxb::Level* const, const std::vector<gxb::PathPt>&);
+  void DrawLevel(const unsigned int vaoEntities, const Shader& progOne, const unsigned int vaoOctree, const gxb::Level* const);
   void clearScreen();
   unsigned int BuildLevelVao(const gxb::Level*);
   void logOpenGLInfo();

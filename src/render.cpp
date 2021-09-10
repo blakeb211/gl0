@@ -11,7 +11,7 @@
 //	};
 
 void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, const unsigned int vao_spatial_grid,
-					   const gxb::Level * const level, const std::vector<gxb::PathPt> &path)
+					   const gxb::Level * const level)
 {
 	glBindVertexArray(vao_entities);
 	size_t curr_color_id = 0;
@@ -60,7 +60,7 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, 
 		prog_one.SetMat4("model", model);
 		prog_one.SetVec3("color", col::red);
 		const auto tot_verts = level->raw_data.size() / 3;
-		const auto cam_path_verts = path.size();
+		const auto cam_path_verts = level->path.size();
 		glDrawArrays(GL_POINTS, (GLint)(tot_verts - cam_path_verts), (GLint)cam_path_verts);
 	}
 
