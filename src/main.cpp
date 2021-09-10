@@ -30,6 +30,7 @@ const std::vector<unsigned> &FindNearestNeighbors(const gxb::Entity *const);
 const std::vector<float> &GetVertBufGridLinesRef();
 }; // namespace SpatialGrid
 
+void ShowLevelLoading(GLFWwindow* window, const Shader&, std::atomic<bool>& done);
 void TestNaiveCollision();
 void TestSpatialGridCollision();
 void FrameBufSizeCallback(GLFWwindow *window, int width, int height);
@@ -72,14 +73,11 @@ int main()
 	// going to save it to a future_ptr, do some other work and call .get() on it later
 	// Possibly it is preventing the screen from freezing?
 
-	unsigned int vao_spatial_grid;
-	unsigned int vao;
 	auto prog_one = Shader(*gxb::ShaderPath("3pos3color.vs"), *gxb::ShaderPath("colorFromVertex.fs"));
 
-	auto LoadLevel = [&]() {
+	auto LoadLevel = [&] () {
 		level = gxb::LoadLevelMeshesAndCamPath(level_name);
 		SpatialGrid::SetupOctree(level.get());
-		vao_spatial_grid = render::BuildSpatialGridVao(SpatialGrid::GetVertBufGridLinesRef());
 		// add camPath points to level raw_data so I can draw them for debug
 		AddCamPathToRawData(level.get());
 		vao = render::BuildLevelVao(level.get());
@@ -91,10 +89,7 @@ int main()
 	using namespace std::chrono_literals;
 	std::this_thread::sleep_for(5ms);
 #endif
-	LoadLevel();
 
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection = glm::mat4(1.0f);
 
 	// lambda for moving platform behavior
 	auto update_platform_pos = [&](std::unique_ptr<gxb::Entity> &o, const v3 &pos_dir, const float &frame_time,
@@ -184,7 +179,7 @@ int main()
 		// render
 		// ------
 		render::clearScreen();
-		render::DrawLevel(vao, prog_one, vao_spatial_grid, level.get());
+		render::DrawLevel(vao_models, prog_one, vao_spatial_grid, level.get());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		fr.printFrameRateIfFreqHasBeenReached();
@@ -443,4 +438,35 @@ void TestSpatialGridCollision()
 		num_checks += neighbors.size();
 	}
 	Log::PrintLn("Spatial Grid: num of collision checks:", num_checks);
+}
+
+void ShowLevelLoading(GLFWwindow* window, const Shader& prog_one, std::atomic<bool>& done) {
+	using namespace std::chrono_literals;	
+	unsigned int vao_loading;
+	while (!glfwWindowShouldClose(window))
+	{
+
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		ProcessInputPlayerOnly(window, 16);
+
+		// update window title with player position
+		auto str = std::string("Loading...");
+		glfwSetWindowTitle(window, str.c_str());
+
+		// Update
+
+		// render
+		// ------
+		render::clearScreen();
+		render::DrawLoadingScreen(vao_loading, prog_one);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		if (!Flags::VSYNC)
+		{
+			std::this_thread::sleep_for(16ms);
+		}
+		if (done) {
+			break;
+		}
+	} // end game loop
 }
