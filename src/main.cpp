@@ -27,7 +27,7 @@ void UpdateGrid(gxb::Entity *const);
 void ClearGrid();
 iv3 PosToGridCoords(const v3 &pos);
 const std::vector<unsigned> &FindNearestNeighbors(const gxb::Entity *const);
-const std::vector<float>& GetVertBufGridLinesRef();
+const std::vector<float> &GetVertBufGridLinesRef();
 }; // namespace SpatialGrid
 
 void TestNaiveCollision();
@@ -76,7 +76,7 @@ int main()
 	unsigned int vao;
 	auto prog_one = Shader(*gxb::ShaderPath("3pos3color.vs"), *gxb::ShaderPath("colorFromVertex.fs"));
 
-	auto LoadLevel = [&] () {
+	auto LoadLevel = [&]() {
 		level = gxb::LoadLevelMeshesAndCamPath(level_name);
 		SpatialGrid::SetupOctree(level.get());
 		vao_spatial_grid = render::BuildSpatialGridVao(SpatialGrid::GetVertBufGridLinesRef());
