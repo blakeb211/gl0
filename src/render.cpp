@@ -14,17 +14,16 @@ void render::DrawLoadingScreen(const unsigned int vao, const Shader &prog, const
 {
 	auto view = glm::lookAt(v3(0.f, 0.f, 0.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f));
 	prog.SetMat4("view", view);
-	auto projection = glm::perspective(glm::radians(40.f), 800.0f / 600.0f, 0.1f, 100.0f);
+	auto projection = glm::perspective(glm::radians(40.f), 400.0f / 400.0f, 0.1f, 50.0f);
 	prog.SetMat4("projection", projection);
 	glBindVertexArray(vao);
 	auto model = glm::mat4{}; // view & projection set elsewhere
-	model = glm::translate(model, glm::vec3{0, 0, -15.f});
-	model = glm::translate(model, pos);
+	model = glm::translate(model, v3(0.f,0.f,0.f)); 
 	auto radz = glm::radians(rot);
 	model = glm::rotate(model, radz, v3(0.f, 0.f, 1.f));
 	prog.SetVec3("color", col::red);
 	prog.SetMat4("model", model);
-	auto num_verts_model = 9;
+	auto num_verts_model = 3;
 	glDrawArrays(GL_TRIANGLES, static_cast<GLint>(0), num_verts_model);
 }
 
@@ -205,15 +204,15 @@ unsigned int render::BuildLoadingScreenVao()
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	std::vector<float> triangle_verts{};
+	triangle_verts.push_back(0.5);
+	triangle_verts.push_back(0.0);
 	triangle_verts.push_back(0.0);
 	triangle_verts.push_back(1.0);
-	triangle_verts.push_back(-10.0);
-	triangle_verts.push_back(1.0);
-	triangle_verts.push_back(1.0);
-	triangle_verts.push_back(-10.0);
+	triangle_verts.push_back(0.5);
+	triangle_verts.push_back(0.0);
 	triangle_verts.push_back(1.0);
 	triangle_verts.push_back(0.0);
-	triangle_verts.push_back(-10.0);
+	triangle_verts.push_back(0.0);
 	// vbo data is static
 	glBufferData(GL_ARRAY_BUFFER, triangle_verts.size() * sizeof(float), triangle_verts.data(), GL_STATIC_DRAW);
 
