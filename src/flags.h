@@ -3,7 +3,7 @@ namespace Flags {
 
   // make these toggleable with a hotkey
   inline constexpr bool FREE_MOVE = 0;
-  inline constexpr bool VSYNC = 0;
+  inline constexpr bool VSYNC = 1;
   inline constexpr bool DRAW_CAM_PATH = 0;
   inline constexpr bool DRAW_OCTREE = 0;
   inline constexpr bool DRAW_OBJECT_POS = 0;

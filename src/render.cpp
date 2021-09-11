@@ -10,7 +10,7 @@
 //		size_t GetVertBufGridLinesSize();
 //	};
 
-void render::DrawLoadingScreen(const unsigned int vao_loading, const Shader& prog_one) {
+void render::DrawLoadingScreen(const unsigned int vao, const Shader& prog, const v3 pos, const v3 rot) {
 
 
 }
@@ -180,4 +180,33 @@ unsigned int render::BuildSpatialGridVao(const std::vector<float> &vertices_octr
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	return vao_spatial_grid;
+}
+
+unsigned int render::BuildLoadingScreenVao() {
+	unsigned int vbo, vao; 
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	std::vector<float> triangle_verts{};
+	triangle_verts.push_back(0.0);
+	triangle_verts.push_back(1.0);
+	triangle_verts.push_back(-10.0);
+	triangle_verts.push_back(1.0);
+	triangle_verts.push_back(1.0);
+	triangle_verts.push_back(-10.0);
+	triangle_verts.push_back(1.0);
+	triangle_verts.push_back(0.0);
+	triangle_verts.push_back(-10.0);
+	// vbo data is static 
+	glBufferData(GL_ARRAY_BUFFER, triangle_verts.size() * sizeof(float), triangle_verts.data(), GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+	glEnableVertexAttribArray(0); // @CONFUSED: what is the point of this call?
+
+	// unbind the VBO and VAO
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	return vao;
 }
