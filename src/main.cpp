@@ -84,7 +84,7 @@ int main()
       SpatialGrid::SetupOctree(level.get());
       // add camPath points to level raw_data so I can draw them for debug
       AddCamPathToRawData(level.get());
-      std::this_thread::sleep_for(2500ms);
+      std::this_thread::sleep_for(5000ms);
       level_loaded = true;
     };
 
@@ -428,7 +428,7 @@ void AddCamPathToRawData(gxb::Level* l)
 void CamGoalSeek(float delta_time)
 {
   auto new_cam_goal_pos = SelectNextCamPoint(level.get(), camera);
-  // smoothly move cam towards goal pos
+  // smoothly move cam towards goal offset
   if (camera.Position != new_cam_goal_pos)
   {
     const auto camDp = new_cam_goal_pos - camera.Position;
@@ -466,7 +466,8 @@ void ShowLevelLoading(GLFWwindow* window, unsigned int vao_loading, const Shader
 {
   using namespace std::chrono_literals;
   float rot{ 0.f };
-  float pos{ -0.2f };
+  float offset{ -0.2f };
+  bool dir_flag{ false };
   for (;;)
   {
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -477,12 +478,20 @@ void ShowLevelLoading(GLFWwindow* window, unsigned int vao_loading, const Shader
     glfwSetWindowTitle(window, str.c_str());
 
     // Update
-
+    constexpr float dY = 0.004f;
+    if (offset > -0.5f && !dir_flag) {
+      offset -= dY;
+    }
+    if (offset < -0.5f) dir_flag = !dir_flag;
+    if (offset > 0.5f) dir_flag = !dir_flag;
+    if (dir_flag) {
+      offset += dY;
+    }
     // render
     render::clearScreen();
 
 
-    render::DrawLoadingScreen(vao_loading, prog_one, pos, rot);
+    render::DrawLoadingScreen(vao_loading, prog_one, offset, rot);
 
     glfwSwapBuffers(window);
     glfwPollEvents();
