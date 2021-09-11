@@ -4,21 +4,21 @@
 
 namespace gxb
 {
-struct Level;
-struct PathPt;
+  struct Level;
+  struct PathPt;
 }; // namespace gxb
 
 namespace render
 {
-void DrawLevel(const unsigned int vaoEntities, const Shader &progOne, const unsigned int vaoOctree,
-			   const gxb::Level *const);
-void DrawLoadingScreen(const unsigned int vao, const Shader& prog, const glm::vec3 pos, const float rot);
-void clearScreen();
-unsigned int BuildLevelVao(const gxb::Level *);
-void logOpenGLInfo();
-void SetGlFlags();
-unsigned int BuildSpatialGridVao(const std::vector<float> &);
-unsigned int BuildLoadingScreenVao();
+  void DrawLevel(const unsigned int vaoEntities, const Shader& progOne, const unsigned int vaoOctree,
+    const gxb::Level* const);
+  void DrawLoadingScreen(const unsigned int vao, const Shader& prog, const float pos, const float rot);
+  void clearScreen();
+  unsigned int BuildLevelVao(const gxb::Level*);
+  void logOpenGLInfo();
+  void SetGlFlags();
+  unsigned int BuildSpatialGridVao(const std::vector<float>&);
+  unsigned int BuildLoadingScreenVao();
 
-inline std::vector<unsigned> highlighted_entities{};
+  inline std::vector<unsigned> highlighted_entities{};
 }; // namespace render

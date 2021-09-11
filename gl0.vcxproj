@@ -435,6 +435,7 @@
     <None Include="Session.vim">
       <FileType>Script</FileType>
     </None>
+    <None Include="shaders\3pos_no_projection.vs" />
     <None Include="vars_vstudio.bat">
       <FileType>Script</FileType>
     </None>

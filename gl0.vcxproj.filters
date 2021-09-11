@@ -182,6 +182,7 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="models\.gitignore" />
+    <None Include="shaders\3pos_no_projection.vs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="levels\test4.xcf" />
