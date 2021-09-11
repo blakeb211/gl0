@@ -467,6 +467,7 @@ void ShowLevelLoading(GLFWwindow* window, unsigned int vao_loading, const Shader
   using namespace std::chrono_literals;
   float rot{ 0.f };
   float offset{ -0.2f };
+  float scale {0.3f};
   bool dir_flag{ false };
   for (;;)
   {
@@ -478,12 +479,12 @@ void ShowLevelLoading(GLFWwindow* window, unsigned int vao_loading, const Shader
     glfwSetWindowTitle(window, str.c_str());
 
     // Update
-    constexpr float dY = 0.004f;
-    if (offset > -0.5f && !dir_flag) {
+    constexpr float dY = 0.014f;
+    if (offset > -0.5f*(1.f - 0.5f*scale)&& !dir_flag) {
       offset -= dY;
     }
-    if (offset < -0.5f) dir_flag = !dir_flag;
-    if (offset > 0.5f) dir_flag = !dir_flag;
+    if (offset < -0.5f*(1.f - 0.5f*scale)) dir_flag = !dir_flag;
+    if (offset > 0.5f*(1.f - 0.5f*scale))  dir_flag = !dir_flag;
     if (dir_flag) {
       offset += dY;
     }
@@ -491,7 +492,7 @@ void ShowLevelLoading(GLFWwindow* window, unsigned int vao_loading, const Shader
     render::clearScreen();
 
 
-    render::DrawLoadingScreen(vao_loading, prog_one, offset, rot);
+    render::DrawLoadingScreen(vao_loading, prog_one, offset, rot, scale);
 
     glfwSwapBuffers(window);
     glfwPollEvents();

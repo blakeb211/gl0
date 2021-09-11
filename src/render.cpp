@@ -10,18 +10,17 @@
 //		size_t GetVertBufGridLinesSize();
 //	};
 
-void render::DrawLoadingScreen(const unsigned int vao, const Shader& prog, const float offset, const float rot)
+void render::DrawLoadingScreen(const unsigned int vao, const Shader& prog, const float offset, const float rot, const float scale)
 {
   glBindVertexArray(vao);
-  auto model = glm::mat4{}; // view & projection set elsewhere
   auto radz = glm::radians(rot);
-  model = glm::rotate(model, radz, v3(0.f, 0.f, 1.f));
-  // offset always between -0.5 and 0.5
-  // so add 0.5 to make it [0,1]
-  // multiply * 10 and trunc it.
-  auto col_g = 0.5f + offset;
+  //model = glm::rotate(model, radz, v3(0.f, 0.f, 1.f));
+  auto col_g = 0.5f + offset; // shift range to [0,1]
   prog.SetVec3("color", v3(0.3f, col_g, 0.4f));
   prog.setFloat("offset", offset);
+  
+  prog.setFloat("scale", scale);
+  
   auto num_verts_model = 3;
   glDrawArrays(GL_TRIANGLES, static_cast<GLint>(0), num_verts_model);
 }
