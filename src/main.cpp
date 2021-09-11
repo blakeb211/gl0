@@ -90,6 +90,7 @@ int main()
 
 		std::thread loading_thread{LoadLevel};
 		unsigned vao_loading = render::BuildLoadingScreenVao();
+		prog_one.Use();
 		ShowLevelLoading(window, vao_loading, prog_one, level_loaded);
 		loading_thread.join();
 	}
@@ -477,7 +478,8 @@ void ShowLevelLoading(GLFWwindow *window, unsigned int vao_loading, const Shader
 
 		// render
 		render::clearScreen();
-		v3 pos{}, rot{};
+		v3 pos{0.f,0.f,-8.f};
+		float rot{0.f};
 		render::DrawLoadingScreen(vao_loading, prog_one, pos, rot);
 
 		glfwSwapBuffers(window);

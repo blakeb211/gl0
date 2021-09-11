@@ -10,22 +10,35 @@
 //		size_t GetVertBufGridLinesSize();
 //	};
 
-void render::DrawLoadingScreen(const unsigned int vao, const Shader& prog, const v3 pos, const v3 rot) {
-
-
+void render::DrawLoadingScreen(const unsigned int vao, const Shader &prog, const v3 pos, const float rot)
+{
+	auto view = glm::lookAt(v3(0.f, 0.f, 0.f), v3(0.f, 1.f, 0.f), v3(0.f, 0.f, -1.f));
+	prog.SetMat4("view", view);
+	auto projection = glm::perspective(glm::radians(40.f), 800.0f / 600.0f, 0.1f, 100.0f);
+	prog.SetMat4("projection", projection);
+	glBindVertexArray(vao);
+	auto model = glm::mat4{}; // view & projection set elsewhere
+	model = glm::translate(model, glm::vec3{0, 0, -15.f});
+	model = glm::translate(model, pos);
+	auto radz = glm::radians(rot);
+	model = glm::rotate(model, radz, v3(0.f, 0.f, 1.f));
+	prog.SetVec3("color", col::red);
+	prog.SetMat4("model", model);
+	auto num_verts_model = 9;
+	glDrawArrays(GL_TRIANGLES, static_cast<GLint>(0), num_verts_model);
 }
 
 void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, const unsigned int vao_spatial_grid,
-					   const gxb::Level * const level)
+					   const gxb::Level *const level)
 {
 	glBindVertexArray(vao_entities);
 	size_t curr_color_id = 0;
-	auto model = glm::mat4{}; // view & projection set elsewhere 
+	auto model = glm::mat4{}; // view & projection set elsewhere
 
 	const size_t num_colors = col::list.size();
 	for (size_t i = 0; i < level->objects.size(); i++)
 	{
-		model = glm::mat4(1.0f); 
+		model = glm::mat4(1.0f);
 
 		model = glm::translate(model, glm::vec3{0, 0, 0});
 		model = glm::translate(model, level->objects[i]->pos);
@@ -33,9 +46,9 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, 
 		auto radx = glm::radians(level->objects[i]->rot.x);
 		auto rady = glm::radians(level->objects[i]->rot.y);
 		auto radz = glm::radians(level->objects[i]->rot.z);
-		model = glm::rotate(model, radx, v3(1,0,0));
-		model = glm::rotate(model, rady, v3(0,1,0));
-		model = glm::rotate(model, radz, v3(0,0,1));
+		model = glm::rotate(model, radx, v3(1, 0, 0));
+		model = glm::rotate(model, rady, v3(0, 1, 0));
+		model = glm::rotate(model, radz, v3(0, 0, 1));
 
 		curr_color_id = (curr_color_id == num_colors - 1) ? curr_color_id -= num_colors - 1 : curr_color_id += 1;
 
@@ -49,7 +62,8 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader &prog_one, 
 
 		const auto object_id = level->objects[i]->id;
 		auto num_verts_model = static_cast<unsigned>(mesh_ptr->faces.size() * 3);
-		if (Flags::DRAW_OBJECT_OUTLINES || std::count(highlighted_entities.begin(), highlighted_entities.end(), object_id))
+		if (Flags::DRAW_OBJECT_OUTLINES ||
+			std::count(highlighted_entities.begin(), highlighted_entities.end(), object_id))
 		{
 			glDrawArrays(GL_LINE_LOOP, static_cast<GLint>(mesh_ptr->pos_first_vert), num_verts_model);
 		}
@@ -129,7 +143,7 @@ void render::SetGlFlags()
 	glEnable(GL_PROGRAM_POINT_SIZE);
 }
 
-unsigned int render::BuildLevelVao(const gxb::Level * const l)
+unsigned int render::BuildLevelVao(const gxb::Level *const l)
 {
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -182,8 +196,9 @@ unsigned int render::BuildSpatialGridVao(const std::vector<float> &vertices_octr
 	return vao_spatial_grid;
 }
 
-unsigned int render::BuildLoadingScreenVao() {
-	unsigned int vbo, vao; 
+unsigned int render::BuildLoadingScreenVao()
+{
+	unsigned int vbo, vao;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 
@@ -199,7 +214,7 @@ unsigned int render::BuildLoadingScreenVao() {
 	triangle_verts.push_back(1.0);
 	triangle_verts.push_back(0.0);
 	triangle_verts.push_back(-10.0);
-	// vbo data is static 
+	// vbo data is static
 	glBufferData(GL_ARRAY_BUFFER, triangle_verts.size() * sizeof(float), triangle_verts.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);

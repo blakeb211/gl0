@@ -12,7 +12,7 @@ namespace render
 {
 void DrawLevel(const unsigned int vaoEntities, const Shader &progOne, const unsigned int vaoOctree,
 			   const gxb::Level *const);
-void DrawLoadingScreen(const unsigned int vao, const Shader& prog, const glm::vec3 pos, const glm::vec3 rot);
+void DrawLoadingScreen(const unsigned int vao, const Shader& prog, const glm::vec3 pos, const float rot);
 void clearScreen();
 unsigned int BuildLevelVao(const gxb::Level *);
 void logOpenGLInfo();
