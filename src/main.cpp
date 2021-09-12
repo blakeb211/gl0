@@ -36,8 +36,8 @@ const std::vector<float> &GetVertBufGridLinesRef();
 gxb::Camera camera{};
 float last_x = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool first_mouse = true;
-std::unique_ptr<gxb::Level> level = nullptr;
-
+gxb::Level* curr_level = nullptr;
+std::vector<std::unique_ptr<gxb::Level>> levels;
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
 void TerminateProgram(int exit_code)
@@ -53,9 +53,9 @@ void ProcessInputPlayerOnly(GLFWwindow *window, float delta_time)
 	const auto playerSpeed = 0.017f;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	auto &pos = level->objects[0]->pos;
+	auto &pos = curr_level->objects[0]->pos;
 	// save last position before changing the position
-	level->objects[0]->pos_last = pos;
+	curr_level->objects[0]->pos_last = pos;
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
@@ -268,19 +268,19 @@ void AddCamPathToRawData(gxb::Level *l)
 
 void CamGoalSeek(float delta_time)
 {
-	auto new_cam_goal_pos = SelectNextCamPoint(level.get(), camera);
+	auto new_cam_goal_pos = SelectNextCamPoint(curr_level, camera);
 	// smoothly move cam towards goal offset
 	if (camera.Position != new_cam_goal_pos)
 	{
 		const auto camDp = new_cam_goal_pos - camera.Position;
 		camera.moveTo(camera.Position + delta_time * CAM_MOVE_SPEED * camDp);
-		camera.Front = level->objects[0]->pos - camera.Position; // look at hero
+		camera.Front = curr_level->objects[0]->pos - camera.Position; // look at hero
 	}
 }
 
 void TestNaiveCollision()
 {
-	const auto ocnt = level->objects.size();
+	const auto ocnt = curr_level->objects.size();
 	int num_checks{0};
 	for (int i = 0; i < ocnt - 1; i++)
 	{
@@ -295,7 +295,7 @@ void TestNaiveCollision()
 void TestSpatialGridCollision()
 {
 	size_t num_checks{0};
-	for (const auto &o : level->objects)
+	for (const auto &o : curr_level->objects)
 	{
 		auto neighbors = SpatialGrid::FindNearestNeighbors(o.get());
 		num_checks += neighbors.size();
@@ -394,10 +394,11 @@ int main()
 	using namespace std::chrono_literals;
 	{
 		auto LoadLevel = [&]() {
-			level = gxb::LoadLevelMeshesAndCamPath(level_name);
-			SpatialGrid::SetupOctree(level.get());
+			levels.push_back(gxb::LoadLevelMeshesAndCamPath(level_name));
+			curr_level = levels.back().get();
+			SpatialGrid::SetupOctree(curr_level);
 			// add camPath points to level raw_data so I can draw them for debug
-			AddCamPathToRawData(level.get());
+			AddCamPathToRawData(curr_level);
 			std::this_thread::sleep_for(2000ms);
 			level_loaded = true;
 		};
@@ -413,7 +414,7 @@ int main()
 	auto projection = glm::mat4(1.0);
 
 	unsigned vao_spatial_grid = render::BuildSpatialGridVao(SpatialGrid::GetVertBufGridLinesRef());
-	unsigned vao_models = render::BuildLevelVao(level.get());
+	unsigned vao_models = render::BuildLevelVao(curr_level);
 
 	// Game loop
 	// -----------
@@ -433,7 +434,7 @@ int main()
 		}
 
 		// update window title with player position
-		const glm::vec3 &pos = level->objects[0]->pos;
+		const glm::vec3 &pos = curr_level->objects[0]->pos;
 		const glm::ivec3 grid_coords{SpatialGrid::PosToGridCoords((v3 &)pos)};
 		auto str = std::string(glm::to_string(pos) + " " + glm::to_string(grid_coords) +
 							   " fr: " + std::to_string(static_cast<int>(fr.most_recent_frame_rate)));
@@ -443,7 +444,7 @@ int main()
 
 		// update objects
 		// movement is moderated by the elapsed time in case we change the framerate later
-		for (auto &o : level->objects)
+		for (auto &o : curr_level->objects)
 		{
 			auto const elapsed = fr.lastTimeInMs();
 			v3 pos_dir;
@@ -467,11 +468,11 @@ int main()
 		if (fr.frame_count % 2 == 0)
 		{
 			SpatialGrid::ClearGrid();
-			for (auto &o : level->objects)
+			for (auto &o : curr_level->objects)
 			{
 				SpatialGrid::UpdateGrid(o.get());
 			}
-			const auto near_neighbors = SpatialGrid::FindNearestNeighbors(level->objects[0].get());
+			const auto near_neighbors = SpatialGrid::FindNearestNeighbors(curr_level->objects[0].get());
 			render::highlighted_entities.resize(near_neighbors.size());
 			std::copy(near_neighbors.begin(), near_neighbors.end(), render::highlighted_entities.begin());
 		}
@@ -486,7 +487,7 @@ int main()
 		// render
 		// ------
 		render::clearScreen();
-		render::DrawLevel(vao_models, prog_one, vao_spatial_grid, level.get());
+		render::DrawLevel(vao_models, prog_one, vao_spatial_grid, curr_level);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		fr.printFrameRateIfFreqHasBeenReached();

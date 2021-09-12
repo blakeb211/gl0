@@ -24,6 +24,8 @@ inline const unsigned int SCR_HEIGHT = 768;
 
 inline std::hash<std::string> str_hasher;
 
+
+
 enum class EntityType
 {
 	unknown,
@@ -176,6 +178,7 @@ struct Level
 	std::vector<unsigned int> vaos;
 	std::vector<float> raw_data;
 	std::vector<gxb::PathPt> path;
+	std::string name;
 
 	mesh *GetMesh(const size_t hashCode) const
 	{
@@ -351,17 +354,17 @@ inline float CalculateMeshSphericalBoundingBox(const mesh *const m)
 // format of level
 // 							 pos   rot
 // entity_type  model_name  x y z x y z
-inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string levelName)
+inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string level_name)
 {
 	auto l = std::make_unique<Level>();
 	std::string line, entity_name = "";
 
-	bool levelExist = slurp::CheckFileExist(level_root, levelName, "txt");
+	bool levelExist = slurp::CheckFileExist(level_root, level_name, "txt");
 
 	if (levelExist)
 	{
-		auto levelData = slurp::GetFileContents(LevelPath(levelName, "txt")->c_str());
-		Log::PrintLn("SUCCESS:: level", levelName, "slurped from disk");
+		auto levelData = slurp::GetFileContents(LevelPath(level_name, "txt")->c_str());
+		Log::PrintLn("SUCCESS:: level", level_name, "slurped from disk");
 
 		int line_num = 0;
 
@@ -378,7 +381,7 @@ inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string levelN
 			auto type = str_to_type.count(entity_name) ? str_to_type[entity_name] : EntityType::unknown;
 			if (type == EntityType::unknown)
 			{
-				Log::LogErr(levelName, line_num, "Entity type unknown");
+				Log::LogErr(level_name, line_num, "Entity type unknown");
 				continue;
 			}
 
@@ -397,7 +400,7 @@ inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string levelN
 
 			if (line_stream_bad)
 			{
-				Log::PrintLn("ERROR: wrong values on line <", line_num, ">", "level:", levelName);
+				Log::PrintLn("ERROR: wrong values on line <", line_num, ">", "level:", level_name);
 				continue;
 			}
 
@@ -421,7 +424,7 @@ inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string levelN
 			if (!model_exist)
 			{
 				// can only reach this line if model file was not found
-				Log::PrintLn("ERROR::missing mesh file:", mesh_name, "while loading level:", levelName);
+				Log::PrintLn("ERROR::missing mesh file:", mesh_name, "while loading level:", level_name);
 				return nullptr;
 			}
 
@@ -486,9 +489,10 @@ inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string levelN
 		} // end while
 
 		// Load campath
-		l->path = LoadCamPath(levelName);
+		l->path = LoadCamPath(level_name);
 		Log::PrintLn("objects created:", l->objects.size());
 		Log::PrintLn("meshes loaded from disk:", l->meshes.size());
+		l->name = level_name;
 		return std::move(l);
 	}
 	return nullptr;
