@@ -4,11 +4,10 @@ VISIT THE SCREENSHOTS FOLDER TO SEE THE ENGINE IN ACTION
 *		GOALS
 	4 levels
 	generated levels
-	death conditions: 	y = -20, health = 0, 
-	win condition:		touch the final fruit
-	add menu screen
 	audio
 	animation
+	death conditions: 	y = -20, health = 0, 
+	win condition:		touch the final fruit
 
 *****************************************/
 FILETYPES:
@@ -36,12 +35,12 @@ Your process should look like
 
 game
 	collision detection and response
-	loading screen either using async or other threading
+	level generator
 	menu screen
 	pause capability
 	reduce globals using state objects
-
 	-------------------------------------------------
+	loading screen either using async or other threading - done
 	camera on a rail system - done
 	read a level and its campath file - done
 	camera follows campath - done

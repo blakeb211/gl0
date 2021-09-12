@@ -300,6 +300,7 @@
     <ClInclude Include="src\gamelib.h" />
     <ClInclude Include="src\glm.h" />
     <ClInclude Include="src\headers.h" />
+    <ClInclude Include="src\levelgen.h" />
     <ClInclude Include="src\log.h" />
     <ClInclude Include="src\octree.h" />
     <ClInclude Include="src\render.h" />
