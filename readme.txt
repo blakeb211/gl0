@@ -29,10 +29,6 @@ Your process should look like
 2. multi threaded version of 1.
 3. move to GPU if testing a prototype version shows an improvement
 
-
-
-
-
 game
 	collision detection and response
 	level generator
@@ -48,8 +44,8 @@ game
 
 refactoring
 	pull update outside of main.cpp
-	separate octree into header and cpp file
 	-------------------------------------------------
+	separate octree into header and cpp file - done
 	compile lib fmt and glm into a dll and add it to the project - done
 	move header and cpps into same directory - done
 	Fix names: all types and functions InThisCase and all variables in_this_case - done
