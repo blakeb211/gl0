@@ -6,10 +6,10 @@
 #include "gamelib.h"
 #include "glm.h"
 #include "headers.h"
+#include "octree.h"
 #include "render.h"
 #include "shader.h"
 #include <magic_enum.h>
-#include "octree.h"
 // -------------------------------------------
 // TYPEDEFS
 // -------------------------------------------
@@ -27,7 +27,7 @@ using iv3 = glm::ivec3;
 gxb::Camera camera{};
 float last_x = gxb::SCR_WIDTH / 2, lastY = gxb::SCR_HEIGHT / 2;
 bool first_mouse = true;
-gxb::Level* curr_level = nullptr;
+gxb::Level *curr_level = nullptr;
 std::vector<std::unique_ptr<gxb::Level>> levels;
 constexpr auto CAM_MOVE_SPEED = 0.001f;
 
@@ -311,7 +311,7 @@ void ShowLevelLoading(GLFWwindow *window, unsigned int vao_loading, const Shader
 			dot_count = 0;
 		}
 		dot_count++;
-		auto str = std::string("Loading") + std::string(dot_count/2, '.');
+		auto str = std::string("Loading") + std::string(dot_count / 2, '.');
 		glfwSetWindowTitle(window, str.c_str());
 
 		// Update
@@ -469,12 +469,21 @@ int main()
 		}
 
 		// test for collisions
-		auto sz = curr_level->objects.size();
-		for (int i = 0; i < sz; i++) {
-			const auto near_neighbors = SpatialGrid::FindNearestNeighbors(curr_level->objects[i].get());
-			v3 collision_response_vec{};
+		// @NOTE: Once outer loop is only over dynamic objects this will be faster
+		const auto sz = curr_level->objects.size();
+		for (int i = 0; i < sz; i++)
+		{
+			const auto & curr_object_ptr = curr_level->objects[i].get();
+			const auto near_neighbors = SpatialGrid::FindNearestNeighbors(curr_object_ptr);
+			const auto nn_sz = near_neighbors.size();
+			gxb::Entity *ea = gxb::ObjectIdToEntity(curr_level, curr_object_ptr->id);
+			for (int j = 0; j < nn_sz; j++)
+			{
+				gxb::Entity *eb = gxb::ObjectIdToEntity(curr_level, near_neighbors[j]);
+				v3 collision_response_vec{};
+				SpatialGrid::FineGrainCollisionCheck(ea, eb, collision_response_vec);
+			}
 		}
-		
 
 		// set transformations
 		view = camera.GetViewMatrix();

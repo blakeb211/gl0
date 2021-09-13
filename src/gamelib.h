@@ -126,6 +126,7 @@ struct Entity
 	BinaryFsm state_machine{BinaryFsm::States::pos};
 };
 
+
 struct mesh
 {
 	mesh() = default;
@@ -191,6 +192,17 @@ struct Level
 		return nullptr;
 	}
 };
+
+inline Entity* ObjectIdToEntity(const Level* const l, unsigned id) {
+		auto is_match = [&id](const auto &e) { return e->id == id; };
+		const auto & entities = l->objects;
+		const auto & end_it = entities.end();
+		if (auto result = std::find_if(entities.begin(), entities.end(), is_match); result != end_it)
+		{
+			return result->get();
+		}
+		return nullptr;
+}
 
 inline std::unique_ptr<std::string> LevelPath(const std::string name, const char * const ext)
 {
