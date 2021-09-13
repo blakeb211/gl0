@@ -7,8 +7,7 @@
 using v3 = glm::vec3;
 using iv3 = glm::ivec3;
 /* **************************************************************
- *  This file builds a uniform grid for collision testing; rendering handled by
- * render.cpp
+ *  This file builds a uniform grid for collision testing
  *  ***************************************************************/
 
 namespace SpatialGrid
@@ -30,8 +29,8 @@ size_t GridCoordsToIndex(const iv3 coords);
 bool FineGrainCollisionCheck(const gxb::Entity *const a, const gxb::Entity *const b, v3 resultant_accel_modifier);
 
 // Globals
-inline gxb::Level *level;					   // @TODO: add const
-inline std::vector<float> vertbufGridLines{}; // for drawing, vertices of Octree bounding box lines
+inline gxb::Level *level;					  
+inline std::vector<float> vertbufGridLines{}; // cell edges of spatial grid 
 inline constexpr float targetSideL = 1.74f;
 inline constexpr int MAX_CELL_OCCUPATION_PER_ENTITY = 16;
 inline constexpr int MAX_ENTITIES = 500;
@@ -45,6 +44,7 @@ inline std::vector<unsigned> grid_ids_entity_intersects;
 inline std::vector<unsigned> nearest_neighbor_entity_ids;
 // grid coordinates e.g. 0,1,2 that correspond to each cell in grid
 inline std::vector<iv3> id;
+
 constexpr size_t default_cell_list_length = 20;
 
 struct BoundingBox
@@ -52,6 +52,7 @@ struct BoundingBox
 	v3 min, max;
 };
 
+void AddLinesToVertBuf(const BoundingBox x);
 // Individual cell of the uniform grid
 struct Cell
 {
@@ -68,8 +69,6 @@ struct Cell
 	// list of object ids that are partly or wholly in this cell
 	std::vector<int> list{default_cell_list_length};
 };
-
-void AddLinesToVertBuf(const BoundingBox x);
 
 inline Cell topNode; // whole world
 // uniform grid cells; size is numCells^3

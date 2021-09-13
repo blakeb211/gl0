@@ -81,14 +81,13 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader& prog_one, 
     model = glm::translate(model, glm::vec3{ 0, 0, 0 });
     prog_one.SetMat4("model", model);
     glBindVertexArray(vao_spatial_grid); // bind the SpatialGrid vao
-    const auto& tot_vert_num = SpatialGrid::GetVertBufGridLinesSize() / 3;
+    const auto& tot_vert_num = SpatialGrid::GetVertBufGridLinesSize() / 3;    // dependency on SpatialGrid files
     int curr_cell_idx = -1;
     // i loops over *vertices* not float. there are 3 floats per vertex
     for (int i = 0; i < tot_vert_num; i += 24)
     {
       curr_cell_idx++;
-      auto id = SpatialGrid::GridIndexToId(curr_cell_idx);
-      if (SpatialGrid::grid[curr_cell_idx].list.size() > 0)
+      if (SpatialGrid::grid[curr_cell_idx].list.size() > 0)					// dependency on SpatialGrid files
       {
         prog_one.SetVec3("color", col::red);
       }
@@ -100,7 +99,7 @@ void render::DrawLevel(const unsigned int vao_entities, const Shader& prog_one, 
 
       // we draw 24 verts per cell, since there are 12 lines with 2 verts each
       glDrawArrays(GL_LINES, (GLint)i,
-        (GLint)24); // uses vboOctree
+        (GLint)24); 
     }
     glBindVertexArray(0);
   }

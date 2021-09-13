@@ -61,7 +61,7 @@ campath editor
 	write cam path files - done
 	
 collision detection
-	+fine-grain collision and response
+	+fine-grain collision and response - ReactPhysics3D
 	+only check collisions for dynamic objects
 	-------------------------------------------------
 	+only draw cells with list.size() > 0  - done
