@@ -9,7 +9,7 @@
 #include "render.h"
 #include "shader.h"
 #include <magic_enum.h>
-
+#include "octree.h"
 // -------------------------------------------
 // TYPEDEFS
 // -------------------------------------------
@@ -20,15 +20,6 @@ using iv3 = glm::ivec3;
 // -------------------------------------------
 // FORWARD DECLARATIONS
 // -------------------------------------------
-namespace SpatialGrid
-{ // if SpatialGrid wasn't header only I could remove this
-void SetupOctree(const gxb::Level *const);
-void UpdateGrid(gxb::Entity *const);
-void ClearGrid();
-iv3 PosToGridCoords(const v3 &pos);
-const std::vector<unsigned> &FindNearestNeighbors(const gxb::Entity *const);
-const std::vector<float> &GetVertBufGridLinesRef();
-}; // namespace SpatialGrid
 
 // -------------------------------------------
 // GLOBALS

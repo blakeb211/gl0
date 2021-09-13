@@ -5,11 +5,6 @@
 #include "octree.h"
 #include <glad\glad.h>
 
-// Forward Declares
-//	namespace SpatialGrid {
-//		size_t GetVertBufGridLinesSize();
-//	};
-
 void render::DrawLoadingScreen(const unsigned int vao, const Shader& prog, const float offset, const float rot, const float scale)
 {
   glBindVertexArray(vao);
