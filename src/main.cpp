@@ -456,7 +456,7 @@ int main()
 			}
 		}
 		// update spatial grid
-		if (fr.frame_count % 2 == 0)
+		if (fr.frame_count % 1 == 0)
 		{
 			SpatialGrid::ClearGrid();
 			for (auto &o : curr_level->objects)
@@ -467,6 +467,14 @@ int main()
 			render::highlighted_entities.resize(near_neighbors.size());
 			std::copy(near_neighbors.begin(), near_neighbors.end(), render::highlighted_entities.begin());
 		}
+
+		// test for collisions
+		auto sz = curr_level->objects.size();
+		for (int i = 0; i < sz; i++) {
+			const auto near_neighbors = SpatialGrid::FindNearestNeighbors(curr_level->objects[i].get());
+			v3 collision_response_vec{};
+		}
+		
 
 		// set transformations
 		view = camera.GetViewMatrix();

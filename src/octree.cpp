@@ -333,8 +333,11 @@ const std::vector<unsigned> &  SpatialGrid::FindNearestNeighbors(const gxb::Enti
 
 bool SpatialGrid::FineGrainCollisionCheck(const gxb::Entity *const a, const gxb::Entity *const b, v3 resultant_accel_modifier)
 {
-
-	// for (int i = 0; i <
+	assert(level != nullptr);
+	gxb::mesh* ma = level->GetMesh(a->mesh_hash);
+	gxb::mesh* mb = level->GetMesh(b->mesh_hash);
+	// translate mesh to object positions
+	// rotate mesh to object rotations
 	return false;
 }
 
