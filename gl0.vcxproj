@@ -118,6 +118,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>/Oi /Ob1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>c:\cprojects\gl0\thirdparty\include\reactphysics3d</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,6 +183,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>/Oi /Ob1 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>c:\cprojects\gl0\thirdparty\include\reactphysics3d</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

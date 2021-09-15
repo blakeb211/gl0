@@ -345,7 +345,7 @@ inline std::vector<PathPt> LoadCamPath(const std::string level_name)
 	return std::move(pts);
 }
 
-inline float CalculateMeshSphericalBoundingBox(const mesh *const m)
+inline float CalculateMeshSphericalDiameter(const mesh *const m)
 {
 	const auto &verts = m->vertices;
 	const auto sz = verts.size();
@@ -465,7 +465,7 @@ inline std::unique_ptr<Level> LoadLevelMeshesAndCamPath(const std::string level_
 				mesh_ptr->name = mesh_name;
 				mesh_ptr->hash_code = mesh_hash_code;
 				// calculate diameter of a spherical bounding box around the mesh
-				mesh_ptr->spherical_diameter = CalculateMeshSphericalBoundingBox(mesh_ptr.get());
+				mesh_ptr->spherical_diameter = CalculateMeshSphericalDiameter(mesh_ptr.get());
 
 				int face_added_to_raw = 0;
 				auto &v = mesh_ptr->vertices;
