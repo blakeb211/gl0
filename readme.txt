@@ -23,13 +23,13 @@ Your process should look like
 2. multi threaded version of 1. ->
 3. move to GPU if testing a prototype version shows an improvement(edited)
 
-game
+MAIN TODO
 	collision detection and response - bounding boxes
+		which library?
 	level generator
 	ability ot swithc levels
 	menu screen
 	pause capability
-	reduce globals using state objects
 	sound
 	-------------------------------------------------
 	loading screen either using async or other threading - done
@@ -40,6 +40,7 @@ game
 
 refactoring
 	pull update outside of main.cpp
+	reduce globals using state objects
 	-------------------------------------------------
 	separate octree into header and cpp file - done
 	compile lib fmt and glm into a dll and add it to the project - done
@@ -47,18 +48,18 @@ refactoring
 	Fix names: all types and functions InThisCase and all variables in_this_case - done
 	pull rendering system outside of main.cpp - done
 
-campath editor
-	show coords on hover
-	move control points
-	delete control points
-	add control points
+campath editor - ideally scrap and generate during level generation
 	-------------------------------------------------
+	show coords on hover - planning to skip
+	move control points - planning to skip
+	delete control points - planning to skip
+	add control points - planning to skip
 	get campath control pts from a ppm - done
 	write cam path files - done
 	
 collision detection
-	+fine-grain collision and response - ReactPhysics3D
-	+only check collisions for dynamic objects
+	+narrow phase collision detection and response
+	+only check collisions for dynamic objects - need library
 	-------------------------------------------------
 	+only draw cells with list.size() > 0  - done
 	+use center for now - done
