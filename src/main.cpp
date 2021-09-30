@@ -412,7 +412,7 @@ int main()
       SpatialGrid::SetupOctree(curr_level);
       // add camPath points to level raw_data so I can draw them for debug
       AddCamPathToRawData(curr_level);
-      std::this_thread::sleep_for(2000ms);
+      std::this_thread::sleep_for(1000ms);
       level_loaded = true;
     };
 
