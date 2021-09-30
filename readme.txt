@@ -25,9 +25,9 @@ Your process should look like
 
 MAIN TODO
 	collision detection and response - bounding boxes
-		which library?
+		which library? bounce or bullet
 	level generator
-	ability ot swithc levels
+	ability ot switch levels
 	menu screen
 	pause capability
 	sound
