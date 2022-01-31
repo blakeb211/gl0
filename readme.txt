@@ -1,4 +1,4 @@
-VISIT THE SCREENSHOTS FOLDER TO SEE THE ENGINE IN ACTION
+![working 3d engine done in c++](working_3d_engine.jpg)
 
 /****************************************
 *		GOALS
