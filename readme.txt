@@ -1,4 +1,4 @@
-![working 3d engine done in c++](/screenshots/working_3d_engine.jpg)
+![working 3d engine done in c++](screenshots/working_3d_engine.jpg)
 
 /****************************************
 *		GOALS
